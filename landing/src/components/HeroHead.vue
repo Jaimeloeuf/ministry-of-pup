@@ -7,7 +7,7 @@
       <div class="container">
         <div class="navbar-brand">
           <a class="navbar-item" href="#">
-            <img src="../assets/logo_wo_slogan.png" alt="Logo" />
+            <img src="../assets/logo_navbar.jpg" alt="Logo" />
           </a>
 
           <!-- Using <a> instead of button as it does not need an icon and dont have the inverted colors on click behaviour -->
@@ -61,14 +61,15 @@ export default {
         { name: "Home", link: "#" },
         { name: "About Us", link: "#about" },
         {
-          name: "<i class='fab fa-medium' />",
-          link: "https://medium.com/enkel-digital",
+          name: "<i class='fab fa-instagram' />",
+          link: "https://instagram.com/ministryofpup/",
           target: "_blank",
         },
         {
-          name: "<i class='fab fa-github' />",
-          link: "https://github.com/Enkel-Digital/",
-          target: "_blank",
+          name: "<i class='fab fa-medium' />",
+          // link: "https://medium.com/ministryofpup",
+          // target: "_blank",
+          link: "#",
         },
       ],
     };

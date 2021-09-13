@@ -6,16 +6,19 @@
       <HeroBody />
     </section>
 
+    <OurDogs />
+
     <!-- Next section after the hero banner -->
+    <div v-if="false">
+      <section id="next" class="hero is-fullheight">
+        <img :src="heroImage2" alt="Hero" class="image hero-image" />
 
-    <section id="next" class="hero is-fullheight">
-      <img :src="heroImage2" alt="Hero" class="image hero-image" />
+        <!-- @todo Empty hero body to force footer to the bottom of the hero page -->
+        <div class="hero-body" />
+      </section>
 
-      <!-- @todo Empty hero body to force footer to the bottom of the hero page -->
-      <div class="hero-body" />
-    </section>
-
-    <Footer />
+      <Footer />
+    </div>
   </div>
 </template>
 
@@ -27,6 +30,7 @@ import "bulma/css/bulma.min.css";
 
 import HeroHead from "@/components/HeroHead";
 import HeroBody from "@/components/HeroBody";
+import OurDogs from "@/components/OurDogs";
 import Footer from "@/components/Footer";
 
 export default {
@@ -34,14 +38,16 @@ export default {
   components: {
     HeroHead,
     HeroBody,
+    OurDogs,
     Footer,
   },
   data() {
     return {
       heroImage:
-        "https://images.unsplash.com/39/lIZrwvbeRuuzqOoWJUEn_Photoaday_CSD%20(1%20of%201)-5.jpg?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
-      heroImage2:
-        "https://images.unsplash.com/photo-1497465135434-9dc15238075a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format",
+        "https://images.unsplash.com/photo-1603123853880-a92fafb7809f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1949&q=80",
+      // "https://images.unsplash.com/photo-1613946278314-42c14694434a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
+      // heroImage2:
+      //   "https://images.unsplash.com/photo-1583337426008-2fef51aa841d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2134&q=80",
     };
   },
 };

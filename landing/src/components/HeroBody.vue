@@ -3,12 +3,11 @@
   <div class="hero-body">
     <div class="container has-text-left">
       <h2 class="title">
-        <span class="title-bg" style="color: #f7941d"> Keep It Simple </span>
+        <!-- <span class="title-bg" style="color: #f7941d">Ministry Of Pup</span> -->
+        <span class="title-bg title-color">Ministry Of Pup</span>
       </h2>
       <h2 class="subtitle">
-        <span class="title-bg" style="color: #fcbe4c">
-          Simple Solutions for Complex problems
-        </span>
+        <span class="title-bg title-color"> Find your dream dog </span>
       </h2>
 
       <a href="#next">
@@ -57,6 +56,11 @@ export default {
 </script>
 
 <style scoped>
+.title-color {
+  /* color: #2c2c2c; */
+  color: white;
+}
+
 .scroll-icon {
   width: 3.5rem;
   height: auto;
@@ -64,7 +68,9 @@ export default {
   color: #fcbe4c;
 }
 .title-bg {
-  background: #414042;
+  /* background: #414042; */
+  /* background: white; */
+  background: black;
   padding: 0 0.2em 0.1em 0.2em;
   border-radius: 0.1em;
 }
