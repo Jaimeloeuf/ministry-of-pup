@@ -1,5 +1,5 @@
-# vue-bulma-template
-Template repository for scaffolding simple frontend sites with Vue and Bulma
+# mop-landing
+MOP's landing page
 
 ## Project setup
 ### Installing Dependencies
@@ -33,7 +33,7 @@ npm run lint
 - Uncomment the event dispatching code in main.js
 
 ## License, Author and Contributing
-This project is developed and made available under the "MIT License"  
+This project is developed and made available under the [AGPL v3 License](./LICENSE)  
 If you have any questions, contact us via [email](mailto:developer@enkeldigital.com)  
 Authors:
 - [JJ](https://github.com/Jaimeloeuf)
