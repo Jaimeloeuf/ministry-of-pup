@@ -1,0 +1,33 @@
+{
+  "name": "mop-booking",
+  "version": "0.0.1",
+  "description": "Booking system for MOP customers",
+  "scripts": {
+    "start": "node ./build.js --watch",
+    "serve": "node ./build.js --watch",
+    "build": "node ./build.js"
+  },
+  "dependencies": {
+    "@hyperapp/html": "^2.0.0",
+    "bulma": "^0.9.3",
+    "hyperapp": "^2.0.19"
+  },
+  "keywords": [
+    "hyperapp",
+    "bulma"
+  ],
+  "author": "JJ",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Enkel-Digital/mop-booking.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Enkel-Digital/mop-booking/issues"
+  },
+  "homepage": "https://github.com/Enkel-Digital/mop-booking#readme",
+  "devDependencies": {
+    "esbuild": "^0.12.28",
+    "live-server": "^1.2.1",
+    "purgecss": "^4.0.3"
+  }
+}
