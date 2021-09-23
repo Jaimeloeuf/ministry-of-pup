@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --dest ./docs",
-    "deploy-to-github": "npx simple-github-pages-deploy",
-    "deploy": "npm run build && npm run deploy-to-github",
+    "build": "vue-cli-service build",
+    "deploy-firebase-hosting": "firebase deploy --only hosting:ministryofpup",
+    "deploy": "npm run build && npm run deploy-firebase-hosting",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
