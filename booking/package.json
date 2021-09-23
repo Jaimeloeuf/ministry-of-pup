@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node ./build.js --watch",
     "serve": "node ./build.js --watch",
-    "build": "node ./build.js"
+    "build": "node ./build.js",
+    "deploy-firebase-hosting": "firebase deploy --only hosting:ministryofpup-booking",
+    "deploy": "npm run build && npm run deploy-firebase-hosting"
   },
   "dependencies": {
     "@hyperapp/html": "^2.0.0",

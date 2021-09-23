@@ -23,3 +23,6 @@ esbuild-metafile.json
 .env
 .env.test
 .env.production
+
+# Firebase cache dir
+.firebase/
