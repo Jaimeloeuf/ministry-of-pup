@@ -1,14 +1,14 @@
 <template>
-  <div id="app">
-    <div class="columns is-vcentered">
-      <div class="column is-1 mr-6" v-if="showNavbar">
-        <Navbar />
-      </div>
+  <!-- is-vcentered modifier makes main section vertically centered regardless of side nav bar placement -->
+  <div id="main" class="columns is-vcentered">
+    <!-- is-narrow modifier makes the column shrink to the size of the inner component -->
+    <div class="column is-narrow" v-if="showNavbar">
+      <Navbar />
+    </div>
 
-      <div class="column">
-        <!-- Router view for the main view -->
-        <router-view />
-      </div>
+    <div class="column">
+      <!-- Router view for the main view -->
+      <router-view />
     </div>
   </div>
 </template>
@@ -38,7 +38,7 @@ export default {
 /* Alternative bulma import using CDN */
 /* @import "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"; */
 
-#app {
+#main {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

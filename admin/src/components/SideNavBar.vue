@@ -1,10 +1,5 @@
 <template>
-  <!-- @todo Fix this in squarish view, not exactly tablet, but between tablet and desktop -->
-  <nav
-    id="nav"
-    class="navbar navbar-menu px-5 ml-5 is-white has-text-left center"
-    role="navigation"
-  >
+  <nav class="navbar navbar-menu ml-5 mr-5 mt-6" role="navigation">
     <aside class="menu">
       <p class="menu-label">User</p>
       <!-- Give px-4 padding to align with the other items as a tags carry that padding by default -->
