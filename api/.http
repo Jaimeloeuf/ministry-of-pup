@@ -1,0 +1,74 @@
+# Global file variable definitions
+@hostname = http://localhost
+@port = 3000
+@host = {{hostname}}:{{port}}
+# Demo key, change to actual key
+@firebaseAuthApiKey = AIzaSyCrCpzzlzTPy-jRyZJtCJ32gI92JTKLtXE
+@authHeader = Authorization: Bearer {{getAuth.response.body.idToken}}
+
+### Although users can only use phone auth from the frontend, email/password auth method is enabled for testing locally.
+### Create api_tester account if none
+# @name signUp
+POST https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={{firebaseAuthApiKey}}
+content-type: application/json
+
+{
+    "email": "api_tester@scdf.gov.sg",
+    "password": "securePassword",
+    "returnSecureToken": true,
+}
+
+
+### Get auth credentials
+# @name getAuth
+POST https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{firebaseAuthApiKey}}
+content-type: application/json
+
+{
+    "email": "api_tester@scdf.gov.sg",
+    "password": "securePassword",
+    "returnSecureToken": true,
+}
+
+### ping
+GET {{host}}/
+
+### Health probe
+GET {{host}}/health
+
+### Search number
+# GET /search/:number
+GET {{host}}/search/+6584138820
+{{authHeader}}
+
+### Take an item
+POST {{host}}/take
+{{authHeader}}
+content-type: application/json
+
+{
+    "item": "1234",
+    "quantity": "1",
+    "user": "api_tester@scdf.gov.sg"
+}
+
+### Take a controlled item, set item to be the item ID of a controlled item set in firestore
+POST {{host}}/take
+{{authHeader}}
+content-type: application/json
+
+{
+    "item": "1",
+    "quantity": "1",
+    "user": "api_tester@scdf.gov.sg"
+}
+
+### Request for help
+POST {{host}}/help
+{{authHeader}}
+content-type: application/json
+
+{
+    "user": "api_tester@scdf.gov.sg",
+    "details": "app not working..."
+}
