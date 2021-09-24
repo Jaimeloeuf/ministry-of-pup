@@ -32,16 +32,16 @@
             :to="{ name: 'next-appointment' }"
             :class="{ 'is-active': $route.name === 'next-appointment' }"
           >
-            Next appointment
+            Next
           </router-link>
         </li>
         <!-- See all appointments to click into 1 for more details to prep for it -->
         <li>
           <router-link
-            :to="{ name: 'all-appointment' }"
-            :class="{ 'is-active': $route.name === 'all-appointment' }"
+            :to="{ name: 'all-appointments' }"
+            :class="{ 'is-active': $route.name === 'all-appointments' }"
           >
-            All appointments
+            All
           </router-link>
         </li>
       </ul>

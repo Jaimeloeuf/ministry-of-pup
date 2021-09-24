@@ -13,8 +13,12 @@ const routes = [
     name: "home",
     component: () => import("@/views/Home.vue"),
     meta: { Auth_requirements: AuthType.private },
-    // Pass URL query parameters as prop to component
-    props: (route) => route.query,
+  },
+  {
+    path: "/dog/new",
+    name: "new-dog",
+    component: () => import("@/views/NewDog.vue"),
+    meta: { Auth_requirements: AuthType.private },
   },
   {
     // Have to add the extra /details if not, all the other routes with /trip/$ANYTHING will get matched with this
