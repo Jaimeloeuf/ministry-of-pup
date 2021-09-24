@@ -9,12 +9,6 @@ const cors = require("cors");
 app.use(cors());
 app.use(require("helmet")()); // middleware which adds http headers
 
-// require("@enkeldigital/firebase-admin")
-//   .auth()
-//   .updateUser("GLUIUpAlDOg4RdkhQvfFWHXbDAg1", { emailVerified: true })
-//   .then(() => console.log("completed"))
-//   .catch(console.error);
-
 const authMiddleware = require("firebase-auth-express-middleware")({
   firebaseAdmin: require("firebase-admin"),
 });
@@ -23,7 +17,7 @@ const authMiddleware = require("firebase-auth-express-middleware")({
  * @notice Import and Mount all the routers for the different routes
  */
 app.use("/", require("./routes/default"));
-// app.use("/search", authMiddleware, require("./routes/search"));
+app.use("/search", authMiddleware, require("./routes/search"));
 app.use("/take", authMiddleware, require("./routes/take"));
 app.use("/help", authMiddleware, require("./routes/help"));
 app.use("/rbac", authMiddleware, require("./routes/RBAC"));

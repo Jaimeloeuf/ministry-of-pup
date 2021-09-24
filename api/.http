@@ -3,7 +3,7 @@
 @port = 3000
 @host = {{hostname}}:{{port}}
 # Demo key, change to actual key
-@firebaseAuthApiKey = AIzaSyCrCpzzlzTPy-jRyZJtCJ32gI92JTKLtXE
+@firebaseAuthApiKey = AIzaSyDjnXdzvj9hAwMnNfb6ogHbAPuMIx-q8uM
 @authHeader = Authorization: Bearer {{getAuth.response.body.idToken}}
 
 ### Although users can only use phone auth from the frontend, email/password auth method is enabled for testing locally.
@@ -13,7 +13,7 @@ POST https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={{firebaseAut
 content-type: application/json
 
 {
-    "email": "api_tester@scdf.gov.sg",
+    "email": "api_tester@enkeldigital.com",
     "password": "securePassword",
     "returnSecureToken": true,
 }
@@ -25,7 +25,7 @@ POST https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={
 content-type: application/json
 
 {
-    "email": "api_tester@scdf.gov.sg",
+    "email": "api_tester@enkeldigital.com",
     "password": "securePassword",
     "returnSecureToken": true,
 }
@@ -36,39 +36,37 @@ GET {{host}}/
 ### Health probe
 GET {{host}}/health
 
+### Book a new appointment through the booking app
+POST {{host}}/app/book
+{{authHeader}}
+content-type: application/json
+
+{
+    "dogID": 1,
+    "dateTime": 1634281200,
+    "fname": "John",
+    "lname": "Smith",
+    "number": "+6599999999",
+    "email": "api_tester@enkeldigital.com"
+}
+
 ### Search number
-# GET /search/:number
-GET {{host}}/search/+6584138820
+# GET /app/user/:userID
+GET {{host}}/app/user/1
 {{authHeader}}
 
-### Take an item
-POST {{host}}/take
+### Get all appointments
+POST {{host}}/admin/appointment/all
 {{authHeader}}
-content-type: application/json
 
-{
-    "item": "1234",
-    "quantity": "1",
-    "user": "api_tester@scdf.gov.sg"
-}
-
-### Take a controlled item, set item to be the item ID of a controlled item set in firestore
-POST {{host}}/take
+### Update available time slots for booking
+POST {{host}}/admin/available/update
 {{authHeader}}
 content-type: application/json
 
 {
-    "item": "1",
-    "quantity": "1",
-    "user": "api_tester@scdf.gov.sg"
-}
-
-### Request for help
-POST {{host}}/help
-{{authHeader}}
-content-type: application/json
-
-{
-    "user": "api_tester@scdf.gov.sg",
-    "details": "app not working..."
+    "available": {
+        "1": [{ "start": 1, "end": 2 }]
+    },
+    "blockedDates": "1"
 }
