@@ -1,0 +1,33 @@
+<template>
+  <div class="section center">
+    <!-- @todo Move loader to parent/global, then triggered by a event or smth -->
+    <!-- <loader v-if="loader" /> -->
+
+    <Chart />
+  </div>
+</template>
+
+<script>
+import Chart from "../components/Chart";
+
+export default {
+  name: "Home",
+
+  components: { Chart },
+
+  computed: {
+    // Load ID of current trip from vuex
+    currentTripID() {
+      return this.$store.state.trip.currentTrip;
+    },
+  },
+};
+</script>
+
+<style scoped>
+/* Color input pink if it is invalid --> when telephone number does not match the specified pattern */
+/* Will only activate if the placeholder is not currently being shown, meaning will not show before user type anything */
+input:not(:placeholder-shown):invalid {
+  background-color: lightpink;
+}
+</style>
