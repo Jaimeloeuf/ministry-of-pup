@@ -21,6 +21,12 @@ const routes = [
     meta: { Auth_requirements: AuthType.private },
   },
   {
+    path: "/dog/sold",
+    name: "sold-dog",
+    component: () => import("@/views/SoldDog.vue"),
+    meta: { Auth_requirements: AuthType.private },
+  },
+  {
     // Have to add the extra /details if not, all the other routes with /trip/$ANYTHING will get matched with this
     path: "/trip/new/:tripID",
     props: true,

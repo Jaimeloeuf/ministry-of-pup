@@ -15,9 +15,8 @@
           <br />
 
           <div class="select is-fullwidth">
-            <!-- Use on change event listener for changes to the firestation ID -->
             <select v-on:change="updateDogTypeID($event)">
-              <!-- Value must be firestation's id so that when parsing value in @change handler it can get id instead of station name -->
+              <!-- Value must be id so that when parsing value in @change handler it can get id instead of the text -->
               <option
                 v-for="dogType in dogTypes"
                 :value="dogType.id"
@@ -137,7 +136,7 @@ export default {
     updateDogTypeID(event) {
       // ID is int, but if set as value of option element, it will be auto converted into String, thus parseInt back to int before saving it
       // If not converted before saving, tripTypeID would become a string and UI will show as edited because "1" !== 1
-      this.tripTypeID = parseInt(event.target.value);
+      this.dogTypeID = parseInt(event.target.value);
     },
 
     async addNewDog() {
