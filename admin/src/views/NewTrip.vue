@@ -195,9 +195,7 @@
             </span>
             <br />
 
-            <Map v-if="departureLocation" />
             <button
-              v-else
               class="button is-light is-fullwidth is-success"
               @click="departureLocation = true"
             >
@@ -249,12 +247,11 @@ import firebase from "firebase/app";
 
 import loader from "../components/Loader";
 import DatetimePicker from "../components/DatetimePicker";
-import Map from "../components/Map";
 
 export default {
   name: "NewTrip",
 
-  components: { loader, DatetimePicker, Map },
+  components: { loader, DatetimePicker },
 
   created() {
     if (this.$store.state.user.user.ic === undefined) {

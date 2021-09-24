@@ -17,7 +17,6 @@
 // Load the bulma styles in the top level component
 import "bulma/css/bulma.min.css";
 
-// import Navbar from "./components/Navbar";
 import Navbar from "./components/SideNavBar";
 import AuthType from "./router/AuthType";
 
@@ -29,8 +28,7 @@ export default {
   computed: {
     // @todo Remove this and rely on router to pass in prop to decide if nav bar should be shown
     showNavbar() {
-      // return this.$route.meta.Auth_requirements !== AuthType.public_only;
-      return true;
+      return this.$route.meta.Auth_requirements !== AuthType.public_only;
     },
   },
 };

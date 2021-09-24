@@ -18,10 +18,10 @@ const routes = [
   },
   {
     // Have to add the extra /details if not, all the other routes with /trip/$ANYTHING will get matched with this
-    path: "/trip/details/:tripID",
+    path: "/trip/new/:tripID",
     props: true,
-    name: "trip-details",
-    component: () => import("@/views/TripDetails.vue"),
+    name: "new-trip",
+    component: () => import("@/views/NewTrip.vue"),
     meta: { Auth_requirements: AuthType.private },
   },
 ];
