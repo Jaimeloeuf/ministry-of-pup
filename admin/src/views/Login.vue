@@ -6,9 +6,7 @@
       <div class="columns">
         <!-- Need to put width: 100% -->
         <div class="column" style="width: 100%">
-          <label for="otp">
-            <b>mis admin portal</b>
-          </label>
+          <label><b>Ministry Of Pup Admin Portal</b></label>
 
           <input
             v-autofocus
