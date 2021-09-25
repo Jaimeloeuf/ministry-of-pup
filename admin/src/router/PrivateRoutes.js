@@ -15,15 +15,29 @@ const routes = [
     meta: { Auth_requirements: AuthType.private },
   },
   {
-    path: "/schedule/block",
-    name: "block-schedule",
-    component: () => import("@/views/BlockSchedule.vue"),
+    path: "/appointment/all",
+    name: "all-appointments",
+    component: () => import("@/views/AllAppointments.vue"),
     meta: { Auth_requirements: AuthType.private },
   },
+  // {
+  //   // This route has to be defined after AllAppointments to prevent "all" in /appointment/all to be used as the ID
+  //   path: "/appointment/:appointmentID",
+  //   props: true,
+  //   name: "appointment",
+  //   component: () => import("@/views/Appointment.vue"),
+  //   meta: { Auth_requirements: AuthType.private },
+  // },
   {
     path: "/dog/new",
     name: "new-dog",
     component: () => import("@/views/NewDog.vue"),
+    meta: { Auth_requirements: AuthType.private },
+  },
+  {
+    path: "/dog/all",
+    name: "all-dogs",
+    component: () => import("@/views/AllDogs.vue"),
     meta: { Auth_requirements: AuthType.private },
   },
   {
@@ -33,11 +47,21 @@ const routes = [
     meta: { Auth_requirements: AuthType.private },
   },
   {
-    // Have to add the extra /details if not, all the other routes with /trip/$ANYTHING will get matched with this
-    path: "/trip/new/:tripID",
-    props: true,
-    name: "new-trip",
-    component: () => import("@/views/NewTrip.vue"),
+    path: "/schedule",
+    name: "schedule",
+    component: () => import("@/views/SeeSchedule.vue"),
+    meta: { Auth_requirements: AuthType.private },
+  },
+  {
+    path: "/schedule/block",
+    name: "block-schedule",
+    component: () => import("@/views/BlockSchedule.vue"),
+    meta: { Auth_requirements: AuthType.private },
+  },
+  {
+    path: "/schedule/opening",
+    name: "set-opening",
+    component: () => import("@/views/SetOpeningHours.vue"),
     meta: { Auth_requirements: AuthType.private },
   },
 ];
