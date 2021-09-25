@@ -1,6 +1,5 @@
 <template>
-  <!-- is-vcentered modifier makes main section vertically centered regardless of side nav bar placement -->
-  <div id="main" class="columns is-vcentered">
+  <div id="main" class="columns mt-5 ml-5">
     <!-- is-narrow modifier makes the column shrink to the size of the inner component -->
     <div class="column is-narrow" v-if="showNavbar">
       <Navbar />
