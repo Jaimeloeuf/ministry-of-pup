@@ -2,6 +2,7 @@
   <input
     class="input"
     type="datetime-local"
+    :min="currentDatetime"
     v-bind:value="value"
     v-on:input="onUpdate($event.target.value)"
   />
@@ -21,6 +22,10 @@ export default {
     value: {
       default: currentDatetime,
     },
+  },
+
+  data() {
+    return { currentDatetime };
   },
 
   // Emit default datetime on mounted, so if parent component uses v-model with a undefined variable by default,

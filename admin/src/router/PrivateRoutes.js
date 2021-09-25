@@ -15,6 +15,12 @@ const routes = [
     meta: { Auth_requirements: AuthType.private },
   },
   {
+    path: "/schedule/block",
+    name: "block-schedule",
+    component: () => import("@/views/BlockSchedule.vue"),
+    meta: { Auth_requirements: AuthType.private },
+  },
+  {
     path: "/dog/new",
     name: "new-dog",
     component: () => import("@/views/NewDog.vue"),

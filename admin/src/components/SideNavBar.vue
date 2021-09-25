@@ -17,6 +17,22 @@
             Dashboard
           </router-link>
         </li>
+        <li>
+          <router-link
+            :to="{ name: 'schedule' }"
+            :class="{ 'is-active': $route.name === 'schedule' }"
+          >
+            See Schedule
+          </router-link>
+        </li>
+        <li>
+          <router-link
+            :to="{ name: 'block-schedule' }"
+            :class="{ 'is-active': $route.name === 'block-schedule' }"
+          >
+            Block Schedule
+          </router-link>
+        </li>
       </ul>
 
       <p class="menu-label">Appointments</p>

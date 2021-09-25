@@ -111,7 +111,6 @@ export default {
 
   data() {
     return {
-      // @todo Default to today
       availablityDate: undefined,
 
       dogTypeID: 1,
