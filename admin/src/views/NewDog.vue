@@ -4,7 +4,12 @@
       <label>
         <b>Dog availablity date</b>
 
-        <DatetimePicker v-model="availablityDate" />
+        <input
+          class="input"
+          type="date"
+          :min="today"
+          v-model="availablityDate"
+        />
       </label>
     </div>
 
@@ -102,16 +107,17 @@
 </template>
 
 <script>
-import DatetimePicker from "../components/DatetimePicker.vue";
+import todaysDate from "../utils/todaysDate.js";
 
 export default {
   name: "NewDog",
 
-  components: { DatetimePicker },
-
   data() {
+    const today = todaysDate();
+
     return {
-      availablityDate: undefined,
+      today,
+      availablityDate: today,
 
       dogTypeID: 1,
       name: undefined,

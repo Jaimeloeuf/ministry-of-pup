@@ -110,6 +110,7 @@
 
 <script>
 import DatetimePicker from "../components/DatetimePicker.vue";
+import todaysDate from "../utils/todaysDate.js";
 
 export default {
   name: "Schedule",
@@ -117,16 +118,6 @@ export default {
   components: { DatetimePicker },
 
   data() {
-    // Might be reused later
-    function todaysDate() {
-      const today = new Date();
-      const dd = today.getDate();
-      const mm = today.getMonth() + 1; // Jan is 0, thus convert to 1 indexed first
-      const yyyy = today.getFullYear();
-
-      return `${yyyy}-${mm < 10 ? "0" + mm : mm}-${dd < 10 ? "0" + dd : dd}`;
-    }
-
     const today = todaysDate();
     const defaultTimeSlot = { start: undefined, end: undefined };
 

@@ -147,7 +147,7 @@
 
 <script>
 import { mapState } from "vuex";
-import logout from "../utils/logout";
+import logout from "../utils/logout.js";
 
 export default {
   name: "SideNavBar",

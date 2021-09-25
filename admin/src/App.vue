@@ -1,14 +1,20 @@
 <template>
-  <div id="main" class="columns mt-5 ml-5">
-    <!-- is-narrow modifier makes the column shrink to the size of the inner component -->
-    <div class="column is-narrow" v-if="showNavbar">
-      <Navbar />
+  <div id="main">
+    <!-- This contains both the navbar and the main content at the top of the viewport -->
+    <div class="columns mt-5 ml-5">
+      <!-- is-narrow modifier makes the column shrink to the size of the inner component -->
+      <div class="column is-narrow" v-if="showNavbar">
+        <Navbar />
+      </div>
+
+      <div class="column">
+        <!-- Router view for the main view -->
+        <router-view />
+      </div>
     </div>
 
-    <div class="column">
-      <!-- Router view for the main view -->
-      <router-view />
-    </div>
+    <!-- The version component is at the bottom of the main content below logout button in side nav bar -->
+    <version class="ml-5 mb-5" />
   </div>
 </template>
 
@@ -17,12 +23,13 @@
 import "bulma/css/bulma.min.css";
 
 import Navbar from "./components/SideNavBar";
+import version from "./components/Version.vue";
 import AuthType from "./router/AuthType";
 
 export default {
   name: "App",
 
-  components: { Navbar },
+  components: { Navbar, version },
 
   computed: {
     // @todo Remove this and rely on router to pass in prop to decide if nav bar should be shown

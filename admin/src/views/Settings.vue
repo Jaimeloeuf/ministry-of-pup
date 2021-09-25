@@ -220,33 +220,6 @@ export default {
       // Always ensure full screen loader is removed
       this.loader = false;
     },
-
-    // Async function to save settings
-    async saveSettings() {
-      // Show loader before dispatching asynchronous vuex action
-      this.loader = true;
-
-      try {
-        // @todo Only send the updated values
-        await this.$store.dispatch("user/saveSettings", {
-          name: this.name,
-          ic: this.ic,
-          licenseTypeID: this.licenseTypeID,
-          firestationID: this.firestationID,
-        });
-      } catch (error) {
-        console.error(error);
-
-        // Display error and ask user if action should be retried
-        // Call method recursively if user wants to retry,
-        // await recursive call to ensure it completes before doing anything else for the earlier calls
-        if (confirm(`Error:\n${error.message}\nRetry?`))
-          await this.saveSettings();
-      }
-
-      // Always ensure full screen loader is removed
-      this.loader = false;
-    },
   },
 };
 </script>

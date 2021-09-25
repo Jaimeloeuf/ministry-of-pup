@@ -1,9 +1,9 @@
 <template>
-  <div class="section center">
+  <div>
     <!-- @todo Move loader to parent/global, then triggered by a event or smth -->
     <!-- <loader v-if="loader" /> -->
 
-    <Chart />
+    <Chart class="pr-5" />
   </div>
 </template>
 

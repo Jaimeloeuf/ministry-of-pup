@@ -17,7 +17,7 @@ export default {
         datasets: [
           {
             label: "Dogs sold",
-            data: [12, 17, 5, 8],
+            data: [17, 23, 10, 13],
             backgroundColor: [
               "rgba(255, 99, 132, 0.2)",
               "rgba(54, 162, 235, 0.2)",
