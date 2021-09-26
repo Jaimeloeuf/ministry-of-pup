@@ -61,4 +61,10 @@ export default {
   text-align: left;
   height: 100vh;
 }
+
+/* Color input pink if it is invalid --> when telephone number does not match the specified pattern */
+/* Will only activate if the placeholder is not currently being shown, meaning will not show before user type anything */
+input:not(:placeholder-shown):invalid {
+  background-color: lightpink;
+}
 </style>
