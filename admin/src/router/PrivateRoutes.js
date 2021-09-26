@@ -61,7 +61,7 @@ const routes = [
   {
     path: "/schedule/opening",
     name: "set-opening",
-    component: () => import("@/views/SetOpeningHours.vue"),
+    component: () => import("@/views/OpeningHours.vue"),
     meta: { Auth_requirements: AuthType.private },
   },
 ];
