@@ -6,19 +6,10 @@
       <HeroBody />
     </section>
 
-    <OurDogs />
+    <OurDogs id="OurDogs" />
+    <FAQ id="FAQ" />
 
-    <!-- Next section after the hero banner -->
-    <div v-if="false">
-      <section id="next" class="hero is-fullheight">
-        <img :src="heroImage2" alt="Hero" class="image hero-image" />
-
-        <!-- @todo Empty hero body to force footer to the bottom of the hero page -->
-        <div class="hero-body" />
-      </section>
-
-      <Footer />
-    </div>
+    <Footer />
   </div>
 </template>
 
@@ -31,6 +22,7 @@ import "bulma/css/bulma.min.css";
 import HeroHead from "@/components/HeroHead";
 import HeroBody from "@/components/HeroBody";
 import OurDogs from "@/components/OurDogs";
+import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 
 export default {
@@ -39,6 +31,7 @@ export default {
     HeroHead,
     HeroBody,
     OurDogs,
+    FAQ,
     Footer,
   },
   data() {
