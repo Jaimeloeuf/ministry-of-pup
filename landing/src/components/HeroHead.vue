@@ -59,17 +59,28 @@ export default {
       showMobileMenu: false,
       menuItems: [
         { name: "Home", link: "#" },
+        { name: "Puppies", link: "#OurDogs" },
+        {
+          name: "Booking",
+          link: "https://booking.ministryofpup.com",
+          target: "_blank",
+        },
         { name: "About Us", link: "#about" },
+        { name: "FAQ", link: "#FAQ" },
         {
           name: "<i class='fab fa-instagram' />",
           link: "https://instagram.com/ministryofpup/",
           target: "_blank",
         },
         {
-          name: "<i class='fab fa-medium' />",
-          // link: "https://medium.com/ministryofpup",
-          // target: "_blank",
-          link: "#",
+          name: "<i class='fab fa-facebook' />",
+          link: "https://www.facebook.com/Ministry-of-PUP-422583404451946/",
+          target: "_blank",
+        },
+        {
+          name: "<i class='fas fa-mobile' />",
+          link: "https://app.ministryofpup.com",
+          target: "_blank",
         },
       ],
     };

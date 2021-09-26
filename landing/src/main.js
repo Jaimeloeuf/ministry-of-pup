@@ -12,7 +12,6 @@
 
 import Vue from "vue";
 import App from "./App.vue";
-import "./registerServiceWorker";
 
 // @todo Does not use the router by default
 // import router from "./router";

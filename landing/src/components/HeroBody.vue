@@ -2,15 +2,15 @@
   <!-- Hero content: will be in the middle -->
   <div class="hero-body">
     <div class="container has-text-left">
-      <h2 class="title">
+      <h2 class="title is-4">
         <!-- <span class="title-bg" style="color: #f7941d">Ministry Of Pup</span> -->
         <span class="title-bg title-color">Ministry Of Pup</span>
       </h2>
       <h2 class="subtitle">
-        <span class="title-bg title-color"> Find your dream dog </span>
+        <span class="title-bg title-color">Find your dream dog</span>
       </h2>
 
-      <a href="#next">
+      <a href="#OurDogs">
         <figure class="scroll-icon">
           <svg
             version="1.1"
@@ -68,9 +68,6 @@ export default {
   color: #fcbe4c;
 }
 .title-bg {
-  /* background: #414042; */
-  /* background: white; */
-  background: black;
   padding: 0 0.2em 0.1em 0.2em;
   border-radius: 0.1em;
 }
