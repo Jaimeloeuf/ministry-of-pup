@@ -15,7 +15,15 @@
 
     <div class="column is-full">
       <label>
-        <b>Dog type</b>
+        <b>Date of Birth</b>
+
+        <input class="input" type="date" :max="today" v-model="dob" />
+      </label>
+    </div>
+
+    <div class="column is-full">
+      <label>
+        <b>Breed</b>
         <br />
 
         <div class="select is-fullwidth">
@@ -36,7 +44,28 @@
 
     <div class="column is-full">
       <label>
-        <b>Dog name</b>
+        <b>Sex</b>
+        <br />
+
+        <div class="select is-fullwidth">
+          <select v-on:change="updateDogSexID($event)">
+            <!-- Value must be id so that when parsing value in @change handler it can get id instead of the text -->
+            <option
+              v-for="dogSex in dogSexes"
+              :value="dogSex.id"
+              :key="dogSex.id"
+              :selected="dogSex.id === dogSexID"
+            >
+              {{ dogSex.text }}
+            </option>
+          </select>
+        </div>
+      </label>
+    </div>
+
+    <div class="column is-full">
+      <label>
+        <b>Name</b>
 
         <input
           type="text"
@@ -48,22 +77,22 @@
       </label>
     </div>
 
-    <!-- 
-      <div class="column is-full">
-        <label>
-          <b>Other data</b>
+    <div class="column is-full">
+      <label>
+        <b>Microchip number</b>
+        <br />
+        *Use scanner
 
-          Pattern matching version for a any number of digits and whitespaces
-          <input
-            type="number"
-            pattern="[\s0-9]+"
-            v-model="something"
-            placeholder="E.g. 1234"
-            required
-            class="input"
-          />
-        </label>
-      </div> -->
+        <input
+          type="number"
+          v-model="mcNumber"
+          pattern="[\s0-9]+"
+          max="999999999999999"
+          placeholder="E.g. 123456789012345"
+          class="input"
+        />
+      </label>
+    </div>
 
     <div class="column is-full">
       <label>
@@ -80,8 +109,8 @@
 
     <div class="column is-full">
       <label>
-        <input type="checkbox" v-model="checkBox" />
-        Example Check Box
+        <input type="checkbox" v-model="pedigree" />
+        Pedigree
       </label>
     </div>
 
@@ -118,13 +147,22 @@ export default {
     return {
       today,
       availablityDate: today,
+      dob: today,
 
-      dogTypeID: 1,
+      // Should this be a Int ID, or something like either "M" or "F"?
+      dogSexID: 1,
+      dogSexes: [
+        { id: 1, text: "Male" },
+        { id: 2, text: "Female" },
+      ],
+
       name: undefined,
       copyWriting: undefined,
-      checkBox: false,
+      mcNumber: undefined,
+      pedigree: false,
 
       // @todo Can be taken from DB if needed
+      dogTypeID: 1,
       dogTypes: [
         { id: 1, text: "French bulldog" },
         { id: 2, text: "Shiba Inu" },
@@ -139,8 +177,14 @@ export default {
       this.dogTypeID = parseInt(event.target.value);
     },
 
+    updateDogSexID(event) {
+      // ID is int, but if set as value of option element, it will be auto converted into String, thus parseInt back to int before saving it
+      // If not converted before saving, tripTypeID would become a string and UI will show as edited because "1" !== 1
+      this.dogSexID = parseInt(event.target.value);
+    },
+
     async addNewDog() {
-      //
+      // Validate all required input is entered
     },
   },
 };
