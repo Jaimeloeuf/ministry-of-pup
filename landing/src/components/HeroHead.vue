@@ -65,7 +65,7 @@ export default {
           link: "https://booking.ministryofpup.com",
           target: "_blank",
         },
-        { name: "About Us", link: "#about" },
+        { name: "About Us", link: "#AboutUs" },
         { name: "FAQ", link: "#FAQ" },
         {
           name: "<i class='fab fa-instagram' />",

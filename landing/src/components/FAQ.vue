@@ -13,26 +13,31 @@
     </div>
 
     <div class="columns is-multiline">
-      <div v-for="(faq, i) in faqs" :key="i" class="column is-full">
-        <div @click="faq.hide = !faq.hide" class="card" style="cursor: pointer">
+      <div v-for="(faq, i) in faqs" :key="i" class="column is-4">
+        <div @click="faq.show = !faq.show" class="card" style="cursor: pointer">
           <div class="card-content">
             <p class="subtitle has-text-weight-bold">
               {{ faq.ques }}
             </p>
 
-            <p :class="{ 'is-hidden': faq.hide }">{{ faq.ans }}</p>
+            <!-- <span v-if="faq.show" v-html="faq.ans">{{ faq.ans }}</span> -->
+            <span v-if="faq.show" v-html="faq.ans"></span>
           </div>
         </div>
       </div>
 
-      <div class="column is-full">
+      <div class="column is-full" />
+
+      <div class="column is-8">
         <div class="card">
           <div class="card-content">
             <p class="title" style="color: lightcoral">
               Have another question in mind?
+              <br />
+              <br />
               <a
                 href="#ContactUs"
-                class="button mx-6"
+                class="button is-flex-mobile"
                 style="background: lightcoral; color: white"
               >
                 Ask us now!
@@ -55,43 +60,27 @@ export default {
         {
           ques: "Whats your operating hours?",
           ans: "Mon to Sun, 10am to 8pm",
-          hide: true,
+          show: false,
         },
         {
           ques: "Where are your puppies from?",
-          ans: "United Kingdom",
-          hide: true,
+          ans: "United Kingdom!",
+          show: false,
+        },
+        {
+          ques: "Do you have pedigree dogs?",
+          ans:
+            "Yes we do! See the listing details for each dog, and you can learn more during your on site viewing session",
+          show: false,
+        },
+        {
+          ques: "What type of dogs do you have?",
+          ans:
+            "Primarily French Bulldogs and Shiba Inus, but you can let us know what you are looking for via our booking system and we will notify you when we find a dog that suits your preferences.",
+          show: false,
         },
       ],
     };
   },
 };
 </script>
-
-<style scoped>
-/* The overlay effect - lays on top of the container and over the image */
-.overlay {
-  position: absolute;
-  /* bottom: 0; */
-  right: 100;
-
-  /* Pink see-through */
-  background: rgba(255, 103, 103, 0.8);
-
-  /* Color of the icons */
-  color: white;
-  opacity: 0;
-
-  transition: 0.5s ease;
-
-  width: 100%;
-  font-size: 1.4em;
-  padding: 0.2em;
-  /* text-align: center; */
-}
-
-/* When you mouse over the container, fade in the overlay title */
-.container:hover .overlay {
-  opacity: 1;
-}
-</style>
