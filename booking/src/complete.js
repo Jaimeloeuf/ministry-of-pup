@@ -1,10 +1,101 @@
-import { text, h1, b, br, div, button, label, p } from "@hyperapp/html";
+import { text, a, img, h1, b, br, div, button, label, p } from "@hyperapp/html";
 
-// @todo
-const addToCalendar = (state) => state;
+import { google, outlook, office365, yahoo, ics } from "calendar-link";
+
+// @todo Add a link where they can click to request for us to contact them
+// @todo Remove all the gaurd rails
+const calendarDescription = (name, dogName = "French bulldog") => `Hey${
+  name ? " " + name : ""
+}!
+
+Our puppies ${dogName && `and ${dogName}`} can't wait to see you!
+
+Location: https://www.google.com/maps/place/Ministry+Of+Pup/@1.276847,103.836264,15z/data=!4m2!3m1!1s0x0:0x8e0ceb011e0b9fbe?sa=X&ved=2ahUKEwit9f_25JzzAhVPdCsKHYpSDHsQ_BJ6BAhHEAU
+Carpark slots: Available!
+Nearest MRT: Outram park
+
+Call us at 88022177 daily between 10am - 8pm for help`;
+
+// Generate event object for the calendar links using data from state
+const getCalendarEventObj = (state) => ({
+  // Based on time, set it to, Morning/Afternoon/Night with $DOG_NAME
+  // Also, only add the dog name if viewing a specific dog
+  title: `On site viewing with ${state.dog.name}`,
+
+  // start: state.selectedDate.date,
+  start: state.selectedDate?.date || new Date(),
+  duration: [30, "minutes"],
+  busy: true,
+
+  description: calendarDescription(state.details?.fname),
+  location: "43 Kampong Bahru Rd, Singapore 169359",
+});
+
+const calendarLinks = (event) => [
+  div(
+    { class: "column is-full" },
+    a(
+      {
+        class: "button is-fullwidth",
+        href: google(event),
+        target: "_blank",
+      },
+      text("Google Calendar")
+    )
+  ),
+
+  // @todo Only show this if user using iphone
+  div(
+    { class: "column is-full" },
+    a(
+      {
+        class: "button is-fullwidth",
+        href: ics(event), // Standard ICS file based on https://icalendar.org
+        target: "_blank",
+      },
+      text("iOS Calendar")
+    )
+  ),
+
+  div(
+    { class: "column is-full" },
+    a(
+      {
+        class: "button is-fullwidth",
+        href: outlook(event),
+        target: "_blank",
+      },
+      text("Outlook Calendar")
+    )
+  ),
+
+  div(
+    { class: "column is-full" },
+    a(
+      {
+        class: "button is-fullwidth",
+        href: office365(event),
+        target: "_blank",
+      },
+      text("Office 365 Calendar")
+    )
+  ),
+
+  div(
+    { class: "column is-full" },
+    a(
+      {
+        class: "button is-fullwidth",
+        href: yahoo(event),
+        target: "_blank",
+      },
+      text("Yahoo Calendar")
+    )
+  ),
+];
 
 const view = ({ dog, selectedDate, details }) =>
-  div({ class: "px-5 pt-5", style: { "max-width": "30em" } }, [
+  div({ class: "px-5 pt-5 mt-6", style: { "max-width": "30em" } }, [
     div({ class: "columns is-multiline" }, [
       div(
         { class: "column is-full" },
@@ -55,14 +146,10 @@ const view = ({ dog, selectedDate, details }) =>
 
       div(
         { class: "column is-full" },
-        button(
-          {
-            class: "button is-light is-success is-fullwidth",
-            onclick: addToCalendar,
-          },
-          text("Add to calendar")
-        )
+        h1({ class: "subtitle is-3" }, text("Add to Calendar"))
       ),
+
+      ...calendarLinks(getCalendarEventObj({ dog, selectedDate })),
 
       // @todo Add a section with our contact details like the email so they can find us if anything
       // The generated google cal invite should have a details, with a link to cancel or change appt time if needed

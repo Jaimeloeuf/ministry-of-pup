@@ -30,7 +30,7 @@ const selectDateView = (datesAvailable) =>
               div(
                 {
                   class: "level is-mobile",
-                  onclick: (state) => selectDate(state, date),
+                  onclick: [selectDate, date],
                 },
                 [
                   div({ class: "level-right" }, [

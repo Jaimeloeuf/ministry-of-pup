@@ -12,6 +12,7 @@
   "dependencies": {
     "@hyperapp/html": "^2.0.0",
     "bulma": "^0.9.3",
+    "calendar-link": "^2.1.1",
     "hyperapp": "^2.0.19"
   },
   "keywords": [
