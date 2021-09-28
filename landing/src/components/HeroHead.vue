@@ -2,7 +2,7 @@
   <!-- Hero head: will stick at the top on load -->
   <div class="hero-head">
     <!-- is fixed top will keep it sticky at the top of the page -->
-    <nav id="nav" class="navbar is-fixed-top is-white" role="navigation">
+    <nav id="nav" class="navbar is-fixed-top" role="navigation">
       <!-- Container to force nav bar into center with wider side margins -->
       <div class="container">
         <div class="navbar-brand">
@@ -89,10 +89,8 @@ export default {
 </script>
 
 <style scoped>
-/* Gives the nav bar a white fill background and a super thin and light bottom underline to give visual seperation from the content */
+/* Gives the nav bar a super thin and light bottom underline to give visual seperation from the content */
 #nav {
-  /* background: black; */
-  background: white;
   border-bottom: 1px solid rgb(231, 231, 231);
 }
 </style>

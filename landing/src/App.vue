@@ -1,15 +1,8 @@
 <template>
-  <div id="app">
-    <section class="hero is-fullheight">
-      <HeroHead />
-      <img :src="heroImage" alt="Hero" class="image hero-image" />
-      <HeroBody />
-    </section>
-
-    <OurDogs id="OurDogs" />
-    <AboutUs id="AboutUs" />
-    <FAQ id="FAQ" />
-
+  <div id="main">
+    <!-- Where app contains the shared components and the router-view component to show the different views -->
+    <HeroHead />
+    <router-view />
     <Footer />
   </div>
 </template>
@@ -21,20 +14,12 @@
 import "bulma/css/bulma.min.css";
 
 import HeroHead from "@/components/HeroHead";
-import HeroBody from "@/components/HeroBody";
-import OurDogs from "@/components/OurDogs";
-import AboutUs from "@/components/AboutUs";
-import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 
 export default {
   name: "App",
   components: {
     HeroHead,
-    HeroBody,
-    OurDogs,
-    AboutUs,
-    FAQ,
     Footer,
   },
   data() {
@@ -53,7 +38,7 @@ export default {
 /* Alternative bulma import using CDN */
 /* @import "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"; */
 
-#app {
+#main {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
