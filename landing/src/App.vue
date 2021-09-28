@@ -7,6 +7,7 @@
     </section>
 
     <OurDogs id="OurDogs" />
+    <AboutUs id="AboutUs" />
     <FAQ id="FAQ" />
 
     <Footer />
@@ -22,6 +23,7 @@ import "bulma/css/bulma.min.css";
 import HeroHead from "@/components/HeroHead";
 import HeroBody from "@/components/HeroBody";
 import OurDogs from "@/components/OurDogs";
+import AboutUs from "@/components/AboutUs";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 
@@ -31,6 +33,7 @@ export default {
     HeroHead,
     HeroBody,
     OurDogs,
+    AboutUs,
     FAQ,
     Footer,
   },
