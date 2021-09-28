@@ -14,12 +14,12 @@ import Vue from "vue";
 import App from "./App.vue";
 
 // @todo Does not use the router by default
-// import router from "./router";
+import router from "./router";
 
 Vue.config.productionTip = false;
 
 new Vue({
-  // router,
+  router,
   render: (h) => h(App),
 
   // UNCOMMENT THIS IF PRE-RENDERING PLUGIN IS USED
