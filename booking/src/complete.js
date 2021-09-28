@@ -32,21 +32,9 @@ const getCalendarEventObj = (state) => ({
 });
 
 const calendarLinks = (event) => [
-  div(
-    { class: "column is-full" },
-    a(
-      {
-        class: "button is-fullwidth",
-        href: google(event),
-        target: "_blank",
-      },
-      text("Google Calendar")
-    )
-  ),
-
   // @todo Only show this if user using iphone
   div(
-    { class: "column is-full" },
+    { class: "column is-half" },
     a(
       {
         class: "button is-fullwidth",
@@ -58,19 +46,19 @@ const calendarLinks = (event) => [
   ),
 
   div(
-    { class: "column is-full" },
+    { class: "column is-half" },
     a(
       {
         class: "button is-fullwidth",
-        href: outlook(event),
+        href: google(event),
         target: "_blank",
       },
-      text("Outlook Calendar")
+      text("Google Calendar")
     )
   ),
 
   div(
-    { class: "column is-full" },
+    { class: "column is-half" },
     a(
       {
         class: "button is-fullwidth",
@@ -82,7 +70,19 @@ const calendarLinks = (event) => [
   ),
 
   div(
-    { class: "column is-full" },
+    { class: "column is-half" },
+    a(
+      {
+        class: "button is-fullwidth",
+        href: outlook(event),
+        target: "_blank",
+      },
+      text("Outlook Calendar")
+    )
+  ),
+
+  div(
+    { class: "column is-half" },
     a(
       {
         class: "button is-fullwidth",
@@ -95,8 +95,8 @@ const calendarLinks = (event) => [
 ];
 
 const view = ({ dog, selectedDate, details }) =>
-  div({ class: "px-5 pt-5 mt-6", style: { "max-width": "30em" } }, [
-    div({ class: "columns is-multiline" }, [
+  div({ class: "px-5 pt-5", style: { "max-width": "30em" } }, [
+    div({ class: "columns is-multiline is-mobile" }, [
       div(
         { class: "column is-full" },
         h1(

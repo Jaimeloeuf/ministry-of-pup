@@ -23,6 +23,7 @@ const selectDateView = (datesAvailable) =>
     div({ class: "card-content content" }, [
       h1({ class: "subtitle is-6" }, text("Select a date")),
 
+      // Show loading instead of just empty
       datesAvailable &&
         div(
           datesAvailable.map((date) =>
@@ -30,6 +31,7 @@ const selectDateView = (datesAvailable) =>
               div(
                 {
                   class: "level is-mobile",
+                  style: { cssText: "cursor: pointer" },
                   onclick: [selectDate, date],
                 },
                 [
