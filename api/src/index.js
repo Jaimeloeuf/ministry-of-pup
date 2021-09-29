@@ -17,6 +17,7 @@ const authMiddleware = require("firebase-auth-express-middleware")({
  * @notice Import and Mount all the routers for the different routes
  */
 app.use("/", require("./routes/default"));
+app.use("/appointment", require("./routes/appointment"));
 app.use("/search", authMiddleware, require("./routes/search"));
 app.use("/take", authMiddleware, require("./routes/take"));
 app.use("/help", authMiddleware, require("./routes/help"));
