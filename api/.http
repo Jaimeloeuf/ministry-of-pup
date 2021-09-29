@@ -2,7 +2,6 @@
 @hostname = http://localhost
 @port = 3000
 @host = {{hostname}}:{{port}}
-# Demo key, change to actual key
 @firebaseAuthApiKey = AIzaSyDjnXdzvj9hAwMnNfb6ogHbAPuMIx-q8uM
 @authHeader = Authorization: Bearer {{getAuth.response.body.idToken}}
 
@@ -37,20 +36,21 @@ GET {{host}}/
 GET {{host}}/health
 
 ### Book a new appointment through the booking app
-POST {{host}}/app/book
+### This action will also create a new account for the user in the "user doubling DB"
+POST {{host}}/appointment/book
 {{authHeader}}
 content-type: application/json
 
 {
     "dogID": 1,
-    "dateTime": 1634281200,
+    "time": 1634281200,
     "fname": "John",
     "lname": "Smith",
     "number": "+6599999999",
-    "email": "api_tester@enkeldigital.com"
+    "email": "JJ@enkeldigital.com"
 }
 
-### Search number
+### Get user details
 # GET /app/user/:userID
 GET {{host}}/app/user/1
 {{authHeader}}

@@ -38,7 +38,7 @@ router.post(
     // Send out emails 1 by 1 to all accounts and wait for all mail to complete
     await Promise.all(
       docs.docs.map((doc) =>
-        // @todo Use email template instead, or consider https://www.open.gov.sg/products/postman/
+        // @todo Use email template instead
         sendMail.send({
           to: doc.data().email,
           from: process.env.notificationEmailSender,
