@@ -6,7 +6,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 
-app.use(cors());
+app.use(cors({ origin: /ministryofpup\.com$/ }));
 app.use(require("helmet")()); // middleware which adds http headers
 
 const authMiddleware = require("firebase-auth-express-middleware")({

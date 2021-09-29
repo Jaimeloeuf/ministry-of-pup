@@ -13,14 +13,17 @@
   "license": "AGPL-3.0-or-later",
   "dependencies": {
     "@enkeldigital/firebase-admin": "^0.1.0",
-    "@sendgrid/mail": "^7.4.2",
+    "@sendgrid/mail": "^7.4.7",
+    "base64-stream": "^1.0.0",
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-error-middlewares": "^1.0.0",
-    "firebase-admin": "^9.4.2",
-    "firebase-auth-express-middleware": "^0.1.2",
-    "helmet": "^4.4.1",
+    "firebase-admin": "^9.12.0",
+    "firebase-auth-express-middleware": "^0.2.1",
+    "helmet": "^4.6.0",
+    "mop-invoice": "github:Enkel-Digital/mop-invoice",
+    "pdfkit": "^0.12.3",
     "unixseconds": "^0.1.0"
   }
 }
