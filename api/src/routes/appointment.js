@@ -9,6 +9,7 @@ const express = require("express");
 const router = express.Router();
 const sendMail = require("../utils/sendMail");
 const fs = require("../utils/fs");
+const { createAndInsertEvent } = require("../utils/GoogleCalendar");
 const unixseconds = require("unixseconds");
 const { asyncWrap } = require("express-error-middlewares");
 
@@ -76,13 +77,19 @@ router.post(
     });
 
     // Send user a email to confirm with them that their appointment has been scheduled successfully
-    sendMail.send({
+    await sendMail.send({
       to: email,
       from: process.env.notificationEmailSender,
       subject: "Ministry Of Pup: Appointment Booked!",
       html:
         `Hi ${fname}!<br /><br />` +
         `You appointment has been scheduled successfully, see you on ${time}<br />`,
+    });
+
+    await createAndInsertEvent({
+      appointmentID,
+      userFname: fname,
+      start: time,
     });
 
     res.status(200).json({ ok: true });
