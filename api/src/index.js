@@ -9,9 +9,9 @@ const cors = require("cors");
 app.use(cors({ origin: /ministryofpup\.com$/ }));
 app.use(require("helmet")()); // middleware which adds http headers
 
-const authMiddleware = require("firebase-auth-express-middleware")({
-  firebaseAdmin: require("firebase-admin"),
-});
+const authMiddleware = require("firebase-auth-express-middleware")(
+  require("firebase-admin")
+);
 
 /**
  * @notice Import and Mount all the routers for the different routes
