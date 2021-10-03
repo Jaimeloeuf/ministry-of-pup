@@ -43,6 +43,32 @@
       </label>
     </div>
 
+    <!-- 
+      Show MSRP without auto fill to force admin to type it out again
+      Then if differs from MSRP, warn user before allowing them to proceed
+      This is to prevent user from just clicking sold without updating the price if it has change after negotiation
+    -->
+    <div class="column is-full">
+      <label>
+        <b>Final sale price</b> (MSRP is ${{ dog.msrp }})
+        <br />
+        <p v-if="salePrice < dog.msrp">*Less than MSRP</p>
+        <p v-if="salePrice > dog.msrp">*More than MSRP</p>
+
+        <input
+          type="number"
+          v-model="salePrice"
+          pattern="[\s0-9]+"
+          placeholder="E.g. 10000 for $10,000"
+          class="input"
+          :class="{
+            'is-danger': salePrice < dog.msrp,
+            'is-warning': salePrice > dog.msrp,
+          }"
+        />
+      </label>
+    </div>
+
     <div class="column">
       <hr class="my-0" style="background-color: #dedede" />
     </div>
@@ -68,7 +94,17 @@ export default {
         { id: 1, text: "Zhang Rui" },
         { id: 2, text: "Cloris" },
       ],
+
+      salePrice: undefined,
     };
+  },
+
+  computed: {
+    dog() {
+      // @todo Load the dog using this.dogID after admin choose from the dropdown
+      // this.dogID
+      return { msrp: 10000 };
+    },
   },
 
   methods: {
