@@ -119,19 +119,8 @@ export default {
 
       defaultTimeSlot,
 
-      timeSlots: [...Array(7).keys()].map((_) => [{ ...defaultTimeSlot }]),
-
       // @todo Load from DB
-      // timeSlots: [
-      //   // 1 array of timeslots per day
-      //   [defaultTimeSlot],
-      //   [defaultTimeSlot],
-      //   [defaultTimeSlot],
-      //   [defaultTimeSlot],
-      //   [defaultTimeSlot],
-      //   [defaultTimeSlot],
-      //   [defaultTimeSlot],
-      // ],
+      timeSlots: [...Array(7).keys()].map((_) => [{ ...defaultTimeSlot }]),
     };
   },
 
