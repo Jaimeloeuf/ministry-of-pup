@@ -114,6 +114,41 @@
       </label>
     </div>
 
+    <div class="column is-full">
+      <label>
+        <b>Cost of dog</b>
+        <br />
+        *How much did you pay for this dog / Inventory cost
+
+        <input
+          type="number"
+          v-model="cost"
+          pattern="[\s0-9]+"
+          min="0"
+          placeholder="E.g. 10000 for $10,000"
+          class="input"
+        />
+      </label>
+    </div>
+
+    <div class="column is-full">
+      <label>
+        <b>MSRP</b>
+        <br />
+        *How much do you plan to sell this dog for?
+
+        <!-- Needs to be more than the cost of dog -->
+        <input
+          type="number"
+          v-model="msrp"
+          pattern="[\s0-9]+"
+          :min="cost"
+          placeholder="E.g. 10000 for $10,000"
+          class="input"
+        />
+      </label>
+    </div>
+
     <div class="column">
       <hr class="my-0" style="background-color: #dedede" />
     </div>
@@ -160,6 +195,8 @@ export default {
       copyWriting: undefined,
       mcNumber: undefined,
       pedigree: false,
+      cost: undefined,
+      msrp: undefined,
 
       // @todo Can be taken from DB if needed
       dogTypeID: 1,
