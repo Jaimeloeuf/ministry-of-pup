@@ -11,23 +11,24 @@ const fs = require("../utils/fs");
 const { asyncWrap } = require("express-error-middlewares");
 const { DateTime } = require("luxon");
 
-// Creates a new user account and returns the user document ID
-// @todo Ensure that the new Date is in SGT offset
-function nextFiveAvailableDates(
-  startingDate = Math.trunc(new Date().getTime() / 1000)
-) {
-  // Generate an array of the next 5 dates, where each element is an obj with start and end timestamp of that date
-  // Then map it into an array of 5 arrays, where the element array is created with freeTimeSlots function
-  const start = DateTime.now().startOf("day");
+// Function that returns the next 5 available dates in an array,
+// where each element is an object with a start and end luxon DateTime object
+function nextFiveAvailableDates(startingDate) {
+  // Create a starting date that defaults to start of the current day in SGT
+  const start = startingDate
+    ? DateTime.fromMillis(startingDate)
+    : DateTime.now().setZone("Asia/Singapore").startOf("day");
 
-  // Generate an array of [0, 1, 2, 3, 4] and map to create 5 object with start and end datetimes
-  return [...Array(5).keys()].map((_, index) => {
-    const currentDate = start.plus({ days: index });
-    return {
-      start: currentDate.startOf("day"),
-      end: currentDate.endOf("day"),
-    };
-  });
+  // Create an empty array of [0, 0, 0, 0, 0] and map to create 5 object with start and end datetimes
+  return Array(5)
+    .fill(0)
+    .map((_, index) => {
+      const currentDate = start.plus({ days: index });
+      return {
+        start: currentDate.startOf("day"),
+        end: currentDate.endOf("day"),
+      };
+    });
 }
 
 // Function that generates all the possible time slots for a given day
