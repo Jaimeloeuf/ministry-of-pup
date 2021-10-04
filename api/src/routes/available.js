@@ -31,31 +31,36 @@ function nextFiveAvailableDates(
 }
 
 // Function that generates all the possible time slots for a given day
-function allTimeSlots(
-  openingSecond,
-  closingSecond,
-  currentDateStart,
-  currentDateEnd
-) {
-  // Inner recursive function that takes in closing time in seconds where 0 is start of day
-  // AND opening time in seconds where 0 is start of day
-  // To return an array of all the time slots in between them
-  function _allTimeSlots(currentIncrement = 0) {
-    const currentSecondOfCurrentDay = openingSecond + currentIncrement;
+function allTimeSlots(openingTimeArray, currentDateStart, currentDateEnd) {
+  const timeslots = [];
 
-    // if (currentSecondOfCurrentDay >= closingSecond) return [];
-    if (currentSecondOfCurrentDay === closingSecond) return [];
-    else {
-      // Call itself with increment of 30 minutes in seconds
-      // 30 * 60 = 1800 seconds in a 30 minute interval
-      const timeSlots = _allTimeSlots(currentIncrement + 1800000);
-      // Unshift is more efficient than calling spread operator to create new array
-      timeSlots.unshift(new Date(currentDateStart + currentSecondOfCurrentDay));
-      return timeSlots;
+  for (const openingTimes of openingTimeArray) {
+    const { start: openingSecond, end: closingSecond } = openingTimes;
+
+    // Inner recursive function that takes in closing time in seconds where 0 is start of day
+    // AND opening time in seconds where 0 is start of day
+    // To return an array of all the time slots in between them
+    function _allTimeSlots(currentIncrement = 0) {
+      const currentSecondOfCurrentDay = openingSecond + currentIncrement;
+
+      // if (currentSecondOfCurrentDay >= closingSecond) return [];
+      if (currentSecondOfCurrentDay === closingSecond) return [];
+      else {
+        // Call itself with increment of 30 minutes in seconds
+        // 30 * 60 = 1800 seconds in a 30 minute interval
+        const timeSlots = _allTimeSlots(currentIncrement + 1800000);
+        // Unshift is more efficient than calling spread operator to create new array
+        timeSlots.unshift(
+          new Date(currentDateStart + currentSecondOfCurrentDay)
+        );
+        return timeSlots;
+      }
     }
+
+    timeslots.push(..._allTimeSlots());
   }
 
-  return _allTimeSlots();
+  return timeslots;
 }
 
 // Query DB for appointments that within the given time constraints
@@ -103,9 +108,8 @@ function availableTimeSlots(allTimeSlots, appointments) {
 // Function that gets the opening time from the DB
 // This only gets and reads a single Doc from DB as all the opening time for the entire week,
 // is stored in a single doc to make it cheaper to access repeatedly as Firestore charge by docs read
+// Day of the weeks are Mon to Sun, mapped to 1 to 7
 async function openingTimeInMilliseconds() {
-  // Day of the weeks are Mon to Sun, mapping to 1 to 7
-
   const doc = await fs.collection("openingHours").doc("openingHours").get();
   return doc.data();
 }
@@ -126,8 +130,7 @@ async function openingTimeInMilliseconds() {
   const fin = dates.map(async (date) =>
     availableTimeSlots(
       allTimeSlots(
-        timestamps[date.start.weekday].start,
-        timestamps[date.start.weekday].end,
+        timestamps[date.start.weekday],
         date.start.toMillis(),
         date.end.toMillis()
       ),
