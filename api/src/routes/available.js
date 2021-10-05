@@ -128,16 +128,21 @@ async function openingTimeInMilliseconds() {
   // 2. endMilis of date
   // 3. store opening milis
   // 4. store closing milis
-  const fin = dates.map(async (date) =>
-    availableTimeSlots(
+
+  const fin = dates.map(async (date) => ({
+    // Return date as milliseconds to allow client to easily instantiate a Date object
+    date: date.start.toMillis(),
+
+    timeslots: availableTimeSlots(
       allTimeSlots(
         timestamps[date.start.weekday],
         date.start.toMillis(),
         date.end.toMillis()
       ),
       await appointments(date.start.toSeconds(), date.end.toSeconds())
-    )
-  );
+    ),
+  }));
+
   console.log("fin", await Promise.all(fin));
 })();
 
