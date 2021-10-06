@@ -12,8 +12,9 @@ const now = new Date();
 
 app({
   init: {
-    // route: "/",
-    route: location.pathname,
+    // Route is just used to show the different views
+    // It does not actually reflect the URL path of the app
+    route: "/",
 
     dog: { name: "French bull dog 1" },
 

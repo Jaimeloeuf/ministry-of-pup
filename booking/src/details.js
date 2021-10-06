@@ -9,23 +9,12 @@ const NewValue = (detailPropertyString) => (state, event) => ({
   },
 });
 
-// @todo Might not be the right way to do this
 function back(state) {
-  // Still push state to show on URL but no actual effect
-  history.pushState(undefined, undefined, "/");
-
   return { ...state, route: "/" };
 }
 
-// @todo Call API too
-// function book(state) {
-//   history.pushState(undefined, undefined, "/complete");
-//   return state;
-// }
 function book(state) {
-  // Still push state to show on URL but no actual effect
-  history.pushState(undefined, undefined, "/complete");
-
+  // @todo Call API too
   return { ...state, route: "/complete" };
 }
 

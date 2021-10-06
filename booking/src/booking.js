@@ -1,9 +1,6 @@
 import { text, h1, h3, p, hr, div, button } from "@hyperapp/html";
 
 function selectDate(state, date) {
-  // Still push state to show on URL but no actual effect
-  history.pushState(undefined, undefined, "/details");
-
   return {
     ...state,
 

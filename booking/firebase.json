@@ -3,11 +3,6 @@
     "target": "ministryofpup-booking",
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-
-    // Redirect these as the user should start using the app from / by default
-    "redirects": [
-      { "source": "/details", "destination": "/", "type": 301 },
-      { "source": "/complete", "destination": "/", "type": 301 }
-    ]
+    "rewrites": [{ "source": "**", "destination": "/index.html" }]
   }
 }
