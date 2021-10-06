@@ -13,6 +13,7 @@ const { DateTime } = require("luxon");
 
 // Function that returns the next 5 available dates in an array,
 // where each element is an object with a start and end luxon DateTime object
+// Accepts a startingDate that defaults to today
 function nextFiveAvailableDates(startingDate) {
   // Create a starting date that defaults to start of the current day in SGT
   const start = startingDate
@@ -125,7 +126,10 @@ router.get(
   "/date",
   asyncWrap(async (req, res) => {
     // Generate an array of the next 5 dates, where each element is an obj with start and end timestamp of that date
-    const dates = await nextFiveAvailableDates(1633881600000);
+    // If the "after" query param is used, parse it from String to Int first before passing it to function
+    const dates = await nextFiveAvailableDates(
+      req.query.after && parseInt(req.query.after)
+    );
 
     // Get the opening and closing milis from DB
     const openingTime = await openingTimeInMilliseconds();
