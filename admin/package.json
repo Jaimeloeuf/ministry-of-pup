@@ -13,6 +13,7 @@
     "bulma": "^0.9.3",
     "chart.js": "^3.5.1",
     "core-js": "^3.6.5",
+    "dog-names": "^2.0.0",
     "firebase": "^9.0.1",
     "vue": "^2.6.12",
     "vue-router": "^3.5.1",

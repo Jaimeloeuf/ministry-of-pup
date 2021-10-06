@@ -67,13 +67,20 @@
       <label>
         <b>Name</b>
 
-        <input
-          type="text"
-          v-model="name"
-          placeholder="E.g. Mochi"
-          required
-          class="input"
-        />
+        <div class="field has-addons">
+          <div class="control is-expanded">
+            <input
+              type="text"
+              v-model="name"
+              placeholder="E.g. Mochi"
+              required
+              class="input"
+            />
+          </div>
+          <div class="control">
+            <button class="button" @click="generateDogName">Generate</button>
+          </div>
+        </div>
       </label>
     </div>
 
@@ -218,6 +225,13 @@ export default {
       // ID is int, but if set as value of option element, it will be auto converted into String, thus parseInt back to int before saving it
       // If not converted before saving, tripTypeID would become a string and UI will show as edited because "1" !== 1
       this.dogSexID = parseInt(event.target.value);
+    },
+
+    async generateDogName() {
+      // Only asynchronously load the package if user wants to generate a random name
+      const dogNames = await import("dog-names");
+      this.name =
+        this.dogSexID === 1 ? dogNames.maleRandom() : dogNames.femaleRandom();
     },
 
     async addNewDog() {
