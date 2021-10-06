@@ -21,7 +21,14 @@ const routes = [
     meta: { Auth_requirements: AuthType.private },
   },
   {
-    // This route has to be defined after AllAppointments to prevent "all" in /appointment/all to be used as the ID
+    path: "/appointment/current",
+    name: "current-appointment",
+    component: () => import("@/views/CurrentAppointment.vue"),
+    meta: { Auth_requirements: AuthType.private },
+  },
+  {
+    // This route has to be defined after All and Current appointments,
+    // to prevent e.g. "all" in /appointment/all to be used as the ID
     path: "/appointment/:appointmentID",
     props: true,
     name: "appointment",

@@ -21,6 +21,14 @@
 
       <p class="menu-label">Appointments</p>
       <ul class="menu-list">
+        <li>
+          <router-link
+            :to="{ name: 'current-appointment' }"
+            :class="{ 'is-active': $route.name === 'current-appointment' }"
+          >
+            Current
+          </router-link>
+        </li>
         <!-- See the very next upcoming appointment -->
         <!-- @todo This should get the next appointment ID, then route to appointment vue with the ID. Alert if nothing -->
         <!-- @todo Instead of using a :to binding, use a @click to call a function to compute the ID before calling route -->
