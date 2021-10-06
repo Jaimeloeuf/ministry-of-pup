@@ -115,37 +115,6 @@ async function openingTimeInMilliseconds() {
   return doc.data();
 }
 
-// IIFE to test logic first
-(async function () {
-  const dates = nextFiveAvailableDates();
-
-  // Get the opening and closing milis from DB
-  const timestamps = await openingTimeInMilliseconds();
-
-  // To generate possible time slots of a given date
-  // You need to have the
-  // 1. startMilis of date
-  // 2. endMilis of date
-  // 3. store opening milis
-  // 4. store closing milis
-
-  const fin = dates.map(async (date) => ({
-    // Return date as milliseconds to allow client to easily instantiate a Date object
-    date: date.start.toMillis(),
-
-    timeslots: availableTimeSlots(
-      allTimeSlots(
-        timestamps[date.start.weekday],
-        date.start.toMillis(),
-        date.end.toMillis()
-      ),
-      await appointments(date.start.toSeconds(), date.end.toSeconds())
-    ),
-  }));
-
-  console.log("fin", await Promise.all(fin));
-})();
-
 /**
  * Get up to the first 5 available dates through the booking app
  * An available date is defined as a date from the earliest available booking date that includes at least 1 free time slot
@@ -155,8 +124,33 @@ async function openingTimeInMilliseconds() {
 router.get(
   "/date",
   asyncWrap(async (req, res) => {
+    // Generate an array of the next 5 dates, where each element is an obj with start and end timestamp of that date
+    const dates = await nextFiveAvailableDates(1633881600000);
 
-    res.status(200).json({ ok: true });
+    // Get the opening and closing milis from DB
+    const openingTime = await openingTimeInMilliseconds();
+
+    // Map the dates into an array of objects, where each object contains the start timestamp of that date,
+    // And a timeslots array of available time slots
+    const timeslots = dates.map(async (date) => ({
+      // Return date as milliseconds to allow client to easily instantiate a Date object
+      date: date.start.toMillis(),
+
+      timeslots: availableTimeSlots(
+        allTimeSlots(
+          openingTime[date.start.weekday],
+          date.start.toMillis(),
+          date.end.toMillis()
+        ),
+
+        // Date time is stored as milliseconds, thus when converted to seconds,
+        // it will be something like 1634140799.999 with a trailing 9 till the last milliseconds
+        // However dont need to truncate it as firestore can compare this floating num to Int unix seconds just fine.
+        await appointments(date.start.toSeconds(), date.end.toSeconds())
+      ),
+    }));
+
+    res.status(200).json({ ok: true, timeslots: await Promise.all(timeslots) });
   })
 );
 
