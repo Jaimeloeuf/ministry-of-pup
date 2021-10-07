@@ -62,8 +62,27 @@ router.post(
       (await getUserAccountIdIfExists(number)) ||
       (await createUserAccount({ fname, lname, number, email }));
 
+    // @todo Handle on failure and still store appointment into DB + notify developer
+    // Get the event ID back and store it to programmatically delete or modify it later on if needed
+    // Add appointment event to google cal first to get back the event ID to store in appointment doc
+    // However by doing this first, means that the appointment ID cannot be added into the description
+    // https://developers.google.com/calendar/api/v3/reference/events#id
+    const googleCalendarEventID = await createAndInsertEvent({
+      start: time,
+
+      summary: `Appointment with ${fname}`,
+      description: "Checkout this appointment in the admin portal",
+      // description: `AppointmentID: ${appointmentID}\nPortal's link`,
+    });
+
     const { id: appointmentID } = await fs.collection("appointments").add({
       user: userID,
+
+      // Although the `googleCalendarEventID` can be used as the doc ID for appointments, it is safer because,
+      // 1. If google calendar API call failed, the appointment data should still be stored
+      // 2. If there is ever a time to store appointment directly into the DB its easier to let firestore auto generate
+      // 3. It is better to keep these 2 seperate and not have our appointments DB rely on google cal for doc ID
+      googleCalendarEventID,
 
       dogID,
       time,
