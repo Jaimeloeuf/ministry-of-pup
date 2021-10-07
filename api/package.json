@@ -26,6 +26,7 @@
     "luxon": "^2.0.2",
     "mop-invoice": "github:Enkel-Digital/mop-invoice",
     "pdfkit": "^0.12.3",
+    "tiny-json-http": "^7.3.0",
     "unixseconds": "^0.1.0"
   }
 }
