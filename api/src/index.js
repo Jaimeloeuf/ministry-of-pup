@@ -4,10 +4,12 @@ require("dotenv").config();
 // setup app
 const express = require("express");
 const app = express();
-const cors = require("cors");
 
-app.use(cors({ origin: /ministryofpup\.com$/ }));
-app.use(require("helmet")()); // middleware which adds http headers
+// Allow ministryofpup domains for production use and localhost for development
+app.use(require("cors")({ origin: [/ministryofpup\.com$/, /localhost/] }));
+
+// middleware to add http headers
+app.use(require("helmet")());
 
 const authMiddleware = require("firebase-auth-express-middleware")(
   require("firebase-admin")
