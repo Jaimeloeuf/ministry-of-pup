@@ -47,6 +47,7 @@ GET {{host}}/appointment/available/date?after=1633881600000
 
 ### Book a new appointment through the booking app
 ### This action will also create a new account for the user in the "user doubling DB"
+# @name bookAppointment
 POST {{host}}/appointment/book
 content-type: application/json
 
@@ -58,6 +59,11 @@ content-type: application/json
     "number": "+6599999999",
     "email": "JJ@enkeldigital.com"
 }
+
+### Cancel an appointment with a link sent to user either via confirmation or reminder emails/SMS
+# POST {{host}}/appointment/cancel/:appointmentID
+DELETE {{host}}/appointment/cancel/{{bookAppointment.response.body.appointmentID}}
+content-type: application/json
 
 ### Get user details
 # GET /app/user/:userID

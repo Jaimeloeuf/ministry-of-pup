@@ -73,6 +73,10 @@ async function appointments(
   currentDateStartInSeconds,
   currentDateEndInSeconds
 ) {
+  // https://cloud.google.com/firestore/docs/query-data/queries#limitations
+  // Because of the limitations of the != operator, we cannot filter out
+  // cancelled appointments directly using the query, thus need to filter out after getting back the document
+  // It isn't too bad since there will probably not be so many cancelled appointments within the timeframe
   const snapshot = await fs
     .collection("appointments")
     .where("time", ">=", currentDateStartInSeconds)
@@ -81,7 +85,14 @@ async function appointments(
 
   // If snapshot is empty, return an empty array to specify that no slots are taken for the given day
   if (snapshot.empty) return [];
-  else return snapshot.docs.map((doc) => doc.data().time);
+
+  // Map the array of doc references to an array of doc data
+  // Filter out cancelled events
+  // Map the arary of doc data to an array of just the time of the appointments
+  return snapshot.docs
+    .map((doc) => doc.data())
+    .filter((doc) => doc.cancelled !== true)
+    .map((doc) => doc.time);
 }
 
 // Function takes an array of available time slots and an array of appointments for the same exact day
