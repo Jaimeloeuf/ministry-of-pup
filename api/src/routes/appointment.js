@@ -9,9 +9,12 @@ const express = require("express");
 const router = express.Router();
 const sendMail = require("../utils/sendMail");
 const fs = require("../utils/fs");
-const { createAndInsertEvent } = require("../utils/GoogleCalendar");
 const unixseconds = require("unixseconds");
 const { asyncWrap } = require("express-error-middlewares");
+const {
+  createAndInsertEvent,
+  deleteEvent,
+} = require("../utils/GoogleCalendar");
 
 // Checks if user already have an account, if true, return account ID,
 // Else create a new account and return the ID
@@ -105,11 +108,32 @@ router.post(
         `You appointment has been scheduled successfully, see you on ${time}<br />`,
     });
 
-    await createAndInsertEvent({
-      appointmentID,
-      userFname: fname,
-      start: time,
-    });
+    // @todo appointmentID might not actually be needed.
+    // Returned right now to use .http to test the cancel appointment API
+    res.status(200).json({ ok: true, appointmentID });
+  })
+);
+
+/**
+ * Cancel an existing appointment and delete the event in google calendar
+ * @name DELETE /appointment/cancel/:appointmentID
+ * @returns Sucess indicator
+ */
+router.delete(
+  "/cancel/:appointmentID",
+  asyncWrap(async (req, res) => {
+    const { appointmentID } = req.params;
+
+    const docRef = fs.collection("appointments").doc(appointmentID);
+
+    // Keeping user data for future use and analytics, just adding a cancelled field
+    await docRef.update({ cancelled: true });
+
+    // Get the `googleCalendarEventID` from doc to delete the event from google calendar
+    const doc = await docRef.get();
+    if (!doc.exists) throw new Error("Appointment does not exist in DB");
+
+    await deleteEvent(doc.data().googleCalendarEventID);
 
     res.status(200).json({ ok: true });
   })

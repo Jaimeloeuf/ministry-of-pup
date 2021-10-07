@@ -4,8 +4,11 @@ function getConfig() {
   // @todo Might not need this anymore
   require("dotenv").config();
 
-  // Get credentials from service account file
   // @todo Fix this before deployment, see if can use ADC somehow?
+  // Alternatively, just store client_email and private_key value from service account in env instead of the whole service acc key
+  // See the logic in ekd/fs-admin to see how to get the ADC out
+
+  // Get credentials from service account file
   const CREDENTIALS = require("../../serviceAccountKey.json");
 
   return {
@@ -40,7 +43,7 @@ async function insertEvent(event) {
     // https://developers.google.com/calendar/api/v3/reference/events#id
     return res.data.id;
   } catch (error) {
-    console.log(`Error at insertEvent --> ${error}`);
+    console.error(`Error at insertEvent --> ${error}`);
 
     // Rethrow error to let API server handle it
     throw error;
@@ -77,4 +80,46 @@ function createEvent({ summary, description, start, end }) {
 const createAndInsertEvent = async ({ summary, description, start, end }) =>
   insertEvent(createEvent({ summary, description, start, end }));
 
-module.exports = { createAndInsertEvent, createEvent, insertEvent };
+// Delete the event with id of `eventID`
+// Returns true if succeeded and throws error if failed
+async function deleteEvent(eventId) {
+  try {
+    const res = await google.calendar({ version: "v3" }).events.delete({
+      ...getConfig(),
+
+      eventId: eventId,
+    });
+
+    if (res.data === "") return true;
+
+    throw new Error(`Google calendar event is not deleted: ${res.data}`);
+  } catch (error) {
+    console.error(`Error at deleteEvent --> ${error}`);
+
+    // Rethrow error to let API server handle it
+    throw error;
+  }
+}
+
+module.exports = {
+  createAndInsertEvent,
+  createEvent,
+  insertEvent,
+  deleteEvent,
+};
+
+// @todo UNUSED, just left here in case next time can use
+// Get all the events between two dates
+// async function getEvents(
+//   dateTimeStart = "2021-11-03T00:00:00.000Z",
+//   dateTimeEnd = "2021-11-04T00:00:00.000Z"
+// ) {
+//   const res = await google.calendar({ version: "v3" }).events.list({
+//     ...getConfig(),
+
+//     timeMin: dateTimeStart,
+//     timeMax: dateTimeEnd,
+//   });
+
+//   return res["data"]["items"];
+// }
