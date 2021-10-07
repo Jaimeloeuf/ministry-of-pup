@@ -23,6 +23,7 @@
     "firebase-auth-express-middleware": "^0.2.1",
     "googleapis": "^87.0.0",
     "helmet": "^4.6.0",
+    "luxon": "^2.0.2",
     "mop-invoice": "github:Enkel-Digital/mop-invoice",
     "pdfkit": "^0.12.3",
     "unixseconds": "^0.1.0"

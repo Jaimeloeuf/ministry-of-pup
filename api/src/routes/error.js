@@ -10,7 +10,6 @@ const router = express.Router();
 const { asyncWrap } = require("express-error-middlewares");
 
 const fs = require("../utils/fs");
-const sendMail = require("../utils/sendMail");
 
 /**
  * Register new error from client
@@ -30,23 +29,16 @@ router.post(
       .collection("errors")
       .add({ error, description, time });
 
-    // Send email to notify developers of error
-    // Get the list of developers' email from DB
-    const docs = await fs.collection("developers").get();
-    for (const doc of docs.docs) {
-      // Send out the emails 1 by 1 to all the developers' email accounts
-      await sendMail.send({
-        to: doc.data().email,
-        from: "harryyhoonn@gmail.com",
-        subject: `TPTS Error '${errorDoc.id}' reported!`,
-        html:
-          "Hello developer, a new error has been reported through the app!<br /><br />" +
-          `Date and Time: ${time}<br />` +
-          `Error ID: ${errorDoc.id}<br />` +
-          `Error: ${error}<br />` +
-          `Description: ${description}<br />`,
-      });
-    }
+    // Construct the error message
+    const message =
+      `Hello developer, new error '${time}' has been reported to the API!\n\n` +
+      `Error ID: ${errorDoc.id}\n` +
+      `Error: ${error}\n` +
+      `Description: ${description}\n`;
+
+    // @todo Send telegram message via telegram bot to notify developers of error
+    // Get the telegram chat ID from env
+    process.env.developer_telegram_chat_id;
 
     res.status(201).json({ ok: true });
   })

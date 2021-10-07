@@ -62,7 +62,7 @@ router.post(
       (await getUserAccountIdIfExists(number)) ||
       (await createUserAccount({ fname, lname, number, email }));
 
-    const { id: appointmentID } = await fs.collection("appointment").add({
+    const { id: appointmentID } = await fs.collection("appointments").add({
       user: userID,
 
       dogID,

@@ -18,9 +18,9 @@ const authMiddleware = require("firebase-auth-express-middleware")(
  */
 app.use("/", require("./routes/default.js"));
 app.use("/appointment", require("./routes/appointment.js"));
+app.use("/appointment/available", require("./routes/available.js"));
 app.use("/admin/pet/new", authMiddleware, require("./routes/newDog.js"));
 app.use("/admin/pet/sold", authMiddleware, require("./routes/sold.js"));
-// app.use("/search", authMiddleware, require("./routes/search.js"));
 // app.use("/help", authMiddleware, require("./routes/help.js"));
 // app.use("/rbac", authMiddleware, require("./routes/RBAC.js"));
 // app.use("/error", require("./routes/error"));
