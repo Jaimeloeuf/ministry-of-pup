@@ -17,41 +17,36 @@ import completeView from "./complete.js";
 import notFoundView from "./notFound.js";
 import loaderView from "./loader.js";
 
-const now = new Date();
+import { loadDates } from "./loadDates.js";
 
 app({
-  init: {
-    // Route is just used to show the different views
-    // It does not actually reflect the URL path of the app
-    route: "/",
+  init: [
+    {
+      // Route is just used to show the different views
+      // It does not actually reflect the URL path of the app
+      route: "/",
 
-    loader: false,
+      loader: false,
 
-    dog: { name: "French bull dog 1" },
+      dog: { name: "French bull dog 1" },
 
-    datesAvailable: [
-      {
-        date: new Date(now),
+      datesAvailable: [],
+      selectedDate: undefined,
+
+      details: {
+        fname: undefined,
+        lname: undefined,
+        number: undefined,
+        email: undefined,
       },
-      {
-        date: new Date(now.setDate(now.getDate() + 1)),
-      },
-      {
-        date: new Date(now.setDate(now.getDate() + 2)),
-      },
-    ],
-    selectedDate: undefined,
 
-    details: {
-      fname: undefined,
-      lname: undefined,
-      number: undefined,
-      email: undefined,
+      // Set after appointment is booked, where this is returned from booking API
+      appointmentID: undefined,
     },
 
-    // Set after appointment is booked, where this is returned from booking API
-    appointmentID: undefined,
-  },
+    // Run `loadDates` effect on init
+    [loadDates],
+  ],
 
   view: ({
     route,

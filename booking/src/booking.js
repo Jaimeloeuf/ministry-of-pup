@@ -1,4 +1,5 @@
 import { text, h1, h3, p, hr, div, button } from "@hyperapp/html";
+import { loadDates } from "./loadDates.js";
 
 function selectDate(state, date) {
   return {
@@ -9,10 +10,17 @@ function selectDate(state, date) {
   };
 }
 
-// @todo Call API too
-function getMoreDates(state) {
-  return { ...state };
-}
+const getMoreDates = (state) => [
+  state,
+  [
+    loadDates,
+
+    // Get the last date in available dates to get more timeslots after that date
+    state.datesAvailable[state.datesAvailable.length - 1]?.date,
+    // SADLY SAFARI does not support .at() ... smh
+    // state.datesAvailable.at(-1)?.date,
+  ],
+];
 
 const selectDateView = (datesAvailable) =>
   div(
@@ -31,29 +39,36 @@ const selectDateView = (datesAvailable) =>
                   style: { cssText: "cursor: pointer" },
                   onclick: [selectDate, date],
                 },
-                [
-                  div({ class: "level-right" }, [
-                    div({ class: "level-item" }, [
-                      text(
-                        `${date.date.toLocaleString("default", {
-                          weekday: "long",
-                        })}`
-                      ),
-                    ]),
-                  ]),
+                (() => {
+                  // Only create date object for the view fn
+                  // As the unix timestamp in milliseconds is still preferred for storing in state
+                  // As calling load dates API also requires the millisecond value.
+                  const dateObj = new Date(date.date);
 
-                  div(
-                    { class: "level-left" },
-                    div({ class: "level-item" }, [
-                      text(
-                        `${date.date.getDate()} ${date.date.toLocaleString(
-                          "default",
-                          { month: "long" }
-                        )}`
-                      ),
-                    ])
-                  ),
-                ]
+                  return [
+                    div({ class: "level-right" }, [
+                      div({ class: "level-item" }, [
+                        text(
+                          `${dateObj.toLocaleString("default", {
+                            weekday: "long",
+                          })}`
+                        ),
+                      ]),
+                    ]),
+
+                    div(
+                      { class: "level-left" },
+                      div({ class: "level-item" }, [
+                        text(
+                          `${dateObj.getDate()} ${dateObj.toLocaleString(
+                            "default",
+                            { month: "long" }
+                          )}`
+                        ),
+                      ])
+                    ),
+                  ];
+                })()
               ),
 
               hr({ style: { "background-color": "#dedede" } }),
