@@ -18,13 +18,14 @@ function back(state) {
 const booked = (state, appointmentID) => ({
   ...state,
   appointmentID,
+  loader: false,
   route: "/complete",
 });
 
 // Dun modify state, let the next action run after data is recieved to do action
 const book = (state) => [
-  /* show loading using a state value, only remove loading after complete API call */
-  { ...state },
+  // Show loader while waiting for API call to complete
+  { ...state, loader: true },
   [
     (dispatch) =>
       grecaptcha.ready(function () {

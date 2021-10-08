@@ -15,6 +15,7 @@ import bookingView from "./booking.js";
 import detailsView from "./details.js";
 import completeView from "./complete.js";
 import notFoundView from "./notFound.js";
+import loaderView from "./loader.js";
 
 const now = new Date();
 
@@ -23,6 +24,8 @@ app({
     // Route is just used to show the different views
     // It does not actually reflect the URL path of the app
     route: "/",
+
+    loader: false,
 
     dog: { name: "French bull dog 1" },
 
@@ -52,6 +55,7 @@ app({
 
   view: ({
     route,
+    loader,
     dog,
     datesAvailable,
     selectedDate,
@@ -71,25 +75,27 @@ app({
         },
       },
       [
-        (function () {
-          switch (route) {
-            case "/":
-              return bookingView({ dog, datesAvailable });
-            case "/details":
-              return detailsView;
-            case "/complete":
-              return completeView({
-                dog,
-                selectedDate,
-                details,
-                appointmentID,
-              });
+        loader
+          ? loaderView
+          : (function () {
+              switch (route) {
+                case "/":
+                  return bookingView({ dog, datesAvailable });
+                case "/details":
+                  return detailsView;
+                case "/complete":
+                  return completeView({
+                    dog,
+                    selectedDate,
+                    details,
+                    appointmentID,
+                  });
 
-            default:
-              // @todo Load it asynchronously   return import("./notFound.js");
-              return notFoundView;
-          }
-        })(),
+                default:
+                  // @todo Load it asynchronously   return import("./notFound.js");
+                  return notFoundView;
+              }
+            })(),
       ]
     ),
 
