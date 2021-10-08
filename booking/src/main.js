@@ -3,6 +3,14 @@
 import { app } from "hyperapp";
 import { main } from "@hyperapp/html";
 
+// Import first before this is used elsewhere to set the baseUrl
+import { oof } from "simpler-fetch";
+oof.baseUrl(
+  process.env.NODE_ENV === "production"
+    ? "https://api.ministryofpup.com"
+    : "http://localhost:3000"
+);
+
 import bookingView from "./booking.js";
 import detailsView from "./details.js";
 import completeView from "./complete.js";
@@ -37,9 +45,19 @@ app({
       number: undefined,
       email: undefined,
     },
+
+    // Set after appointment is booked, where this is returned from booking API
+    appointmentID: undefined,
   },
 
-  view: ({ route, dog, datesAvailable, selectedDate, details }) =>
+  view: ({
+    route,
+    dog,
+    datesAvailable,
+    selectedDate,
+    details,
+    appointmentID,
+  }) =>
     main(
       {
         style: {
@@ -60,7 +78,12 @@ app({
             case "/details":
               return detailsView;
             case "/complete":
-              return completeView({ dog, selectedDate, details });
+              return completeView({
+                dog,
+                selectedDate,
+                details,
+                appointmentID,
+              });
 
             default:
               // @todo Load it asynchronously   return import("./notFound.js");
