@@ -14,6 +14,7 @@ oof.baseUrl(
 import bookingView from "./booking.js";
 import detailsView from "./details.js";
 import completeView from "./complete.js";
+import cancelView from "./cancel.js";
 import notFoundView from "./notFound.js";
 import loaderView from "./loader.js";
 
@@ -25,6 +26,14 @@ app({
       // Route is just used to show the different views
       // It does not actually reflect the URL path of the app
       route: "/",
+
+      cancellingAppointment: (function () {
+        // Match for the pattern `/#/cancel/$appointmentID`
+        const match = location.hash.match(/#\/cancel\/(\w+)/);
+
+        // Get the second element which is the appointmentID if there is a match
+        return match !== null && match[1];
+      })(),
 
       loader: false,
 
@@ -50,6 +59,7 @@ app({
 
   view: ({
     route,
+    cancellingAppointment,
     loader,
     dog,
     datesAvailable,
@@ -73,6 +83,9 @@ app({
         loader
           ? loaderView
           : (function () {
+              if (cancellingAppointment)
+                return cancelView({ appointmentID: cancellingAppointment });
+
               switch (route) {
                 case "/":
                   return bookingView({ dog, datesAvailable });
