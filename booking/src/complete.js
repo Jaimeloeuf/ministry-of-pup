@@ -1,33 +1,50 @@
-import { text, a, img, h1, b, br, div, button, label, p } from "@hyperapp/html";
+import { text, a, img, h1, b, br, div, label, p } from "@hyperapp/html";
 
 import { google, outlook, office365, yahoo, ics } from "calendar-link";
 
+// @todo Add reschedule appointment link
 // @todo Add a link where they can click to request for us to contact them
-// @todo Remove all the gaurd rails
-const calendarDescription = (name, dogName = "French bulldog") => `Hey${
-  name ? " " + name : ""
-}!
+const calendarDescription = (name, appointmentID) =>
+  `Hey ${name}!
 
-Our puppies ${dogName && `and ${dogName}`} can't wait to see you!
+Our puppies can't wait to see you!
 
-Location: https://www.google.com/maps/place/Ministry+Of+Pup/@1.276847,103.836264,15z/data=!4m2!3m1!1s0x0:0x8e0ceb011e0b9fbe?sa=X&ved=2ahUKEwit9f_25JzzAhVPdCsKHYpSDHsQ_BJ6BAhHEAU
-Carpark slots: Available!
-Nearest MRT: Outram park
+Location
+https://goo.gl/maps/Jw9MpEPx9cuuGVGDA
 
-Call us at 88022177 daily between 10am - 8pm for help`;
+Carpark slots are available! Here is a map of the carpark slot and how to get to us from there.
+https://goo.gl/maps/UAcHeKbps4EyH4by7
+
+Nearest MRT is Outram Park (EW16 / NE3)
+
+Public transport from Outram Park
+https://goo.gl/maps/zB2oUzyMxFnAoBABA
+
+Walking over from Outram Park
+https://goo.gl/maps/WQe1cVQo5d8Ztgz76
+
+-----
+
+In the event where your schedule got blocked up and you need to cancel your appointment. Click on the link below!
+https://booking.ministryofpup.com/#/cancel/${appointmentID}
+
+-----
+
+Whatsapp us through https://wa.me/6588022177
+
+Email us at ministryofpup@gmail.com
+
+Or call us at 88022177 daily between 10am - 8pm for help`;
 
 // Generate event object for the calendar links using data from state
 const getCalendarEventObj = (state) => ({
-  // Based on time, set it to, Morning/Afternoon/Night with $DOG_NAME
-  // Also, only add the dog name if viewing a specific dog
-  title: `On site viewing with ${state.dog.name}`,
+  title: "Play session at Ministry Of Pup!",
 
-  // start: state.selectedDate.date,
-  start: state.selectedDate?.date || new Date(),
+  start: state.selectedDate.date,
   duration: [30, "minutes"],
   busy: true,
 
-  description: calendarDescription(state.details?.fname),
+  description: calendarDescription(state.details.fname, state.appointmentID),
   location: "43 Kampong Bahru Rd, Singapore 169359",
 });
 
@@ -94,7 +111,7 @@ const calendarLinks = (event) => [
   ),
 ];
 
-const view = ({ dog, selectedDate, details }) =>
+const view = ({ dog, selectedDate, details, appointmentID }) =>
   div({ class: "px-5 pt-5", style: { "max-width": "30em" } }, [
     div({ class: "columns is-multiline is-mobile" }, [
       div(
@@ -149,7 +166,9 @@ const view = ({ dog, selectedDate, details }) =>
         h1({ class: "subtitle is-3" }, text("Add to Calendar"))
       ),
 
-      ...calendarLinks(getCalendarEventObj({ dog, selectedDate })),
+      ...calendarLinks(
+        getCalendarEventObj({ selectedDate, details, appointmentID })
+      ),
 
       // @todo Add a section with our contact details like the email so they can find us if anything
       // The generated google cal invite should have a details, with a link to cancel or change appt time if needed
