@@ -35,11 +35,17 @@ const book = (state) => [
             const response = await oof
               .POST("/appointment/book")
               .data({
-                // Might figure out how to pass dogID or preference into the system later on
-                // dogID: 1,
+                // @todo Might figure out how to pass dogID or preference into the system later on
+                // Tmp fake value used here to prevent firestore document insert from failing
+                dogID: 1,
 
                 token,
-                time: state.selectedTimeSlot,
+
+                // @todo Fix API to return unix seconds instead of string version of Date object
+                // Because now forced to do this transform before sending the value back
+                // And the value sent back should be in milliseconds too since the value sent here is in milliseconds
+                time: new Date(state.selectedTimeslot).getTime() / 1000,
+                // time: state.selectedTimeslot,
 
                 // Add in these fields to submit
                 // fname / lname / number / email

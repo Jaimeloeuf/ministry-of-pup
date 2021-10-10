@@ -6,7 +6,7 @@ const back = (state) => ({ ...state, route: "/" });
 const selectTimeslot = (state, timeslot) => ({
   ...state,
 
-  selectedTimeSlot: timeslot,
+  selectedTimeslot: timeslot,
   route: "/details",
 });
 
