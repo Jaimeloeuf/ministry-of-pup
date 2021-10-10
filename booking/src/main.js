@@ -12,6 +12,7 @@ oof.baseUrl(
 );
 
 import bookingView from "./booking.js";
+import selectTimeslotView from "./timeslot.js";
 import detailsView from "./details.js";
 import completeView from "./complete.js";
 import notFoundView from "./notFound.js";
@@ -57,6 +58,7 @@ else
 
         datesAvailable: [],
         selectedDate: undefined,
+        selectedTimeSlot: undefined,
 
         details: {
           fname: undefined,
@@ -79,6 +81,7 @@ else
       dog,
       datesAvailable,
       selectedDate,
+      selectedTimeslot,
       details,
       appointmentID,
     }) =>
@@ -101,12 +104,14 @@ else
                 switch (route) {
                   case "/":
                     return bookingView({ dog, datesAvailable });
+                  case "/select-timeslot":
+                    return selectTimeslotView(selectedDate);
                   case "/details":
                     return detailsView;
                   case "/complete":
                     return completeView({
                       dog,
-                      selectedDate,
+                      selectedTimeslot,
                       details,
                       appointmentID,
                     });

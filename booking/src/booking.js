@@ -1,14 +1,12 @@
 import { text, h1, h3, p, hr, div, button } from "@hyperapp/html";
 import { loadDates } from "./loadDates.js";
 
-function selectDate(state, date) {
-  return {
-    ...state,
+const selectDate = (state, date) => ({
+  ...state,
 
-    selectedDate: date,
-    route: "/details",
-  };
-}
+  selectedDate: date,
+  route: "/select-timeslot",
+});
 
 const getMoreDates = (state) => [
   state,
@@ -46,26 +44,27 @@ const selectDateView = (datesAvailable) =>
                   const dateObj = new Date(date.date);
 
                   return [
-                    div({ class: "level-right" }, [
-                      div({ class: "level-item" }, [
+                    div(
+                      div(
+                        { class: "level-item" },
                         text(
                           `${dateObj.toLocaleString("default", {
                             weekday: "long",
                           })}`
-                        ),
-                      ]),
-                    ]),
+                        )
+                      )
+                    ),
 
                     div(
-                      { class: "level-left" },
-                      div({ class: "level-item" }, [
+                      div(
+                        { class: "level-item" },
                         text(
                           `${dateObj.getDate()} ${dateObj.toLocaleString(
                             "default",
                             { month: "long" }
                           )}`
-                        ),
-                      ])
+                        )
+                      )
                     ),
                   ];
                 })()

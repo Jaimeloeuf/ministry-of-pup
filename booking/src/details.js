@@ -10,9 +10,7 @@ const NewValue = (detailPropertyString) => (state, event) => ({
   },
 });
 
-function back(state) {
-  return { ...state, route: "/" };
-}
+const back = (state) => ({ ...state, route: "/" });
 
 // Action to run once appointment has been booked and API returned
 const booked = (state, appointmentID) => ({

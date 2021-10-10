@@ -40,7 +40,7 @@ Or call us at 88022177 daily between 10am - 8pm for help`;
 const getCalendarEventObj = (state) => ({
   title: "Play session at Ministry Of Pup!",
 
-  start: state.selectedDate.date,
+  start: state.selectedTimeslot,
   duration: [30, "minutes"],
   busy: true,
 
@@ -111,7 +111,7 @@ const calendarLinks = (event) => [
   ),
 ];
 
-const view = ({ dog, selectedDate, details, appointmentID }) =>
+const view = ({ dog, selectedTimeslot, details, appointmentID }) =>
   div({ class: "px-5 pt-5", style: { "max-width": "30em" } }, [
     div({ class: "columns is-multiline is-mobile" }, [
       div(
@@ -130,7 +130,7 @@ const view = ({ dog, selectedDate, details, appointmentID }) =>
           br(),
           b(text("On: ")),
           // @todo Make the date nicer/shorter and easier to read
-          text(selectedDate?.date),
+          text(new Date(selectedTimeslot)),
         ])
       ),
 
@@ -167,7 +167,7 @@ const view = ({ dog, selectedDate, details, appointmentID }) =>
       ),
 
       ...calendarLinks(
-        getCalendarEventObj({ selectedDate, details, appointmentID })
+        getCalendarEventObj({ selectedTimeslot, details, appointmentID })
       ),
 
       // @todo Add a section with our contact details like the email so they can find us if anything
