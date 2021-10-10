@@ -37,10 +37,10 @@ const book = (state) => [
             const response = await oof
               .POST("/appointment/book")
               .data({
+                // Might figure out how to pass dogID or preference into the system later on
+                // dogID: 1,
+
                 token,
-
-                dogID: 1,
-
                 time: state.selectedTimeSlot,
 
                 // Add in these fields to submit
