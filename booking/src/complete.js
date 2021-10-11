@@ -1,4 +1,4 @@
-import { text, a, img, h1, b, br, div, label, p } from "@hyperapp/html";
+import { text, a, img, b, br, div, label, p } from "@hyperapp/html";
 
 import { google, outlook, office365, yahoo, ics } from "calendar-link";
 
@@ -116,7 +116,7 @@ const view = ({ dog, selectedTimeslot, details, appointmentID }) =>
     div({ class: "columns is-multiline is-mobile" }, [
       div(
         { class: "column is-full" },
-        h1(
+        p(
           { class: "title is-4 has-text-danger" },
           text("Booked! See you soon :)")
         )
@@ -129,8 +129,26 @@ const view = ({ dog, selectedTimeslot, details, appointmentID }) =>
           text(dog.name),
           br(),
           b(text("On: ")),
-          // @todo Make the date nicer/shorter and easier to read
-          text(new Date(selectedTimeslot)),
+          // For whatever reason, browsers have yet to support the shorter form of passing options to locale formatter directly
+          // console.log(new Date().toLocaleDateString("default", { dateStyle: "full", timeStyle: "short" }));
+          //
+          // Only longer form works by passing to DateTimeFormat method.
+          // console.log(new Intl.DateTimeFormat('default', { dateStyle: 'full', timeStyle: 'short' }).format(new Date()));
+          text(
+            new Intl.DateTimeFormat("default", {
+              dateStyle: "full",
+              timeStyle: "short",
+            }).format(new Date(selectedTimeslot))
+          ),
+        ])
+      ),
+
+      div(
+        { class: "column is-full" },
+        label([
+          b(text("Appointment ID")),
+          br(),
+          p({ class: "ml-3" }, text(`${appointmentID}`)),
         ])
       ),
 
@@ -163,7 +181,7 @@ const view = ({ dog, selectedTimeslot, details, appointmentID }) =>
 
       div(
         { class: "column is-full" },
-        h1({ class: "subtitle is-3" }, text("Add to Calendar"))
+        p({ class: "subtitle is-3" }, text("Add to Calendar"))
       ),
 
       ...calendarLinks(

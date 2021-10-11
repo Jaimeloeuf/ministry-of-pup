@@ -1,7 +1,4 @@
-import { text, h1, hr, div, button } from "@hyperapp/html";
-
-// @todo Add a back button
-const back = (state) => ({ ...state, route: "/" });
+import { text, p, button, div } from "@hyperapp/html";
 
 const selectTimeslot = (state, timeslot) => ({
   ...state,
@@ -10,64 +7,73 @@ const selectTimeslot = (state, timeslot) => ({
   route: "/details",
 });
 
-const formatDateToTime = (date) =>
-  date.toLocaleString("default", {
+const formatMsToTime = (milliseconds) =>
+  new Date(milliseconds).toLocaleString("default", {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
   });
 
-const view = (selectedDate) =>
+const timeslotString = (timeslotTimeInMilliseconds) =>
+  formatMsToTime(timeslotTimeInMilliseconds) +
+  " - " +
+  formatMsToTime(timeslotTimeInMilliseconds + 30 * 60000);
+
+const selectTimeslotView = (selectedDate) =>
   div(
     { class: "card px-5" },
-    div({ class: "card-content content" }, [
-      h1({ class: "subtitle is-6" }, text("Select a time")),
-
-      // @todo API to ensure to not return an empty array if that day is fully booked
-      div(
-        selectedDate.timeslots.map((timeslot) =>
-          div([
-            div(
-              {
-                class: "level is-mobile",
-                style: { cssText: "cursor: pointer" },
-                onclick: [selectTimeslot, timeslot],
-              },
-              (() => {
-                // Only create date object for the view fn
-                // As the unix timestamp in milliseconds is still preferred for storing in state
-                // As calling load dates API also requires the millisecond value.
-                const dateObj = new Date(timeslot);
-
-                return [
-                  div(
-                    div(
-                      { class: "level-item" },
-                      text(formatDateToTime(dateObj))
-                    )
-                  ),
-
-                  text(" - "),
-
-                  div(
-                    div(
-                      { class: "level-item" },
-                      text(
-                        formatDateToTime(
-                          new Date(dateObj.getTime() + 30 * 60000)
-                        )
-                      )
-                    )
-                  ),
-                ];
-              })()
-            ),
-
-            hr({ style: { "background-color": "#dedede" } }),
-          ])
+    div(
+      { class: "card-content has-text-centered" },
+      selectedDate.timeslots.map((timeslot) =>
+        button(
+          {
+            class: "button is-light is-rounded mb-5 mx-4",
+            onclick: [selectTimeslot, timeslot],
+          },
+          text(timeslotString(timeslot))
         )
-      ),
-    ])
+      )
+    )
   );
+
+const view = (selectedDate) =>
+  div({ class: "px-5 pt-5", style: { "text-align": "left" } }, [
+    div({ class: "columns is-multiline" }, [
+      div(
+        { class: "column is-full" },
+        p({ class: "title is-4" }, text("Select a time"))
+      ),
+
+      div(
+        { class: "column is-full" },
+        div({ class: "columns is-mobile is-vcentered" }, [
+          div(
+            { class: "column" },
+            p(
+              { class: "subtitle" },
+              text(
+                `On ${new Date(selectedDate.date).toLocaleString("default", {
+                  dateStyle: "long",
+                })}`
+              )
+            )
+          ),
+
+          div(
+            { class: "column is-narrow" },
+            button(
+              {
+                class: "button",
+                onclick: (state) => ({ ...state, route: "/" }),
+              },
+              text("Back")
+            )
+          ),
+        ])
+      ),
+
+      div({ class: "column is-full" }, selectTimeslotView(selectedDate)),
+    ]),
+  ]);
 
 export default view;
