@@ -38,7 +38,7 @@ function nextFiveAvailableDates(startingDate) {
 }
 
 // Function that generates all the possible time slots for a given day
-function allTimeSlots(openingTimeArray, currentDateStart, currentDateEnd) {
+function allTimeSlots(openingTimeArray, currentDateStart) {
   const timeslots = [];
 
   for (const openingTimes of openingTimeArray) {
@@ -51,12 +51,12 @@ function allTimeSlots(openingTimeArray, currentDateStart, currentDateEnd) {
       if (currentSecondOfCurrentDay === closingSecond) return [];
       else {
         // Call itself with increment of 30 minutes in seconds
-        // 30 * 60 = 1800 seconds in a 30 minute interval
+        // 30 * 60 * 1000 = 1800000 Milliseconds in a 30 minute interval
         const timeSlots = _allTimeSlots(currentSecondOfCurrentDay + 1800000);
+
+        // Storing the available timeslot in Milliseconds
         // Unshift is more efficient than calling spread operator to create new array
-        timeSlots.unshift(
-          new Date(currentDateStart + currentSecondOfCurrentDay)
-        );
+        timeSlots.unshift(currentDateStart + currentSecondOfCurrentDay);
         return timeSlots;
       }
     }
@@ -103,13 +103,13 @@ async function appointments(
 function availableTimeSlots(allTimeSlots, appointments) {
   // It is faster to loop through appointments instead of timeslots here,
   // number of appointment will always either be less or equals to number of timeslots
-  for (const appointmentInMilliseconds of appointments) {
-    // Filter out the timeslot taken by the current appointment from allTimeSlots
-    // And reassign the filtered array back to itself to reuse this variable to return
+  //
+  // Filter out the timeslot taken by the current appointment from allTimeSlots
+  // And reassign the filtered array back to itself to reuse this variable to return
+  for (const appointmentInMilliseconds of appointments)
     allTimeSlots = allTimeSlots.filter(
-      (slot) => slot.getTime() !== appointmentInMilliseconds
+      (slot) => slot !== appointmentInMilliseconds
     );
-  }
 
   // Return timeslots after current appointments have been filtered out from it
   return allTimeSlots;
@@ -151,11 +151,7 @@ router.get(
       date: date.start.toMillis(),
 
       timeslots: availableTimeSlots(
-        allTimeSlots(
-          openingTime[date.start.weekday],
-          date.start.toMillis(),
-          date.end.toMillis()
-        ),
+        allTimeSlots(openingTime[date.start.weekday], date.start.toMillis()),
 
         await appointments(date.start.toMillis(), date.end.toMillis())
       ),
