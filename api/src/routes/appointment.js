@@ -133,7 +133,9 @@ router.post(
       subject: "Ministry Of Pup: Appointment Booked!",
       html:
         `Hi ${fname}!<br /><br />` +
-        `You appointment has been scheduled successfully, see you on ${time}<br />`,
+        `You appointment has been scheduled successfully, see you on ${new Date(
+          time
+        )}<br />`,
     });
 
     // @todo appointmentID might not actually be needed.

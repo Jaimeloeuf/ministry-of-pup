@@ -73,8 +73,8 @@ function allTimeSlots(openingTimeArray, currentDateStart, currentDateEnd) {
 // Always returns an Array, regardless if there are any appointments in it
 // Appointments timestamps are stored as unix seconds
 async function appointments(
-  currentDateStartInSeconds,
-  currentDateEndInSeconds
+  currentDateStartInMilliseconds,
+  currentDateEndInMilliseconds
 ) {
   // https://cloud.google.com/firestore/docs/query-data/queries#limitations
   // Because of the limitations of the != operator, we cannot filter out
@@ -82,8 +82,8 @@ async function appointments(
   // It isn't too bad since there will probably not be so many cancelled appointments within the timeframe
   const snapshot = await fs
     .collection("appointments")
-    .where("time", ">=", currentDateStartInSeconds)
-    .where("time", "<=", currentDateEndInSeconds)
+    .where("time", ">=", currentDateStartInMilliseconds)
+    .where("time", "<=", currentDateEndInMilliseconds)
     .get();
 
   // If snapshot is empty, return an empty array to specify that no slots are taken for the given day
@@ -103,11 +103,7 @@ async function appointments(
 function availableTimeSlots(allTimeSlots, appointments) {
   // It is faster to loop through appointments instead of timeslots here,
   // number of appointment will always either be less or equals to number of timeslots
-  for (const appointment of appointments) {
-    // Because appointment is stored as seconds,
-    // Need to convert it to milliseconds first before comparing with timeslots
-    appointmentInMilliseconds = appointment * 1000;
-
+  for (const appointmentInMilliseconds of appointments) {
     // Filter out the timeslot taken by the current appointment from allTimeSlots
     // And reassign the filtered array back to itself to reuse this variable to return
     allTimeSlots = allTimeSlots.filter(
@@ -161,10 +157,7 @@ router.get(
           date.end.toMillis()
         ),
 
-        // Date time is stored as milliseconds, thus when converted to seconds,
-        // it will be something like 1634140799.999 with a trailing 9 till the last milliseconds
-        // However dont need to truncate it as firestore can compare this floating num to Int unix seconds just fine.
-        await appointments(date.start.toSeconds(), date.end.toSeconds())
+        await appointments(date.start.toMillis(), date.end.toMillis())
       ),
     }));
 

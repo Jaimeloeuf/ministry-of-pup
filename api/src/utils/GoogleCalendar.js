@@ -54,11 +54,10 @@ async function insertEvent(event) {
 // End datetime can be left blank to be auto set to 1 hour or 30 mins from start time
 function createEvent({ summary, description, start, end }) {
   /* Ensure both start and end time are valid */
-  // Start time accepts either a date object or a Unix time stamp in seconds
-  start = start instanceof Date ? start : new Date(start * 1000);
+  // Start needs to be a Unix time stamp in Milliseconds
+  start = new Date(start);
 
-  // Default time of an appointment is 30 minutes
-  // end = new Date(end || new Date(start).setHours(start.getHours() + 1));
+  // End defaults to 30 minutes after start datetime or a Unix time stamp in Milliseconds should be used
   end = new Date(end || new Date(start).setMinutes(start.getMinutes() + 30));
 
   return {
