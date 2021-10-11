@@ -16,8 +16,13 @@ const { DateTime } = require("luxon");
 // Accepts a startingDate that defaults to today
 function nextFiveAvailableDates(startingDate) {
   // Create a starting date that defaults to start of the current day in SGT
+  // If a startingDate is given, it means that the client has called the API before,
+  // getting back an array of date milliseconds. So if more timeslots is needed,
+  // the client will take the last date milliseconds from the array to call the API
+  // with the value as the `after` value. Which means that we have to increment the
+  // date by 1 to ensure that we only get timeslots "after" that date.
   const start = startingDate
-    ? DateTime.fromMillis(startingDate)
+    ? DateTime.fromMillis(startingDate).plus({ days: 1 })
     : DateTime.now().setZone("Asia/Singapore").startOf("day");
 
   // Create an empty array of [0, 0, 0, 0, 0] and map to create 5 object with start and end datetimes
@@ -39,18 +44,15 @@ function allTimeSlots(openingTimeArray, currentDateStart, currentDateEnd) {
   for (const openingTimes of openingTimeArray) {
     const { start: openingSecond, end: closingSecond } = openingTimes;
 
-    // Inner recursive function that takes in closing time in seconds where 0 is start of day
-    // AND opening time in seconds where 0 is start of day
+    // Inner recursive function that recurses with a `30 mins` increment until
+    // The `currentSecondOfCurrentDay` matches the closing second of the same day.
     // To return an array of all the time slots in between them
-    function _allTimeSlots(currentIncrement = 0) {
-      const currentSecondOfCurrentDay = openingSecond + currentIncrement;
-
-      // if (currentSecondOfCurrentDay >= closingSecond) return [];
+    function _allTimeSlots(currentSecondOfCurrentDay) {
       if (currentSecondOfCurrentDay === closingSecond) return [];
       else {
         // Call itself with increment of 30 minutes in seconds
         // 30 * 60 = 1800 seconds in a 30 minute interval
-        const timeSlots = _allTimeSlots(currentIncrement + 1800000);
+        const timeSlots = _allTimeSlots(currentSecondOfCurrentDay + 1800000);
         // Unshift is more efficient than calling spread operator to create new array
         timeSlots.unshift(
           new Date(currentDateStart + currentSecondOfCurrentDay)
@@ -59,7 +61,8 @@ function allTimeSlots(openingTimeArray, currentDateStart, currentDateEnd) {
       }
     }
 
-    timeslots.push(..._allTimeSlots());
+    // Start the recursive call with openingSecond as the first `currentSecondOfCurrentDay`
+    timeslots.push(..._allTimeSlots(openingSecond));
   }
 
   return timeslots;
