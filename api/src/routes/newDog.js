@@ -41,6 +41,11 @@ router.post(
       pedigree,
       dogTypeID,
 
+      // The dog is not sold by default
+      // Needs to have a sold: false field because cannot filter for != if the field does not exists
+      // Thus need to have a sold: false field to indicate that it is not sold yet when filtering for available dogs
+      sold: false,
+
       // Store time dog is added into the system in unix seconds (this is the time of the server executing the code)
       time: unixseconds(),
     });
