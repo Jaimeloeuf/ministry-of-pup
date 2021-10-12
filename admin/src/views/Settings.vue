@@ -78,23 +78,23 @@
         <!-- is-full to fill up column space when in desktop / landscape mode -->
         <div class="column is-full">
           <label>
-            <b>Firestation</b>
+            <b>store</b>
             <br />
 
             <div class="select is-fullwidth">
               <!-- ID is int, but when set as value of option element it is auto converted into String, thus parse as int before saving -->
-              <!-- If not converted before saving, firestationID would become a string and UI will show as edited because "1" !== 1 -->
+              <!-- If not converted before saving, storeID would become a string and UI will show as edited because "1" !== 1 -->
               <select
                 v-on:change="
-                  ($event) => (firestationID = parseInt($event.target.value))
+                  ($event) => (storeID = parseInt($event.target.value))
                 "
               >
-                <!-- Value must be firestation's id so that when parsing value in @change handler it can get id instead of station name -->
+                <!-- Value must be store's id so that when parsing value in @change handler it can get id instead of station name -->
                 <option
-                  v-for="fs in firestations"
+                  v-for="fs in stores"
                   :value="fs.id"
                   :key="fs.id"
-                  :selected="fs.id === firestationID"
+                  :selected="fs.id === storeID"
                 >
                   {{ fs.name }}
                 </option>
@@ -171,7 +171,7 @@ export default {
       ],
 
       // @todo Load this from DB and cache in vuex store
-      firestations: [
+      stores: [
         { id: 1, name: "Paya lebar" },
         { id: 2, name: "Ang Mo Kio" },
         { id: 3, name: "Changi" },
@@ -194,7 +194,7 @@ export default {
         this.user.name === this.name &&
         this.user.ic === this.ic &&
         this.user.licenseTypeID === this.licenseTypeID &&
-        this.user.firestationID === this.firestationID
+        this.user.storeID === this.storeID
       );
     },
   },
@@ -207,7 +207,7 @@ export default {
 
       try {
         await this.$store.dispatch("user/getHelp");
-        alert("Admins will contact you via your SCDF email shortly.");
+        alert("Our team will contact you shortly!");
       } catch (error) {
         console.error(error);
 

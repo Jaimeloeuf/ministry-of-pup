@@ -94,6 +94,7 @@
           type="number"
           v-model="mcNumber"
           pattern="[\s0-9]+"
+          min="99999999999999"
           max="999999999999999"
           placeholder="E.g. 123456789012345"
           class="input"
@@ -161,24 +162,23 @@
     </div>
 
     <div class="column is-full">
-      <button
-        @click="addNewDog"
-        class="button is-light is-fullwidth is-success"
-      >
+      <button @click="newDog" class="button is-light is-fullwidth is-success">
         Add Dog
       </button>
     </div>
 
     <div class="column is-full">
-      <router-link :to="{ name: 'home' }" class="button is-light is-fullwidth">
-        cancel
-      </router-link>
+      <button @click="reset" class="button is-light is-fullwidth is-danger">
+        Reset form
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import todaysDate from "../utils/todaysDate.js";
+import { oof } from "simpler-fetch";
+import { getAuthHeader } from "../firebase.js";
 
 export default {
   name: "NewDog",
@@ -234,8 +234,44 @@ export default {
         this.dogSexID === 1 ? dogNames.maleRandom() : dogNames.femaleRandom();
     },
 
-    async addNewDog() {
-      // Validate all required input is entered
+    async newDog() {
+      // @todo Validate all required input is entered
+
+      const res = await oof
+        .POST("/admin/pet/new")
+        .header(await getAuthHeader())
+        .data({
+          availablityDate: this.availablityDate,
+          dob: this.dob,
+          dogSexID: this.dogSexID,
+          name: this.name,
+          copyWriting: this.copyWriting,
+          mcNumber: this.mcNumber,
+          pedigree: this.pedigree,
+          dogTypeID: this.dogTypeID,
+        })
+        .runJSON();
+
+      // If the API call failed, recursively call itself again if user wants to retry,
+      // And always make sure that this method call ends right here by putting it in a return expression
+      if (!res.ok)
+        return confirm(`Error: \n${res.error}\n\nTry again?`) && this.newDog();
+
+      alert("Dog added!");
+      // res.dogID;
+
+      // Reset the page once a new dog is added
+      this.reset();
+    },
+
+    reset() {
+      // Reset the data values to its original state by re-running the data method
+      // https://github.com/vuejs/vue/issues/702#issuecomment-308991548
+      // https://www.carlcassar.com/articles/reset-data-in-a-vue-component
+      Object.assign(this.$data, this.$options.data());
+
+      // Only use this if `this` is used in the data method
+      // Object.assign(this.$data, this.$options.data.apply(this));
     },
   },
 };

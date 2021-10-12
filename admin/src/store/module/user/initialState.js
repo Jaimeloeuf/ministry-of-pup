@@ -8,15 +8,8 @@ export default function initialState() {
       // @todo Optional, might remove
       id: undefined,
 
-      ic: undefined,
       email: undefined,
       name: undefined,
-
-      // @todo Optional, might remove
-      firstName: undefined,
-      lastName: undefined,
-
-      firestationID: undefined,
     },
   };
 }

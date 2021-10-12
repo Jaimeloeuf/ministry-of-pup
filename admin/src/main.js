@@ -12,6 +12,14 @@
 
 import { auth, onAuthStateChanged } from "./firebase";
 
+// Import first before this is used elsewhere to set the baseUrl
+import { oof } from "simpler-fetch";
+oof.baseUrl(
+  process.env.NODE_ENV === "production"
+    ? "https://api.ministryofpup.com"
+    : "http://localhost:3000"
+);
+
 import Vue from "vue";
 import App from "./App.vue";
 import "./utils/setupUncaughtErrorHandlers";
