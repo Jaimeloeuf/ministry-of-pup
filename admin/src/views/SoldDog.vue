@@ -85,6 +85,8 @@
 export default {
   name: "SoldDog",
 
+  props: ["dogID"],
+
   data() {
     return {
       customerID: 1,
@@ -101,9 +103,12 @@ export default {
 
   computed: {
     dog() {
-      // @todo Load the dog using this.dogID after admin choose from the dropdown
-      // this.dogID
-      return { msrp: 10000 };
+      // If a dogID is passed in as a URL query
+      if (this.dogID) return {};
+      else {
+        // @todo Load the dog using this.dogID after admin choose from the dropdown
+        return { msrp: 10000 };
+      }
     },
   },
 

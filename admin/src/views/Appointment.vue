@@ -10,31 +10,10 @@
       <hr class="my-0" style="background-color: #dedede" />
     </div>
 
-    <!-- V1 -->
-    <!-- <details open class="column is-full">
-      <summary class="mb-5"><b>Customer details</b></summary>
-
-      <div class="ml-6">
-        <b>Name </b>
-        <p class="subtitle">{{ customer.name }}</p>
-
-        <b>Number </b>
-        <p class="subtitle">{{ customer.number }}</p>
-
-        <b>Email </b>
-        <p class="subtitle">{{ customer.email }}</p>
-      </div>
-    </details>
-
-    <div class="column is-full">
-      <hr class="my-0" style="background-color: #dedede" />
-    </div> -->
-
     <div class="column is-full">
       <p class="subtitle">Customer details</p>
     </div>
 
-    <!-- V2 -->
     <div class="column">
       <b>Name</b>
       <br />
@@ -52,18 +31,6 @@
       <br />
       <p class="subtitle">{{ customer.email }}</p>
     </div>
-
-    <!-- @todo V3, Choose 1 -->
-    <!-- <div class="column is-full">
-      <b>Name </b>
-      <p class="subtitle">{{ customer.name }}</p>
-
-      <b>Number </b>
-      <p class="subtitle">{{ customer.number }}</p>
-
-      <b>Email </b>
-      <p class="subtitle">{{ customer.email }}</p>
-    </div> -->
 
     <div class="column is-full">
       <hr class="my-0" style="background-color: #dedede" />

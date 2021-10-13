@@ -52,6 +52,18 @@ const routes = [
     name: "sold-dog",
     component: () => import("@/views/SoldDog.vue"),
     meta: { Auth_requirements: AuthType.private },
+    // Pass URL query parameters as prop to component
+    // Allows a dogID to be passed in to directly select a dog
+    props: (route) => route.query,
+  },
+  {
+    // This route has to be defined after the other /dog/ routes
+    // to prevent e.g. "all" in /dog/all to be used as the dogID
+    path: "/dog/:dogID",
+    props: true,
+    name: "dog",
+    component: () => import("@/views/Dog.vue"),
+    meta: { Auth_requirements: AuthType.private },
   },
   {
     path: "/schedule",
