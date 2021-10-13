@@ -66,6 +66,10 @@ content-type: application/json
 POST {{host}}/appointment/cancel/{{bookAppointment.response.body.appointmentID}}
 content-type: application/json
 
+### Get all appointments that have yet to start
+GET {{host}}/admin/appointment/scheduled
+{{authHeader}}
+
 ### Get user details
 # GET /app/user/:userID
 GET {{host}}/app/user/1
