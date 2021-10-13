@@ -138,8 +138,8 @@ router.post(
         )}<br />`,
     });
 
-    // @todo appointmentID might not actually be needed.
-    // Returned right now to use .http to test the cancel appointment API
+    // appointmentID is returned so that the booking app can generate the calendar event,
+    // with a link for cancelling appointment using this appointmentID
     res.status(200).json({ ok: true, appointmentID });
   })
 );

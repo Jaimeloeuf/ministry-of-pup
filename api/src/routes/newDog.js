@@ -47,7 +47,7 @@ router.post(
       sold: false,
 
       // Store time dog is added into the system in unix seconds (this is the time of the server executing the code)
-      time: unixseconds(),
+      createdAt: unixseconds(),
     });
 
     res.status(200).json({ ok: true, dogID });

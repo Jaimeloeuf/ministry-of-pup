@@ -69,9 +69,9 @@ function allTimeSlots(openingTimeArray, currentDateStart) {
 }
 
 // Query DB for appointments that within the given time constraints
-// The given time constraints should be the start and end of the day in Seconds
+// The given time constraints should be the start and end of the day in Milliseconds
 // Always returns an Array, regardless if there are any appointments in it
-// Appointments timestamps are stored as unix seconds
+// Appointments timestamps are stored as unix time Milliseconds
 async function appointments(
   currentDateStartInMilliseconds,
   currentDateEndInMilliseconds
@@ -90,7 +90,7 @@ async function appointments(
   if (snapshot.empty) return [];
 
   // Map the array of doc references to an array of doc data
-  // Filter out cancelled events
+  // Filter out cancelled appointments
   // Map the arary of doc data to an array of just the time of the appointments
   return snapshot.docs
     .map((doc) => doc.data())

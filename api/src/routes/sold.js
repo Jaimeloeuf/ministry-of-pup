@@ -92,6 +92,17 @@ router.post(
         ],
       });
 
+    // Storing owner's userID into dog document because in certain cases we might want to get owner after looking at a dog.
+    // It is hard to find dog's owner starting from Dog collection without a direct userID reference,
+    // because you have to filter the user collection for a user with dog of dogID,
+    // while easy to find the dog the owner owns from the user collection since user doc stores dogID.
+    //
+    // Update the dog's document to indicate that is has been sold and is no longer available
+    await fs
+      .collection("dogs")
+      .doc(dogID)
+      .update({ sold: true, owner: userID });
+
     const invoiceData = {
       // @todo How to generate this? Do they have a tax num or smth?
       // If not just create a new invoice data collection in firestore and use the doc id?
