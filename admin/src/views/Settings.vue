@@ -61,7 +61,7 @@
                   ($event) => (licenseTypeID = parseInt($event.target.value))
                 "
               >
-                <!-- Value must be firestation's id so that when parsing value in @change handler it can get id instead of station name -->
+                <!-- Value must be id so that when parsing value in @change handler it can get id instead of station name -->
                 <option
                   v-for="lt in licenseTypes"
                   :value="lt.id"

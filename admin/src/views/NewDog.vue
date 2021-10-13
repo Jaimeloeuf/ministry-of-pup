@@ -258,6 +258,8 @@ export default {
         return confirm(`Error: \n${res.error}\n\nTry again?`) && this.newDog();
 
       alert("Dog added!");
+
+      // Insert this dog's data into vuex store so that it can be seen immediately when switching to AllDogs view
       // res.dogID;
 
       // Reset the page once a new dog is added

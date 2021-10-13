@@ -7,7 +7,7 @@
     <div class="column is-full" v-for="(dog, i) in dogs" :key="i">
       <!-- Display the card content in a router-link element to make the card's content section clickable -->
       <router-link
-        :to="{ name: 'dog', params: { id: dog.id } }"
+        :to="{ name: 'dog', params: { dogID: dog.id } }"
         class="card is-horizontal"
       >
         <div class="card-image" style="width: 50%">
@@ -28,18 +28,14 @@
             <br />
 
             <div>
-              Breed:
-              {{ dog.dogTypeID === 1 ? "French bulldog" : "Shiba Inu" }}
-
-              <br />
               Sex: {{ dog.dogSexID === 1 ? "Male" : "Female" }}
 
               <br />
-              D.O.B: {{ new Date(dog.dob * 1000).toLocaleDateString() }}
+              D.O.B: {{ new Date(dog.dob).toLocaleDateString() }}
 
               <br />
               Available from:
-              {{ new Date(dog.availablityDate * 1000).toLocaleDateString() }}
+              {{ new Date(dog.availablityDate).toLocaleDateString() }}
 
               <br />
               Microchip: {{ dog.mcNumber }}
@@ -57,8 +53,16 @@
   The SCSS in the codepen is converted to css with https://jsonformatter.org/scss-to-css
 */
 
+import { oof } from "simpler-fetch";
+import { getAuthHeader } from "../firebase.js";
+
 export default {
   name: "AllDogs",
+
+  created() {
+    // @todo Update this to mapState instead and trigger a vuex action to load dogs
+    this.getDogs();
+  },
 
   data() {
     return {
@@ -96,6 +100,22 @@ export default {
         },
       ],
     };
+  },
+
+  methods: {
+    async getDogs() {
+      const res = await oof
+        .GET("/admin/pet/available")
+        .header(await getAuthHeader())
+        .runJSON();
+
+      // If the API call failed, recursively call itself again if user wants to retry,
+      // And always make sure that this method call ends right here by putting it in a return expression
+      if (!res.ok)
+        return confirm(`Error: \n${res.error}\n\nTry again?`) && this.getDogs();
+
+      this.dogs = res.dogs;
+    },
   },
 };
 </script>

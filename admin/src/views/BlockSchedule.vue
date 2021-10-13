@@ -1,11 +1,11 @@
 <template>
   <div class="columns is-multiline is-centered" style="max-width: 50em">
     <div class="column is-full">
-      <p class="subtitle">Block a date</p>
+      <p class="subtitle">Block dates/timeslots</p>
     </div>
 
     <div class="column is-full">
-      <b v-if="blockedDates.length === 0">Nothing blocked</b>
+      <b v-if="blockedDates.length === 0">Nothing to block yet</b>
 
       <div class="columns" v-for="(_, i) in blockedDates" :key="i">
         <div class="column">
@@ -46,7 +46,7 @@
     </div>
 
     <div class="column is-full">
-      <b v-if="blockedTimes.length === 0">Nothing blocked</b>
+      <b v-if="blockedTimes.length === 0">Nothing to block yet</b>
 
       <!-- First row is the start and end time labels -->
       <div v-else class="columns mb-0">
