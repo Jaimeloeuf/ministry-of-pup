@@ -14,18 +14,18 @@
     "chart.js": "^3.5.1",
     "core-js": "^3.6.5",
     "dog-names": "^2.0.0",
-    "firebase": "^9.0.1",
-    "simpler-fetch": "^1.1.0",
-    "vue": "^2.6.12",
-    "vue-router": "^3.5.1",
+    "firebase": "^9.1.2",
+    "simpler-fetch": "^2.1.0",
+    "vue": "^2.6.14",
+    "vue-router": "^3.5.2",
     "vuex": "^3.6.2",
-    "vuex-persistedstate": "^4.0.0-beta.3"
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.5.4",
+    "@vue/cli-plugin-babel": "^4.5.13",
     "@vue/cli-plugin-eslint": "^4.5.4",
-    "@vue/cli-plugin-router": "~4.5.4",
-    "@vue/cli-service": "^4.5.4",
+    "@vue/cli-plugin-router": "~4.5.13",
+    "@vue/cli-service": "^4.5.13",
     "@vue/eslint-config-prettier": "^6.0.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.8.1",
@@ -33,8 +33,8 @@
     "eslint-plugin-vue": "^6.2.2",
     "husky": "^5.1.3",
     "lint-staged": "^10.5.4",
-    "prettier": "^2.2.1",
-    "vue-template-compiler": "^2.6.12"
+    "prettier": "^2.4.1",
+    "vue-template-compiler": "^2.6.14"
   },
   "husky": {
     "hooks": {
