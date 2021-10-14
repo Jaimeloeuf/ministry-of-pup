@@ -21,24 +21,41 @@
 
       <p class="menu-label">Appointments</p>
       <ul class="menu-list">
+        <!--
+            See the current appointment
+            The && current gaurd is to prevent accessing 'id' of undefined,
+            if the appointments has not been loaded or if there is no current appointment
+        -->
         <li>
-          <router-link
-            :to="{ name: 'current-appointment' }"
-            :class="{ 'is-active': $route.name === 'current-appointment' }"
+          <a
+            @click="currentAppointment"
+            :class="{
+              'is-active':
+                $route.name === 'appointment' &&
+                current &&
+                $route.params.appointmentID === current.id,
+            }"
           >
             Current
-          </router-link>
+          </a>
         </li>
-        <!-- See the very next upcoming appointment -->
-        <!-- @todo This should get the next appointment ID, then route to appointment vue with the ID. Alert if nothing -->
-        <!-- @todo Instead of using a :to binding, use a @click to call a function to compute the ID before calling route -->
+        <!--
+            See the very next upcoming appointment
+            The && next gaurd is to prevent accessing 'id' of undefined,
+            if the appointments has not been loaded or if there is no upcoming appointment
+        -->
         <li>
-          <router-link
-            :to="{ name: 'appointment', params: { appointmentID: 1 } }"
-            :class="{ 'is-active': $route.name === 'appointment' }"
+          <a
+            @click="nextAppointment"
+            :class="{
+              'is-active':
+                $route.name === 'appointment' &&
+                next &&
+                $route.params.appointmentID === next.id,
+            }"
           >
             Next
-          </router-link>
+          </a>
         </li>
         <!-- See all appointments to click into 1 for more details to prep for it -->
         <li>
@@ -155,15 +172,44 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 import logout from "../utils/logout.js";
 
 export default {
   name: "SideNavBar",
 
-  // Bind vuex's user module's user state object into this component to display user data
-  computed: mapState("user", ["user"]),
+  computed: mapGetters("appointment", ["current", "next"]),
 
-  methods: { logout },
+  methods: {
+    logout,
+
+    // Function to route to the appointment view for the current appointment if any
+    async currentAppointment() {
+      // Trigger the action to load all scheduled appointments from API again,
+      // To ensure that the list of appointments available is the latest before getting the current appointment
+      await this.$store.dispatch("appointment/getAppointments");
+
+      if (this.current)
+        this.$router.push({
+          name: "appointment",
+          params: { appointmentID: this.current.id },
+        });
+      else alert("There is no appointments happening right now!");
+    },
+
+    // Function to route to the appointment view for the next upcoming appointment if any
+    async nextAppointment() {
+      // Trigger the action to load all scheduled appointments from API again,
+      // To ensure that the list of appointments available is the latest before getting the next appointment
+      await this.$store.dispatch("appointment/getAppointments");
+
+      if (this.next)
+        this.$router.push({
+          name: "appointment",
+          params: { appointmentID: this.next.id },
+        });
+      else alert("There is no more appointments left!");
+    },
+  },
 };
 </script>

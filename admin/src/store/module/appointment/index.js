@@ -14,8 +14,29 @@ export default {
   namespaced: true,
   state: initialState(),
   getters: {
+    // Return appointments as an array sorted by nearest appointment first
     appointments: (state) =>
       Object.values(state.appointments).sort((a, b) => a.time - b.time),
+
+    // Assuming appointments do not overlap
+    // Return the appointment in the appointments array that has a starting time before now and an ending time after now
+    current(_, getters) {
+      const nowInMilliseconds = new Date().getTime();
+      return getters.appointments.find(
+        (appointment) =>
+          appointment.time < nowInMilliseconds &&
+          // 30 * 60 * 1000 = 1800000 Milliseconds in a 30 minute interval
+          appointment.time + 1800000 > nowInMilliseconds
+      );
+    },
+
+    // Assuming appointments do not overlap
+    // And since appointments getter is already sorted by ascending appointment time
+    // Return the first appointment in the appointments array that starts after the current time
+    next: (_, getters) =>
+      getters.appointments.find(
+        (appointment) => appointment.time > new Date().getTime()
+      ),
   },
   mutations: {
     setter,

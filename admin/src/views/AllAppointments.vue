@@ -44,6 +44,7 @@
           }"
           class="column is-half"
         >
+          <!-- @todo Hightlight the current appointment green and the next appointment yellow, and add a note to explain the colors -->
           <div class="card">
             <div class="card-content">
               On:
