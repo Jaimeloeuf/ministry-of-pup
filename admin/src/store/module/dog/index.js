@@ -70,7 +70,7 @@ export default {
         .header(await getAuthHeader())
         .runJSON();
 
-      // If the API call failed, recursively call itself again if user wants to retry,
+      // If the API call failed, recursively dispatch itself again if user wants to retry,
       // And always make sure that this method call ends right here by putting it in a return expression
       if (!res.ok)
         return (

@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
 
-import userModule from "./module/user";
+import appointmentModule from "./module/appointment";
 import dogModule from "./module/dog";
 
 Vue.use(Vuex);
@@ -12,7 +12,7 @@ export default new Vuex.Store({
 
   state: {},
   modules: {
-    user: userModule,
+    appointment: appointmentModule,
     dog: dogModule,
   },
   actions: {

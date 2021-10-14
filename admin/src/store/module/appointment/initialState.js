@@ -4,12 +4,6 @@
  */
 export default function initialState() {
   return {
-    user: {
-      // @todo Optional, might remove
-      id: undefined,
-
-      email: undefined,
-      name: undefined,
-    },
+    appointments: {},
   };
 }

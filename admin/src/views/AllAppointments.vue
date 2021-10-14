@@ -72,48 +72,26 @@
 </template>
 
 <script>
-import { oof } from "simpler-fetch";
-import { getAuthHeader } from "../firebase.js";
+import { mapGetters } from "vuex";
 
 export default {
   name: "AllAppointments",
 
   created() {
-    // @todo Update this to mapState instead and trigger a vuex action to load appointments
-    this.getAppointments();
-  },
-
-  data() {
-    return { loading: true, appointments: [] };
-  },
-
-  methods: {
-    /**
-     * Load all the scheduled appointments that hasn't ended yet from the API
-     *
-     * Actually it is much easier to ask API for appointments that have yet to start,
-     * then appointments that have yet to end.
-     * because havent end requires an additional processing round to do 'time + 30min interval' > currentTime
-     */
-    async getAppointments() {
-      const res = await oof
-        .GET("/admin/appointment/scheduled")
-        .header(await getAuthHeader())
-        .runJSON();
-
-      // If the API call failed, recursively call itself again if user wants to retry,
-      // And always make sure that this method call ends right here by putting it in a return expression
-      if (!res.ok)
-        return (
-          confirm(`Error: \n${res.error}\n\nTry again?`) &&
-          this.getAppointments()
-        );
-
-      this.appointments = res.appointments;
+    // Async arrow IIFE (so this binding is not lost) to dispatch action on created and remove loading once completed
+    (async () => {
+      // Trigger the action to load all scheduled appointments from API as user enters this view
+      await this.$store.dispatch("appointment/getAppointments");
 
       // Stop showing loader
       this.loading = false;
-    },
+    })();
+  },
+
+  computed: mapGetters("appointment", ["appointments"]),
+
+  data() {
+    return { loading: true };
   },
 };
 </script>
