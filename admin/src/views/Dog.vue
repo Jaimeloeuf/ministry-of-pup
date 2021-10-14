@@ -112,6 +112,9 @@ export default {
   methods: {
     // Load all appointments for this specific dog
     async loadAppointments() {
+      return alert("Not implemented yet, scheduled for v2");
+
+      // eslint-disable-next-line no-unreachable
       const res = await oof
         .GET(`/admin/appointments?dogID=${this.dogID}`)
         .header(await getAuthHeader())

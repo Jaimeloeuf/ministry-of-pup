@@ -10,6 +10,10 @@
       <hr class="my-0" style="background-color: #dedede" />
     </div>
 
+    <div v-if="loading" class="column is-full">
+      <p class="title is-1">... Loading ...</p>
+    </div>
+
     <div class="column is-full">
       <p class="subtitle">Customer details</p>
     </div>
@@ -70,9 +74,6 @@
       </div>
 
       <p v-else class="subtitle">Looking for specific dog? <b>No</b></p>
-
-      <!-- <b>Looking for</b>
-      <p class="subtitle">{{ appointment.selectedDog || "Unspecified" }}</p> -->
     </div>
   </div>
 </template>

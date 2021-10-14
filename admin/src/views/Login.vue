@@ -111,6 +111,8 @@ export default {
         //   throw error;
         // }
 
+        this.$store.commit("user/setEmail", user.email);
+
         // Await for async dispatch to ensure app only starts after vuex init action is completed
         // await this.$store.dispatch("init");
 

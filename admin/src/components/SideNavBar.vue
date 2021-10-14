@@ -4,7 +4,7 @@
       <p class="menu-label">User</p>
       <!-- Give px-4 padding to align with the other items as a tags carry that padding by default -->
       <ul class="menu-list px-4">
-        <li>Name: {{ user.name }}</li>
+        <li>{{ name }}</li>
       </ul>
 
       <p class="menu-label">General</p>
@@ -177,6 +177,11 @@ import logout from "../utils/logout.js";
 
 export default {
   name: "SideNavBar",
+
+  data() {
+    // Remove the domain part of email and use first part as name
+    return { name: this.$store.state.user.email.split("@")[0] };
+  },
 
   computed: mapGetters("appointment", ["current", "next"]),
 
