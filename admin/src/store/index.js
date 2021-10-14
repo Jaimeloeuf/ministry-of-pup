@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
 
 import userModule from "./module/user";
-import tripModule from "./module/trip";
+import dogModule from "./module/dog";
 
 Vue.use(Vuex);
 
@@ -13,7 +13,7 @@ export default new Vuex.Store({
   state: {},
   modules: {
     user: userModule,
-    trip: tripModule,
+    dog: dogModule,
   },
   actions: {
     /**
@@ -24,8 +24,8 @@ export default new Vuex.Store({
       console.log("Initializing vuex store and its modules...");
 
       // Run asynchronous actions without awaiting for them to complete
-      dispatch("user/init");
-      dispatch("trip/init");
+      // dispatch("user/init");
+      // dispatch("trip/init");
     },
   },
 
@@ -38,7 +38,7 @@ export default new Vuex.Store({
     // Register modules for persistent state using sessionStorage
     createPersistedState({
       storage: window.sessionStorage,
-      paths: ["trip"],
+      paths: ["dog"],
     }),
   ],
 });

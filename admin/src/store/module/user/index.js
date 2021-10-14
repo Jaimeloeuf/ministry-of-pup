@@ -3,7 +3,7 @@
  */
 
 import initialState from "./initialState";
-import setter from "../../utils/setter";
+import setter from "../../setter";
 
 import { auth, getAuthHeader } from "../../../firebase.js";
 
