@@ -85,44 +85,31 @@ else
       details,
       appointmentID,
     }) =>
-      main(
-        {
-          style: {
-            width: "86vw",
-            "max-width": "40em",
+      main({ style: { cssText: "max-width: 40em;" } }, [
+        loader
+          ? loaderView
+          : (function () {
+              switch (route) {
+                case "/":
+                  return bookingView({ dog, datesAvailable });
+                case "/select-timeslot":
+                  return selectTimeslotView(selectedDate);
+                case "/details":
+                  return detailsView;
+                case "/complete":
+                  return completeView({
+                    dog,
+                    selectedTimeslot,
+                    details,
+                    appointmentID,
+                  });
 
-            // CSS to make entire app centered vertically
-            // @todo Although this makes the available x axis smaller esp for booking view
-            cssText:
-              "display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: left; height: 100vh;",
-          },
-        },
-        [
-          loader
-            ? loaderView
-            : (function () {
-                switch (route) {
-                  case "/":
-                    return bookingView({ dog, datesAvailable });
-                  case "/select-timeslot":
-                    return selectTimeslotView(selectedDate);
-                  case "/details":
-                    return detailsView;
-                  case "/complete":
-                    return completeView({
-                      dog,
-                      selectedTimeslot,
-                      details,
-                      appointmentID,
-                    });
-
-                  default:
-                    // @todo Load it asynchronously   return import("./notFound.js");
-                    return notFoundView;
-                }
-              })(),
-        ]
-      ),
+                default:
+                  // @todo Load it asynchronously   return import("./notFound.js");
+                  return notFoundView;
+              }
+            })(),
+      ]),
 
     node: document.getElementById("app"),
   });
