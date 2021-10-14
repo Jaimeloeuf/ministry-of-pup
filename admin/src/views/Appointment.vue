@@ -21,15 +21,19 @@
     </div>
 
     <div class="column">
-      <b>Number</b>
+      <b>Number</b> (click to call)
       <br />
-      <p class="subtitle">{{ customer.number }}</p>
+      <a class="button" :href="'tel:' + customer.number">
+        {{ customer.number }}
+      </a>
     </div>
 
     <div class="column">
-      <b>Email</b>
+      <b>Email</b> (click to email)
       <br />
-      <p class="subtitle">{{ customer.email }}</p>
+      <a class="button" :href="'mailto:' + customer.email">
+        {{ customer.email }}
+      </a>
     </div>
 
     <div class="column is-full">
