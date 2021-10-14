@@ -4,6 +4,7 @@
  */
 export default function initialState() {
   return {
-    dogs: {},
+    // dogs: {},
+    dogs: [],
   };
 }

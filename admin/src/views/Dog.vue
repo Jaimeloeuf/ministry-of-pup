@@ -99,37 +99,17 @@ export default {
   props: ["dogID"],
 
   created() {
-    // @todo Update this to mapState instead and trigger a vuex action to load dogs
-    this.getDog();
+    // Trigger the action to load this specific dogs from API if it does not already exists in store
+    this.$store.dispatch("dog/getDog", this.dogID);
   },
 
-  data() {
-    return {
-      dog: undefined,
-    };
+  computed: {
+    dog() {
+      return this.$store.getters["dog/dog"](this.dogID);
+    },
   },
 
   methods: {
-    async getDog() {
-      const res = await oof
-        .GET(`/admin/pet/${this.dogID}`)
-        .header(await getAuthHeader())
-        .runJSON();
-
-      // If the API call failed, recursively call itself again if user wants to retry,
-      // And always make sure that this method call ends right here by putting it in a return expression
-      if (!res.ok)
-        return confirm(`Error: \n${res.error}\n\nTry again?`) && this.getDogs();
-
-      // @todo Tmp pic source added to demo UI
-      // this.dog = res.dog;
-      this.dog = {
-        ...res.dog,
-        imgSrc:
-          "https://www.lovelyhomefenchbulldogs.com/wp-content/uploads/2020/10/e31d4008-3462-43d4-a45d-cf05aa3421d0.jpg",
-      };
-    },
-
     // Load all appointments for this specific dog
     async loadAppointments() {
       const res = await oof

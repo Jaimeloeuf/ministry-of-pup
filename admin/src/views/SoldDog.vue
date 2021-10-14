@@ -9,14 +9,16 @@
         <b>Which dog?</b>
         <br />
 
+        <!-- @todo Show the dog picture too? -->
+        <div v-if="dog">
+          <p class="subtitle is-3">{{ dog.name }}</p>
+        </div>
+
+        <!-- @todo Load the dogs from store -->
+        <!-- <div v-else class="select is-fullwidth"> -->
         <div class="select is-fullwidth">
           <select>
-            <option>French bulldog 1</option>
-            <option>Shiba Inu 1</option>
-            <option>French bulldog 2</option>
-            <option>Shiba Inu 2</option>
-            <option>French bulldog 3</option>
-            <option>Shiba Inu 3</option>
+            <option v-for="(dog, i) in dogs" :key="i">{{ dog.name }}</option>
           </select>
         </div>
       </label>
@@ -28,15 +30,15 @@
         <br />
 
         <div class="select is-fullwidth">
-          <select v-on:change="updateCustomerID($event)">
+          <select v-on:change="updateUserID($event)">
             <!-- Value must be id so that when parsing value in @change handler it can get id instead of the text -->
             <option
-              v-for="customer in customers"
-              :value="customer.id"
-              :key="customer.id"
-              :selected="customer.id === customerID"
+              v-for="user in users"
+              :value="user.id"
+              :key="user.id"
+              :selected="user.id === userID"
             >
-              {{ customer.text }}
+              {{ user.text }}
             </option>
           </select>
         </div>
@@ -78,21 +80,53 @@
         Sold
       </button>
     </div>
+
+    <!-- @todo Address input form, is there a way that i can validate the address using google or smth? -->
+    <div class="column is-full">
+      <p class="subtitle">Address</p>
+    </div>
+
+    <div class="column is-full">
+      <label>
+        <b>Address</b>
+
+        <input
+          type="number"
+          v-model="salePrice"
+          pattern="[\s0-9]+"
+          placeholder="E.g. 10000 for $10,000"
+          class="input"
+        />
+      </label>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "SoldDog",
 
   props: ["dogID"],
 
+  computed: {
+    // If a dogID is passed in as a URL query
+    // @todo Load the dog using this.dogID after admin choose from the dropdown
+    dog() {
+      if (this.dogID) return this.$store.getters["dog/dog"](this.dogID);
+      else return { msrp: 10000 };
+    },
+
+    ...mapState("dog", ["dogs"]),
+  },
+
   data() {
     return {
-      customerID: 1,
+      userID: 1,
 
       // @todo Load from DB
-      customers: [
+      users: [
         { id: 1, text: "Zhang Rui" },
         { id: 2, text: "Cloris" },
       ],
@@ -101,22 +135,9 @@ export default {
     };
   },
 
-  computed: {
-    dog() {
-      // If a dogID is passed in as a URL query
-      if (this.dogID) return {};
-      else {
-        // @todo Load the dog using this.dogID after admin choose from the dropdown
-        return { msrp: 10000 };
-      }
-    },
-  },
-
   methods: {
-    updateCustomerID(event) {
-      // ID is int, but if set as value of option element, it will be auto converted into String, thus parseInt back to int before saving it
-      // If not converted before saving, tripTypeID would become a string and UI will show as edited because "1" !== 1
-      this.customerID = parseInt(event.target.value);
+    updateUserID(event) {
+      this.userID = event.target.value;
     },
 
     async sold() {
