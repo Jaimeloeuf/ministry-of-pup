@@ -20,16 +20,14 @@ router.post(
   "/",
   express.json(),
   asyncWrap(async (req, res) => {
-    const {
-      availablityDate,
-      dob,
-      dogSexID,
-      name,
-      copyWriting,
-      mcNumber,
-      pedigree,
-      dogTypeID,
-    } = req.body;
+    const { dogSexID, name, copyWriting, mcNumber, pedigree, dogTypeID } =
+      req.body;
+
+    // Lazily load this module, will be cached after first load
+    const convertDateToMilliseconds = require("../utils/convertDateToMilliseconds.js");
+
+    const availablityDate = convertDateToMilliseconds(req.body.availablityDate);
+    const dob = convertDateToMilliseconds(req.body.dob);
 
     const { id: dogID } = await fs.collection("dogs").add({
       availablityDate,
