@@ -1,7 +1,7 @@
 <template>
   <div class="columns is-multiline is-centered" style="max-width: 50em">
     <div class="column is-full">
-      <p class="subtitle">Block dates/timeslots</p>
+      <p class="subtitle">Block Dates & Timeslots</p>
     </div>
 
     <div class="column is-full">
@@ -43,6 +43,7 @@
 
     <div class="column is-full">
       <p class="subtitle">Block a time slot</p>
+      *v1 only supports a single blocked timeslot in the same day
     </div>
 
     <div class="column is-full">

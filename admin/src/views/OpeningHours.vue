@@ -1,8 +1,17 @@
 <template>
   <div class="columns is-multiline is-centered" style="max-width: 50em">
-    <div class="column is-full">
+    <div class="column is-full content mb-0">
       <p class="subtitle mb-1">See & Set Opening Hours</p>
-      <p>*Please set time to nearest hour</p>
+
+      <ul>
+        <li>
+          Changing opening hours <b>WILL NOT</b> affect appointments that are
+          already booked. This only affects time slots for future bookings
+        </li>
+
+        <!-- @todo Can be removed in future versions as this is kinda arbiturary to ensure easier calculations for 30 min booking intervals -->
+        <li>Please set time to nearest hour</li>
+      </ul>
     </div>
 
     <div class="column is-full" v-for="(day, dayInt) in days" :key="dayInt">
