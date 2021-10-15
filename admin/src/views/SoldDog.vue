@@ -75,6 +75,7 @@
       <hr class="my-0" style="background-color: #dedede" />
     </div>
 
+    <!-- @todo Change the buttons to, sell (show purchase agreement then sign), payment (click to generate and show QR code), sold (click to finalise everything once payment received and sends invoice to customer) -->
     <div class="column is-full">
       <button @click="sold" class="button is-light is-fullwidth is-success">
         Sold
@@ -82,7 +83,7 @@
     </div>
 
     <!-- @todo Address input form, is there a way that i can validate the address using google or smth? -->
-    <div class="column is-full">
+    <!-- <div class="column is-full">
       <p class="subtitle">Address</p>
     </div>
 
@@ -98,6 +99,43 @@
           class="input"
         />
       </label>
+    </div> -->
+
+    <!-- @todo Tmp added a click to close for the entire modal -->
+    <!-- Might want to better think about the UX and what if they accidentally click somewhere, it shouldnt close, and how to reopen? -->
+    <!-- Maybe only click to close via X, and click to close via complete method call through a button -->
+    <div
+      class="modal"
+      :class="{ 'is-active': showModal }"
+      @click="showModal = false"
+    >
+      <!-- Modal can be closed by clicking any part of the modal background -->
+      <div class="modal-background" @click="showModal = false"></div>
+
+      <!-- The whole modal content can be clicked to close the modal -->
+      <div class="modal-content" @click="showModal = false">
+        <span class="image is-square">
+          <img :src="imageDataURI" />
+        </span>
+
+        <!-- Might have a complete button or something depending on the UX flow -->
+        <!--
+          <button
+            class="button is-fullwidth is-success is-inverted"
+            aria-label="share"
+            style="border-radius: 0px"
+          >
+            Complete
+          </button>
+        -->
+      </div>
+
+      <!-- Modal can be closed by clicking the top right X -->
+      <button
+        class="modal-close is-large"
+        aria-label="close"
+        @click="showModal = false"
+      />
     </div>
   </div>
 </template>
@@ -132,6 +170,10 @@ export default {
       ],
 
       salePrice: undefined,
+
+      /* Paynow QR code values */
+      showModal: false,
+      imageDataURI: undefined,
     };
   },
 
@@ -140,8 +182,55 @@ export default {
       this.userID = event.target.value;
     },
 
+    async showPaynowQR() {
+      const { default: PaynowQR } = await import("paynowqr");
+
+      // The QR Code should only be valid until tmr
+      // 24 hours * 60 minutes * 60 seconds * 1000 milliseconds = 86400000 milliseconds
+      const d = new Date(new Date().valueOf() + 86400000);
+      const month = d.getMonth() + 1;
+      const pmonth = month > 9 ? month : `0${month}`; // Month with 0 padding
+      const date = d.getDate();
+      const pdate = date > 9 ? date : `0${date}`; // Date with 0 padding
+      const expiryDate = `${d.getFullYear()}${pmonth}${pdate}`;
+
+      //Create a PaynowQR object
+      const paynowQRCode = new PaynowQR({
+        // Required: UEN of company, hard coded in as it will not be changed
+        uen: "T17LL2360H",
+
+        // Specify amount of to pay, this is just the amount keyed in
+        amount: this.salePrice,
+
+        // Set an expiry date for the Paynow QR code (YYYYMMDD, e.g. "20211231")
+        // If omitted, defaults to 5 years from current time.
+        expiry: expiryDate,
+
+        // @todo Call and API to generate a invoice reference number to track later (possibly have the paynow bank app on the ipad)
+        // Reference number for Paynow Transaction. Useful if you need to track payments for recouncilation.
+        refNumber: "MOP-INV-1001",
+
+        // company: "ACME Pte Ltd.", // Company name to embed in the QR code. Optional.
+      });
+
+      const QRCode = await import("qrcode");
+
+      // Generate the QR code image data URL and set onto component data value
+      this.imageDataURI = await QRCode.toDataURL(
+        // Generate UTF-8 string from the qrcode to generate the QR code data URL for the image tag
+        paynowQRCode.output(),
+
+        // Use high error resistance rate of ~ 30%
+        { errorCorrectionLevel: "H" }
+      );
+
+      // Open up modal to show the QR Code image
+      this.showModal = true;
+    },
+
     async sold() {
       //
+      await this.showPaynowQR();
     },
   },
 };
