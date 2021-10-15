@@ -30,6 +30,11 @@ app.use(
 app.use("/admin/pet", authMiddleware, require("./routes/dogs.js"));
 app.use("/admin/pet/new", authMiddleware, require("./routes/newDog.js"));
 app.use("/admin/pet/sold", authMiddleware, require("./routes/sold.js"));
+app.use(
+  "/admin/schedule",
+  authMiddleware,
+  require("./routes/adminSchedule.js")
+);
 // app.use("/help", authMiddleware, require("./routes/help.js"));
 // app.use("/rbac", authMiddleware, require("./routes/RBAC.js"));
 // app.use("/error", require("./routes/error"));
