@@ -35,6 +35,11 @@ app.use(
   authMiddleware,
   require("./routes/adminSchedule.js")
 );
+app.use(
+  "/admin/sale/manual",
+  authMiddleware,
+  require("./routes/manualSale.js")
+);
 // app.use("/help", authMiddleware, require("./routes/help.js"));
 // app.use("/rbac", authMiddleware, require("./routes/RBAC.js"));
 // app.use("/error", require("./routes/error"));
