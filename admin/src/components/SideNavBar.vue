@@ -124,6 +124,18 @@
         </li>
       </ul>
 
+      <p class="menu-label">E Commerce</p>
+      <ul class="menu-list">
+        <li>
+          <router-link
+            :to="{ name: 'sale-manual' }"
+            :class="{ 'is-active': $route.name === 'sale-manual' }"
+          >
+            Manual Sale
+          </router-link>
+        </li>
+      </ul>
+
       <p class="menu-label">Customers</p>
       <ul class="menu-list">
         <li>
