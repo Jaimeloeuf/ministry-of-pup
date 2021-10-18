@@ -9,7 +9,9 @@
  */
 const generateHeader = (doc) =>
   doc
-    .image("logo.jpg", 50, 40, { height: 50 })
+    .image(require("path").resolve(__dirname, "./logo.jpg"), 50, 40, {
+      height: 50,
+    })
     .fillColor("#444444")
     .fontSize(10)
     .text("Ministry Of Pup LLP", 200, 50, { align: "right" })
