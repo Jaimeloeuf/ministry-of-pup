@@ -52,7 +52,9 @@ function generateCustomerInformation(doc, invoice) {
     .font("Helvetica")
     .text(invoice.shipping.address, 300, customerInformationTop + 15)
     .text(
-      invoice.shipping.country + ", " + invoice.shipping.city,
+      `${invoice.shipping.country || "Singapore"}, ${
+        invoice.shipping.city || "SG"
+      }`,
       300,
       customerInformationTop + 30
     )
