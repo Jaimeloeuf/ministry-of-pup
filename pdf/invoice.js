@@ -13,7 +13,10 @@ function create(PDFDocument, invoice) {
   generateHeader(doc);
   generateCustomerInformation(doc, invoice);
   generateInvoiceTable(doc, invoice);
-  generateFooter(doc, "Thank you for your business!");
+  generateFooter(
+    doc,
+    "Payment is due within 15 days. Thank you for your business."
+  );
 
   doc.end();
 
@@ -22,7 +25,7 @@ function create(PDFDocument, invoice) {
 
 // Invoice meta data and customer information
 function generateCustomerInformation(doc, invoice) {
-  doc.fillColor("#444444").fontSize(20).text("Sales Receipt", 50, 160);
+  doc.fillColor("#444444").fontSize(20).text("Invoice", 50, 160);
 
   generateHr(doc, 185);
 
@@ -30,13 +33,20 @@ function generateCustomerInformation(doc, invoice) {
 
   doc
     .fontSize(10)
-    .text("Receipt Number:", 50, customerInformationTop)
+    .text("Invoice Number:", 50, customerInformationTop)
     .font("Helvetica-Bold")
-    .text(invoice.receiptNumber, 140, customerInformationTop)
+    .text(invoice.invoiceNumber, 150, customerInformationTop)
     .font("Helvetica")
-    .text("Date of Sale:", 50, customerInformationTop + 15)
+    .text("Date of Invoice:", 50, customerInformationTop + 15)
     // For now the date is always today's date
-    .text(formatDate(new Date()), 140, customerInformationTop + 15)
+    .text(formatDate(new Date()), 150, customerInformationTop + 15)
+    .text("Balance Due:", 50, customerInformationTop + 30)
+    .text(
+      formatCurrency(invoice.subtotal - invoice.paid),
+      150,
+      customerInformationTop + 30
+    )
+
     .font("Helvetica-Bold")
     .text(invoice.shipping.name, 300, customerInformationTop)
     .font("Helvetica")
@@ -93,7 +103,7 @@ function generateInvoiceTable(doc, invoice) {
     "",
     "Subtotal",
     "",
-    formatCurrency(invoice.totalPrice)
+    formatCurrency(invoice.subtotal)
   );
 
   const paidToDatePosition = subtotalPosition + 20;
@@ -102,10 +112,23 @@ function generateInvoiceTable(doc, invoice) {
     paidToDatePosition,
     "",
     "",
-    "Paid",
+    "Paid To Date",
     "",
-    formatCurrency(invoice.totalPrice)
+    formatCurrency(invoice.paid)
   );
+
+  const duePosition = paidToDatePosition + 25;
+  doc.font("Helvetica-Bold");
+  generateTableRow(
+    doc,
+    duePosition,
+    "",
+    "",
+    "Balance Due",
+    "",
+    formatCurrency(invoice.subtotal - invoice.paid)
+  );
+  doc.font("Helvetica");
 }
 
 module.exports = create;
