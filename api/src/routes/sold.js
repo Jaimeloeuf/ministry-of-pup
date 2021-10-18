@@ -12,19 +12,26 @@ const fs = require("../utils/fs");
 const unixseconds = require("unixseconds");
 const { asyncWrap } = require("express-error-middlewares");
 
-const emailInvoice = async ({ email, userFname, invoice }) =>
+const emailReceipt = async ({ email, userFname, receipt }) =>
   sendMail.send({
+    // to: "z1981r@gmail.com",
+    // to: "jimuzu@hotmail.com",
+    // to: "jaimeloeuf@gmail.com",
+
     // @todo Make HTML, or make template in sendgrid, then they can also edit without changing code and deploying new version
     // @todo Make the phone number click to call? add the +65
 
     to: email,
     from: process.env.notificationEmailSender,
-    subject: "Ministry Of Pup: Invoice",
-    text: `Hey ${userFname}!
-Thank you so much for being our valued partner. Please find attached the invoice for your purchase!
-If you have any concerns regarding this invoice, please call 88022177 between 11am - 7pm to discuss or alternatively reply to this email.
+    subject: "Ministry Of Pup: Receipt",
 
-Ministry of Pup thanks you for your fast response and payment!
+    text: `Hey ${userFname}!
+Thank you so much for being our valued partner. Please find the attached receipt for your purchase!
+If you have any concerns regarding this receipt, please call 8802,2177 between 11am - 8pm, alternatively you can reply to this email.
+
+We can't wait to see you create happy memories with your puppy!
+
+Sincerely,
 The Ministry of Pup team`,
 
     attachments: [
@@ -34,7 +41,7 @@ The Ministry of Pup team`,
         // WORKING!!!
         // content: require("fs").readFileSync("./invoice.txt").toString(),
 
-        content: invoice,
+        content: receipt,
         filename: "Invoice.pdf",
         type: "application/pdf",
         disposition: "attachment",
@@ -42,15 +49,15 @@ The Ministry of Pup team`,
     ],
   });
 
-// Generate the PDF invoice and convert it to base64 string before returning
-async function generateInvoiceString(invoiceData) {
+// Generate the PDF receipt and convert it to base64 string before returning
+async function generateReceiptString(receiptData) {
   // Lazily import this to keep serverless container start up time fast as this is not always used
-  const createInvoice = require("mop-invoice");
+  const create = require("mop-invoice").receipt;
   const PDFDocument = require("pdfkit");
   const { Base64Encode } = require("base64-stream");
 
   let string = ""; // Contains the final base64 string after concatenation
-  let stream = createInvoice(PDFDocument, invoiceData).pipe(new Base64Encode());
+  let stream = create(PDFDocument, receiptData).pipe(new Base64Encode());
 
   return new Promise((resolve, reject) => {
     stream.on("data", (chunk) => (string += chunk));
@@ -60,7 +67,7 @@ async function generateInvoiceString(invoiceData) {
 }
 
 /**
- * Map a pet to a new owner after being sold
+ * Map a pet to a new owner after being sold and sent receipt to customer
  * @name POST /admin/pet/sold
  * @returns Sucess indicator
  */
@@ -103,22 +110,45 @@ router.post(
       .doc(dogID)
       .update({ sold: true, owner: userID });
 
-    const invoiceData = {
-      // @todo How to generate this? Do they have a tax num or smth?
-      // If not just create a new invoice data collection in firestore and use the doc id?
-      invoiceNumber: 1,
+    /**
+     * 1. Create a new date in SGT and format it into a string from 21 Oct, 2021 to 10/21
+     * 2. Split the string by the '/' seperator into an array
+     * 3. Reverse the array so the year comes before the month
+     * 4. Join back the array into a string without any seperators
+     * @returns Current date in the YYMM format
+     */
+    const receiptYYMM = () =>
+      new Intl.DateTimeFormat("en-SG", {
+        year: "2-digit",
+        month: "2-digit",
+        timeZone: "Asia/Singapore",
+      })
+        .format(new Date())
+        .split("/")
+        .reverse()
+        .join("");
 
-      shipping: {
+    // @todo How to generate this? Do they have a tax num or smth?
+    // If not just create a new receipt data collection in firestore and use the doc id?
+    const receiptNumber = `MOP-REC-${receiptYYMM()}-f83j`;
+
+    const receipt = await generateReceiptString({
+      receiptNumber,
+
+      // @todo Fix address and postal code
+      customer: {
         name: user.name,
-
-        // @todo To discuss with ZR how to handle this customer flow?
-        address: "12 Amazing Condo",
-        postal_code: 123456,
-
-        // These will always be the same
-        country: "Singapore",
-        city: "SG",
+        address: customer.address,
+        postal_code: customer.postalCode,
       },
+
+      // @todo Use the data passed to API
+      // amount/currency is in cents
+      totalPrice: 1000000,
+
+      // Note that all amount/currency must be in cents
+      items,
+
       items: [
         // Note that all amount/currency is in cents
         {
@@ -136,15 +166,13 @@ router.post(
           amount: 0,
         },
       ],
-      subtotal: 1000000,
-      paid: 1000000,
-    };
+    });
 
-    // Generate and Email invoice
-    await emailInvoice({
+    // Generate and Email receipt
+    await emailReceipt({
       email: user.email,
       userFname: user.fname,
-      invoice: await generateInvoiceString(invoiceData),
+      receipt,
     });
 
     res.status(200).json({ ok: true });
