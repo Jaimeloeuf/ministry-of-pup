@@ -38,12 +38,12 @@ function generateCustomerInformation(doc, invoice) {
     // For now the date is always today's date
     .text(formatDate(new Date()), 140, customerInformationTop + 15)
     .font("Helvetica-Bold")
-    .text(invoice.shipping.name, 300, customerInformationTop)
+    .text(invoice.customer.name, 300, customerInformationTop)
     .font("Helvetica")
-    .text(invoice.shipping.address, 300, customerInformationTop + 15)
+    .text(invoice.customer.address, 300, customerInformationTop + 15)
     .text(
-      `${invoice.shipping.country || "Singapore"}, ${
-        invoice.shipping.city || "SG"
+      `${invoice.customer.country || "Singapore"}, ${
+        invoice.customer.city || "SG"
       }`,
       300,
       customerInformationTop + 30

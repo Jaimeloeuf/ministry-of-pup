@@ -36,7 +36,7 @@ async function generateInvoiceString(invoiceData) {
 const receipt = {
   receiptNumber: "MOP-2110-f83j",
 
-  shipping: {
+  customer: {
     name: "John Doe",
     address: "12 Amazing Condo",
     country: "Singapore",
@@ -93,7 +93,7 @@ const PDFDocument = require("pdfkit");
 
 create(PDFDocument, {
   invoiceNumber: 1,
-  shipping: {
+  customer: {
     name: "John Doe",
     address: "12 Amazing Condo",
     country: "Singapore",
@@ -129,7 +129,7 @@ import PDFDocument from "pdfkit";
 
 createInvoice(PDFDocument, {
   invoiceNumber: 1,
-  shipping: {
+  customer: {
     name: "John Doe",
     address: "12 Amazing Condo",
     country: "Singapore",
