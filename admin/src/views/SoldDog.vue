@@ -9,12 +9,11 @@
         <b>Which dog?</b>
         <br />
 
-        <!-- @todo Show the dog picture too? -->
+        <!-- @todo Show the card like in Dog.vue -->
         <div v-if="dog">
           <p class="subtitle is-3">{{ dog.name }}</p>
         </div>
 
-        <!-- @todo Load the dogs from store -->
         <div v-else class="select is-fullwidth">
           <select>
             <option v-for="(dog, i) in dogs" :key="i">{{ dog.name }}</option>

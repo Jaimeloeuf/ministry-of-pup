@@ -27,15 +27,15 @@
         <br />
 
         <div class="select is-fullwidth">
-          <select v-on:change="updateDogTypeID($event)">
+          <select v-on:change="updateBreedID($event)">
             <!-- Value must be id so that when parsing value in @change handler it can get id instead of the text -->
             <option
-              v-for="dogType in dogTypes"
-              :value="dogType.id"
-              :key="dogType.id"
-              :selected="dogType.id === dogTypeID"
+              v-for="breed in dogBreeds"
+              :value="breed.id"
+              :key="breed.id"
+              :selected="breed.id === breedID"
             >
-              {{ dogType.text }}
+              {{ breed.text }}
             </option>
           </select>
         </div>
@@ -48,15 +48,15 @@
         <br />
 
         <div class="select is-fullwidth">
-          <select v-on:change="updateDogSexID($event)">
+          <select v-on:change="updateSex($event)">
             <!-- Value must be id so that when parsing value in @change handler it can get id instead of the text -->
             <option
-              v-for="dogSex in dogSexes"
-              :value="dogSex.id"
-              :key="dogSex.id"
-              :selected="dogSex.id === dogSexID"
+              v-for="sex in dogSexes"
+              :value="sex.id"
+              :key="sex.id"
+              :selected="sex.id === sex"
             >
-              {{ dogSex.text }}
+              {{ sex.text }}
             </option>
           </select>
         </div>
@@ -92,7 +92,7 @@
 
         <input
           type="number"
-          v-model="mcNumber"
+          v-model="mc"
           pattern="[\s0-9]+"
           min="99999999999999"
           max="999999999999999"
@@ -104,11 +104,11 @@
 
     <div class="column is-full">
       <label>
-        <b>Copy Writing</b>
+        <b>Description</b>
 
         <!-- @todo Make textarea grow automatically -->
         <textarea
-          v-model="copyWriting"
+          v-model="description"
           class="textarea"
           placeholder="Describe this dog!"
         />
@@ -253,52 +253,50 @@ export default {
       availablityDate: today,
       dob: today,
 
-      // Should this be a Int ID, or something like either "M" or "F"?
-      dogSexID: 1,
+      sex: "m",
       dogSexes: [
-        { id: 1, text: "Male" },
-        { id: 2, text: "Female" },
+        { id: "m", text: "Male" },
+        { id: "f", text: "Female" },
       ],
 
       name: undefined,
-      copyWriting: undefined,
-      mcNumber: undefined,
+      description: undefined,
+      mc: undefined,
       pedigree: false,
       cost: undefined,
       msrp: undefined,
 
-      // @todo Can be taken from DB if needed
-      dogTypeID: 1,
-      dogTypes: [
-        { id: 1, text: "French bulldog" },
+      breedID: 1,
+      // Chagne to breed
+      dogBreeds: [
+        // @todo Can be taken from DB if needed
+        { id: 1, text: "French Bulldog" },
         { id: 2, text: "Shiba Inu" },
       ],
 
       // Files array and firebase cloud storage values
       files: [],
-      folderID: undefined,
-      imagePath: undefined,
+      imgFolder: undefined,
+      imgSrc: undefined,
     };
   },
 
   methods: {
-    updateDogTypeID(event) {
+    updateBreedID(event) {
       // ID is int, but if set as value of option element, it will be auto converted into String, thus parseInt back to int before saving it
-      // If not converted before saving, tripTypeID would become a string and UI will show as edited because "1" !== 1
-      this.dogTypeID = parseInt(event.target.value);
+      // If not converted before saving, breedID would become a string and UI will show as edited because "1" !== 1
+      this.breedID = parseInt(event.target.value);
     },
 
-    updateDogSexID(event) {
-      // ID is int, but if set as value of option element, it will be auto converted into String, thus parseInt back to int before saving it
-      // If not converted before saving, tripTypeID would become a string and UI will show as edited because "1" !== 1
-      this.dogSexID = parseInt(event.target.value);
+    updateSex(event) {
+      this.sex = event.target.value;
     },
 
     async generateDogName() {
       // Only asynchronously load the package if user wants to generate a random name
       const dogNames = await import("dog-names");
       this.name =
-        this.dogSexID === 1 ? dogNames.maleRandom() : dogNames.femaleRandom();
+        this.sex === "m" ? dogNames.maleRandom() : dogNames.femaleRandom();
     },
 
     deleteFile(fileIndex) {
@@ -328,11 +326,11 @@ export default {
 
       // Firebase cloud storage does not provide auto GUID generation, thus here is a crud way of generating GUIDs
       // https://stackoverflow.com/questions/37444685/store-files-with-unique-random-names/37444839#37444839
-      const folderID =
+      const imgFolder =
         Math.random().toString(36).slice(2) +
         Math.random().toString(36).slice(2);
 
-      this.folderID = folderID;
+      this.imgFolder = imgFolder;
 
       const storage = getStorage(firebaseApp);
 
@@ -341,7 +339,7 @@ export default {
         this.files.map((file) =>
           // Upload file and chain to get publicly available download URL
           uploadBytes(
-            ref(storage, `dog-pics/${folderID}/${file.name}`),
+            ref(storage, `dog-pics/${imgFolder}/${file.name}`),
             file
           ).then((snapshot) => getDownloadURL(snapshot.ref))
         )
@@ -356,25 +354,29 @@ export default {
       // Ensure files are successfully uploaded first before calling API
       // If this succeeds, but API call fails then the files are just left in storage
       // If user chooses to retry, on the next recursive call, the upload files step will be skipped
-      if (this.folderID === undefined && this.imgSrc === undefined)
+      if (this.imgFolder === undefined && this.imgSrc === undefined)
         await this._uploadFiles();
 
-      // eslint-disable-next-line no-unreachable
       const res = await oof
         .POST("/admin/pet/new")
         .header(await getAuthHeader())
         .data({
-          folderID: this.folderID,
+          imgFolder: this.imgFolder,
           imgSrc: this.imgSrc,
 
           availablityDate: this.availablityDate,
           dob: this.dob,
-          dogSexID: this.dogSexID,
+          sex: this.sex,
           name: this.name,
-          copyWriting: this.copyWriting,
-          mcNumber: this.mcNumber,
+          description: this.description,
+          mc: this.mc,
           pedigree: this.pedigree,
-          dogTypeID: this.dogTypeID,
+          breedID: this.breedID,
+
+          // HTML input type="number" returns a String, thus parseInt to store as Numbers
+          // Cost and MSRP of dog will not be floats
+          cost: parseInt(this.cost),
+          msrp: parseInt(this.msrp),
         })
         .runJSON();
 

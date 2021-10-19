@@ -326,12 +326,6 @@ export default {
 
       // Used to store the calculated totalPrice of sale when clicking pay button
       totalPrice: undefined,
-
-      dogTypeID: 1,
-      dogTypes: [
-        { id: 1, text: "French bulldog" },
-        { id: 2, text: "Shiba Inu" },
-      ],
     };
   },
 

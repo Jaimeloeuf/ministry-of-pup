@@ -8,7 +8,7 @@
       <div class="card is-horizontal">
         <div class="card-image" style="width: 50%">
           <figure class="image">
-            <img :src="dog.imageSrc[0]" />
+            <img :src="dog.imgSrc[0]" />
           </figure>
         </div>
 
@@ -17,14 +17,14 @@
             <div>
               <p class="title is-4">{{ dog.name }}</p>
               <p class="subtitle is-6">
-                {{ dog.dogTypeID === 1 ? "French bulldog" : "Shiba Inu" }}
+                {{ dog.breedID === 1 ? "French Bulldog" : "Shiba Inu" }}
               </p>
             </div>
 
             <br />
 
             <div>
-              Sex: {{ dog.dogSexID === 1 ? "Male" : "Female" }}
+              Sex: {{ dog.sex === "m" ? "Male" : "Female" }}
 
               <br />
               D.O.B: {{ new Date(dog.dob).toLocaleDateString() }}
@@ -34,7 +34,7 @@
               {{ new Date(dog.availablityDate).toLocaleDateString() }}
 
               <br />
-              Microchip: {{ dog.mcNumber }}
+              Microchip: {{ dog.mc }}
 
               <br />
               Pedigree: {{ dog.pedigree }}
@@ -49,7 +49,7 @@
 
     <div class="column is-full">
       <p class="subtitle">Copy Writing</p>
-      {{ dog.copyWriting }}
+      {{ dog.description }}
     </div>
 
     <div class="column">
@@ -105,7 +105,7 @@ export default {
 
   computed: {
     dog() {
-      return this.$store.getters["dog/dog"](this.dogID);
+      return this.$store.state.dog.dogs[this.dogID];
     },
   },
 

@@ -14,8 +14,8 @@ export default {
   namespaced: true,
   state: initialState(),
   getters: {
-    // @todo Change when changing to object storage for dogs
-    dog: (state) => (dogID) => state.dogs.find((dog) => dog.id === dogID),
+    // Get the dogs as an array
+    dogs: (state) => Object.values(state.dogs),
   },
   mutations: {
     setter,
@@ -24,9 +24,7 @@ export default {
       state.dogs = dogs;
     },
     setDog(state, dog) {
-      // @todo Use this after changing to object storage for dogs
-      // Vue.set(state.dogs, dog.id, dog);
-      state.dogs.push(dog);
+      Vue.set(state.dogs, dog.id, dog);
     },
   },
   actions: {
@@ -62,8 +60,7 @@ export default {
      * @function getDog
      */
     async getDog({ state, commit, dispatch, getters }, dogID) {
-      // if (state.dogs[dogID]) return;
-      if (getters.dog(dogID)) return;
+      if (state.dogs[dogID]) return;
 
       const res = await oof
         .GET(`/admin/pet/${dogID}`)
