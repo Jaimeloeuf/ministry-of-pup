@@ -9,15 +9,15 @@ function getConfig() {
   // See the logic in ekd/fs-admin to see how to get the ADC out
 
   // Get credentials from service account file
-  const CREDENTIALS = require("../../serviceAccountKey.json");
+  const { client_email, private_key } = require("../../serviceAccountKey.json");
 
   return {
     calendarId: "ministryofpup@gmail.com",
 
     auth: new google.auth.JWT(
-      CREDENTIALS.client_email,
+      client_email,
       null,
-      CREDENTIALS.private_key,
+      private_key,
       "https://www.googleapis.com/auth/calendar"
     ),
   };

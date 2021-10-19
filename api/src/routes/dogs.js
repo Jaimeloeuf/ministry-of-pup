@@ -27,7 +27,8 @@ router.get(
       .where("sold", "==", false)
       .get();
 
-    const dogs = snapshot.docs.map((doc) => ({ dogID: doc.id, ...doc.data() }));
+    // Map/reduce the array of objects into a single object keyed by the doc IDs
+    const dogs = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
     // Alternatively send back id only and get frontend to load the dogs 1 by 1
     // However unlike classexpress, there isn't alot of dogs, which means that
@@ -48,7 +49,10 @@ router.get(
   asyncWrap(async (req, res) => {
     const dogDoc = await fs.collection("dogs").doc(req.params.dogID).get();
 
-    res.status(200).json({ ok: true, dog: dogDoc.data() });
+    res.status(200).json({
+      ok: true,
+      dog: { id: dogDoc.id, ...dogDoc.data() },
+    });
   })
 );
 
