@@ -21,14 +21,16 @@ router.post(
   express.json(),
   asyncWrap(async (req, res) => {
     const {
-      folderID,
+      imgFolder,
       imgSrc,
-      dogSexID,
+      sex,
       name,
-      copyWriting,
-      mcNumber,
+      description,
+      mc,
       pedigree,
-      dogTypeID,
+      breedID,
+      cost,
+      msrp,
     } = req.body;
 
     // Lazily load this module, will be cached after first load
@@ -38,17 +40,19 @@ router.post(
     const dob = convertDateToMilliseconds(req.body.dob);
 
     const { id: dogID } = await fs.collection("dogs").add({
-      folderID,
+      imgFolder,
       imgSrc,
 
       availablityDate,
       dob,
-      dogSexID,
+      sex,
       name,
-      copyWriting,
-      mcNumber,
+      description,
+      mc,
       pedigree,
-      dogTypeID,
+      breedID,
+      cost,
+      msrp,
 
       // The dog is not sold by default
       // Needs to have a sold: false field because cannot filter for != if the field does not exists

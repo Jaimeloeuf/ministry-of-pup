@@ -28,7 +28,13 @@ router.get(
       .get();
 
     // Map the array of docs into an array of doc data with the doc ID included
-    const dogs = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    // Reduce the array of objects into a single object keyed by the doc IDs
+    const dogs = snapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .reduce((acc, curr) => {
+        acc[curr.id] = curr;
+        return acc;
+      }, {});
 
     // Alternatively send back id only and get frontend to load the dogs 1 by 1
     // However unlike classexpress, there isn't alot of dogs, which means that
