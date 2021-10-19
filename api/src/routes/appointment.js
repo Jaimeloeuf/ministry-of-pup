@@ -75,6 +75,13 @@ Email us at ministryofpup@gmail.com
 
 Or call us at 8802,2177 daily between 10am - 8pm for help`;
 
+const getTimeString = (time) =>
+  new Intl.DateTimeFormat("en-SG", {
+    dateStyle: "full",
+    timeStyle: "short",
+    timeZone: "Asia/Singapore",
+  }).format(new Date(time));
+
 /**
  * Creates an account for the user if it does not already exists, and book a appointment
  * @name POST /appointment/book
@@ -159,11 +166,7 @@ router.post(
       createdAt: unixseconds(),
     });
 
-    const timeString = new Intl.DateTimeFormat("en-SG", {
-      dateStyle: "full",
-      timeStyle: "short",
-      timeZone: "Asia/Singapore",
-    }).format(new Date());
+    const timeString = getTimeString(time);
 
     // Send user a email to confirm with them that their appointment has been scheduled successfully
     // @todo Copy over the stuff from whats added into the user's google calendar
@@ -181,7 +184,13 @@ router.post(
     //   dynamicTemplateData: { timeString },
     // });
 
-    // @todo Notify admins of the new appointment through the notification bot
+    // Notify admins about new appointment using the telegram notification bot
+    const notifyAdmin = require("../utils/tAdminNotification.js");
+    notifyAdmin(`*New appointment*
+  
+${timeString}
+User: *${fname}*
+ID: _${appointmentID}_`);
 
     // appointmentID is returned so that the booking app can generate the calendar event,
     // with a link for cancelling appointment using this appointmentID
@@ -212,9 +221,16 @@ router.post(
     // Lazily import this to keep serverless container start up time fast as this is not always used
     const { deleteEvent } = require("../utils/GoogleCalendar");
 
-    await deleteEvent(doc.data().googleCalendarEventID);
+    const docData = doc.data();
+    await deleteEvent(docData.googleCalendarEventID);
 
-    // @todo Notify admins of the new appointment through the notification bot
+    // Notify admins about new appointment using the telegram notification bot
+    const notifyAdmin = require("../utils/tAdminNotification.js");
+    notifyAdmin(`*Appointment cancelled*
+   
+${getTimeString(docData.time)}
+User: *${docData.fname}*
+ID: _${doc.id}_`);
 
     res.status(200).json({ ok: true });
   })
