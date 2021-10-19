@@ -4,6 +4,10 @@
       <p class="subtitle">See and manage all current unsold dogs</p>
     </div>
 
+    <div class="column is-full" v-if="dogs.length === 0">
+      <p class="subtitle is-3">No dogs available right now!</p>
+    </div>
+
     <div class="column is-full" v-for="(dog, i) in dogs" :key="i">
       <!-- Display the card content in a router-link element to make the card's content section clickable -->
       <router-link

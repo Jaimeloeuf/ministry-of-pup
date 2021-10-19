@@ -3,11 +3,11 @@
     <!-- This contains both the navbar and the main content at the top of the viewport -->
     <div class="columns mt-5 ml-5">
       <!-- is-narrow modifier makes the column shrink to the size of the inner component -->
-      <div class="column is-narrow" v-if="showNavbar">
+      <div class="column is-narrow pr-0" v-if="showNavbar">
         <Navbar />
       </div>
 
-      <div class="column">
+      <div class="column pl-0">
         <!-- Router view for the main view -->
         <router-view />
       </div>

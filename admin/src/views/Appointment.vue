@@ -1,9 +1,20 @@
 <template>
   <div class="columns is-multiline is-centered" style="max-width: 50em">
-    <div class="column is-full">
+    <div class="column">
       <p class="subtitle">
         Appointment <b>{{ appointmentID }}</b>
       </p>
+    </div>
+
+    <div class="column is-narrow">
+      <b>
+        {{
+          new Date(appointment.time).toLocaleString("default", {
+            dateStyle: "medium",
+            timeStyle: "short",
+          })
+        }}
+      </b>
     </div>
 
     <div class="column is-full">

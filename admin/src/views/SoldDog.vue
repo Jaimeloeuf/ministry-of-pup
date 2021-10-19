@@ -15,8 +15,7 @@
         </div>
 
         <!-- @todo Load the dogs from store -->
-        <!-- <div v-else class="select is-fullwidth"> -->
-        <div class="select is-fullwidth">
+        <div v-else class="select is-fullwidth">
           <select>
             <option v-for="(dog, i) in dogs" :key="i">{{ dog.name }}</option>
           </select>
