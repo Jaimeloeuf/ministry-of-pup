@@ -337,7 +337,7 @@ export default {
       const storage = getStorage(firebaseApp);
 
       // If this fails, let report method that calls this internal method handle it
-      this.imagePath = await Promise.all(
+      this.imgSrc = await Promise.all(
         this.files.map((file) =>
           // Upload file and chain to get publicly available download URL
           uploadBytes(
@@ -356,7 +356,7 @@ export default {
       // Ensure files are successfully uploaded first before calling API
       // If this succeeds, but API call fails then the files are just left in storage
       // If user chooses to retry, on the next recursive call, the upload files step will be skipped
-      if (this.folderID === undefined && this.imagePath === undefined)
+      if (this.folderID === undefined && this.imgSrc === undefined)
         await this._uploadFiles();
 
       // eslint-disable-next-line no-unreachable
@@ -365,7 +365,7 @@ export default {
         .header(await getAuthHeader())
         .data({
           folderID: this.folderID,
-          imagePath: this.imagePath,
+          imgSrc: this.imgSrc,
 
           availablityDate: this.availablityDate,
           dob: this.dob,

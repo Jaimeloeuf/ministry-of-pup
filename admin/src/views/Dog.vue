@@ -8,7 +8,7 @@
       <div class="card is-horizontal">
         <div class="card-image" style="width: 50%">
           <figure class="image">
-            <img :src="dog.imgSrc" />
+            <img :src="dog.imageSrc[0]" />
           </figure>
         </div>
 
