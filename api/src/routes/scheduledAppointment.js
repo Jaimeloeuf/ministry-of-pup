@@ -9,7 +9,6 @@ const express = require("express");
 const router = express.Router();
 const fs = require("../utils/fs");
 const { asyncWrap } = require("express-error-middlewares");
-const { DateTime } = require("luxon");
 
 /**
  * Creates an account for the user if it does not already exists, and book a appointment
@@ -19,20 +18,19 @@ const { DateTime } = require("luxon");
 router.get(
   "/",
   asyncWrap(async (req, res) => {
-    // Query DB for appointments that end after a given time (defaults to current time in SGT)
-    // Always returns an Array, regardless if there are any appointments in it
-    // Appointments timestamps are stored as unix time Milliseconds
-    const after = req.query.after
-      ? DateTime.fromMillis(parseInt(req.query.after)).setZone("Asia/Singapore")
-      : DateTime.now().setZone("Asia/Singapore");
+    // Appointments timestamps are stored as unix time Milliseconds thus `after` is also in Milliseconds
+    // If after is passed in as a query parameter it should be a number with Milliseconds as its unit,
+    // Else get the current unix milliseconds timestamp from system.
+    const after = req.query.after || new Date().getTime();
 
+    // Query DB for appointments that end after a given time
     // https://cloud.google.com/firestore/docs/query-data/queries#limitations
     // Because of the limitations of the != operator, we cannot filter out
     // cancelled appointments directly using the query, thus need to filter out after getting back the document
     // It isn't too bad since there will probably not be so many cancelled appointments within the timeframe
     const snapshot = await fs
       .collection("appointments")
-      .where("time", ">=", after.toMillis())
+      .where("time", ">=", after)
       .get();
 
     res.status(200).json({

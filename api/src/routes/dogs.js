@@ -27,7 +27,7 @@ router.get(
       .where("sold", "==", false)
       .get();
 
-    // Map/reduce the array of objects into a single object keyed by the doc IDs
+    // Map the array of docs into an array of doc data with the doc ID included
     const dogs = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
     // Alternatively send back id only and get frontend to load the dogs 1 by 1
