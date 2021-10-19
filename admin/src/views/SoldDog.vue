@@ -50,7 +50,7 @@
     -->
     <div class="column is-full">
       <label>
-        <b>Final sale price</b> (MSRP is ${{ dog.msrp }})
+        <b>Final sale price</b> (MSRP is {{ formatCurrency(dog.msrp) }})
         <br />
         <p v-if="salePrice < dog.msrp">*Less than MSRP</p>
         <p v-if="salePrice > dog.msrp">*More than MSRP</p>
@@ -59,7 +59,7 @@
           type="number"
           v-model="salePrice"
           pattern="[\s0-9]+"
-          placeholder="E.g. 10000 for $10,000"
+          placeholder="E.g. 10000 for $10,000 where unit is dollars"
           class="input"
           :class="{
             'is-danger': salePrice < dog.msrp,
@@ -93,7 +93,7 @@
           type="number"
           v-model="salePrice"
           pattern="[\s0-9]+"
-          placeholder="E.g. 10000 for $10,000"
+          placeholder="E.g. 10000 for $10,000 where unit is dollars"
           class="input"
         />
       </label>
@@ -141,6 +141,8 @@
 <script>
 import { mapState } from "vuex";
 
+import formatCurrency from "../utils/formatCurrency.js";
+
 export default {
   name: "SoldDog",
 
@@ -150,8 +152,7 @@ export default {
     // If a dogID is passed in as a URL query
     // @todo Load the dog using this.dogID after admin choose from the dropdown
     dog() {
-      if (this.dogID) return this.$store.getters["dog/dog"](this.dogID);
-      else return { msrp: 10000 };
+      return this.dogID ? this.$store.state.dog.dogs[this.dogID] : undefined;
     },
 
     ...mapState("dog", ["dogs"]),
@@ -176,6 +177,8 @@ export default {
   },
 
   methods: {
+    formatCurrency,
+
     updateUserID(event) {
       this.userID = event.target.value;
     },

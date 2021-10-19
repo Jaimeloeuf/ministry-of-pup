@@ -40,6 +40,12 @@
               Pedigree: {{ dog.pedigree }}
 
               <br />
+              Cost: {{ formatCurrency(dog.cost) }}
+
+              <br />
+              MSRP: {{ formatCurrency(dog.msrp) }}
+
+              <br />
               Sold: {{ dog.sold }}
             </div>
           </div>
@@ -93,6 +99,8 @@
 import { oof } from "simpler-fetch";
 import { getAuthHeader } from "../firebase.js";
 
+import formatCurrency from "../utils/formatCurrency.js";
+
 export default {
   name: "Dog",
 
@@ -110,6 +118,8 @@ export default {
   },
 
   methods: {
+    formatCurrency,
+
     // Load all appointments for this specific dog
     async loadAppointments() {
       return alert("Not implemented yet, scheduled for v2");

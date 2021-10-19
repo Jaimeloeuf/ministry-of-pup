@@ -133,7 +133,7 @@
           v-model="cost"
           pattern="[\s0-9]+"
           min="0"
-          placeholder="E.g. 10000 for $10,000"
+          placeholder="E.g. 10000 for $10,000 where unit is dollars"
           class="input"
         />
       </label>
@@ -151,7 +151,7 @@
           v-model="msrp"
           pattern="[\s0-9]+"
           :min="cost"
-          placeholder="E.g. 10000 for $10,000"
+          placeholder="E.g. 10000 for $10,000 where unit is dollars"
           class="input"
         />
       </label>
@@ -351,6 +351,7 @@ export default {
     async newDog() {
       // @todo Validate all required input is entered
 
+      // @todo Test to ensure this works
       // Ensure files are successfully uploaded first before calling API
       // If this succeeds, but API call fails then the files are just left in storage
       // If user chooses to retry, on the next recursive call, the upload files step will be skipped
@@ -373,10 +374,10 @@ export default {
           pedigree: this.pedigree,
           breedID: this.breedID,
 
-          // HTML input type="number" returns a String, thus parseInt to store as Numbers
-          // Cost and MSRP of dog will not be floats
-          cost: parseInt(this.cost),
-          msrp: parseInt(this.msrp),
+          // HTML input type="number" returns a String, thus parseInt to Number and * 100 to convert to cents
+          // Cost and MSRP of dog will not be floats as everything is stored in cents in the backend
+          cost: parseInt(this.cost) * 100,
+          msrp: parseInt(this.msrp) * 100,
         })
         .runJSON();
 

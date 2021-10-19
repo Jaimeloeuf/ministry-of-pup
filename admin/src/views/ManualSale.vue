@@ -84,7 +84,7 @@
                 v-model="item.price"
                 pattern="[\s0-9]+"
                 min="0"
-                placeholder="E.g. 100 for $100"
+                placeholder="E.g. 100 for $100 where unit is dollars"
                 class="input"
               />
             </label>
@@ -417,7 +417,9 @@ export default {
         .data({
           paymentMethod: "paynow",
           invoiceNumber: "MOP-INV-MAN-1001",
-          totalPrice: this.totalPrice,
+
+          // Convert to cents before sending to API as everything is stored in cents in the backend
+          totalPrice: this.totalPrice * 100,
 
           customer: this.customer,
 
