@@ -28,4 +28,4 @@ async function getAuthHeader() {
 }
 
 // Export only the items that will be used
-export { auth, onAuthStateChanged, getAuthHeader };
+export { firebaseApp, auth, onAuthStateChanged, getAuthHeader };

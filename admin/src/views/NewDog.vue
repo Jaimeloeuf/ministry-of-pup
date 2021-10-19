@@ -157,6 +157,68 @@
       </label>
     </div>
 
+    <div v-if="files.length" class="column is-full">
+      <label>
+        <b>Images / Videos</b>
+
+        <table class="table is-striped is-fullwidth is-vcentered">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(file, i) in files"
+              :key="i"
+              :class="{ 'is-selected': false }"
+            >
+              <td>{{ file.name }}</td>
+              <td>
+                <!-- <button @click="deleteFile(i)" class="delete" /> -->
+                <button
+                  @click="deleteFile(i)"
+                  class="button is-danger is-light is-fullwidth"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </label>
+    </div>
+
+    <!-- Allow users to upload up to 10 pictures/videos as needed -->
+    <div class="column is-full">
+      <label v-if="files.length < 10">
+        <b>Max 10 files</b>
+
+        <div class="file">
+          <label class="button is-light is-success is-fullwidth">
+            <p>Select images / videos</p>
+
+            <input
+              type="file"
+              accept="video/*,image/*"
+              multiple
+              @change="onFileChange"
+              class="file-input"
+              name="images"
+            />
+          </label>
+        </div>
+      </label>
+
+      <div v-else>
+        <b>
+          You have uploaded a maximum of 10 files already, please delete files
+          to add more
+        </b>
+      </div>
+    </div>
+
     <div class="column">
       <hr class="my-0" style="background-color: #dedede" />
     </div>
@@ -178,7 +240,7 @@
 <script>
 import todaysDate from "../utils/todaysDate.js";
 import { oof } from "simpler-fetch";
-import { getAuthHeader } from "../firebase.js";
+import { firebaseApp, getAuthHeader } from "../firebase.js";
 
 export default {
   name: "NewDog",
@@ -211,6 +273,11 @@ export default {
         { id: 1, text: "French bulldog" },
         { id: 2, text: "Shiba Inu" },
       ],
+
+      // Files array and firebase cloud storage values
+      files: [],
+      folderID: undefined,
+      imagePath: undefined,
     };
   },
 
@@ -234,13 +301,72 @@ export default {
         this.dogSexID === 1 ? dogNames.maleRandom() : dogNames.femaleRandom();
     },
 
+    deleteFile(fileIndex) {
+      this.files.splice(fileIndex, 1);
+    },
+
+    // Concat list of uploaded file objects to the existing array of files
+    onFileChange(event) {
+      // Dont add files to file array if the total number of files after upload is more than 10
+      if (this.files.length + event.target.files.length > 10)
+        return alert(
+          `Maximum of 10 files allowed\nThere is already ${this.files.length} file(s)`
+        );
+
+      // Need to use push instead of concat as Vue's reactivity does not work with concat
+      this.files.push(...event.target.files);
+    },
+
+    // Upload files to a new random folder in dog-pics/ and return's the folder ID if there are files, else returns null
+    async _uploadFiles() {
+      if (!this.files.length) return null;
+
+      // Lazily import this to quickly load the page first
+      const { getStorage, ref, uploadBytes, getDownloadURL } = await import(
+        "firebase/storage"
+      );
+
+      // Firebase cloud storage does not provide auto GUID generation, thus here is a crud way of generating GUIDs
+      // https://stackoverflow.com/questions/37444685/store-files-with-unique-random-names/37444839#37444839
+      const folderID =
+        Math.random().toString(36).slice(2) +
+        Math.random().toString(36).slice(2);
+
+      this.folderID = folderID;
+
+      const storage = getStorage(firebaseApp);
+
+      // If this fails, let report method that calls this internal method handle it
+      this.imagePath = await Promise.all(
+        this.files.map((file) =>
+          // Upload file and chain to get publicly available download URL
+          uploadBytes(
+            ref(storage, `dog-pics/${folderID}/${file.name}`),
+            file
+          ).then((snapshot) => getDownloadURL(snapshot.ref))
+        )
+      );
+
+      console.log(`${this.files.length} files uploaded`);
+    },
+
     async newDog() {
       // @todo Validate all required input is entered
 
+      // Ensure files are successfully uploaded first before calling API
+      // If this succeeds, but API call fails then the files are just left in storage
+      // If user chooses to retry, on the next recursive call, the upload files step will be skipped
+      if (this.folderID === undefined && this.imagePath === undefined)
+        await this._uploadFiles();
+
+      // eslint-disable-next-line no-unreachable
       const res = await oof
         .POST("/admin/pet/new")
         .header(await getAuthHeader())
         .data({
+          folderID: this.folderID,
+          imagePath: this.imagePath,
+
           availablityDate: this.availablityDate,
           dob: this.dob,
           dogSexID: this.dogSexID,
