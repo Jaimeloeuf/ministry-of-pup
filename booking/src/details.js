@@ -35,6 +35,8 @@ const book = (state) => [
             const response = await oof
               .POST("/appointment/book")
               .data({
+                // @todo validate all the inputs
+
                 // @todo Might figure out how to pass dogID or preference into the system later on
                 // Tmp fake value used here to prevent firestore document insert from failing
                 dogID: 1,
@@ -60,72 +62,85 @@ const book = (state) => [
 ];
 
 const view = div({ class: "px-5 pt-5", style: { "max-width": "30em" } }, [
-  div({ class: "columns is-multiline" }, [
+  div({ class: "columns is-multiline is-mobile" }, [
     div(
       { class: "column is-full" },
       h1({ class: "title is-4" }, text("Enter your details"))
     ),
 
     div(
-      { class: "column is-full" },
-      label([
-        text("First name"),
-        input({
-          oninput: NewValue("fname"),
-          type: "text",
-          class: "input",
-        }),
+      { class: "column is-full box" },
+      div({ class: "columns is-multiline" }, [
+        div(
+          { class: "column is-full" },
+          label([
+            text("First name"),
+            input({
+              oninput: NewValue("fname"),
+              type: "text",
+              class: "input",
+              placeholder: "E.g. John",
+            }),
+          ])
+        ),
+
+        div(
+          { class: "column is-full" },
+          label([
+            text("Last name"),
+            input({
+              oninput: NewValue("lname"),
+              type: "text",
+              class: "input",
+              placeholder: "E.g. Doe",
+            }),
+          ])
+        ),
+
+        div(
+          { class: "column is-full" },
+          label([
+            text("Phone number (+65)"),
+            input({
+              oninput: NewValue("number"),
+              type: "tel",
+              pattern: "[s0-9]+",
+              min: 10000000,
+              max: 99999999,
+              class: "input",
+              required: true,
+              placeholder: "E.g. 92345678",
+            }),
+          ])
+        ),
+
+        div(
+          { class: "column is-full" },
+          label([
+            text("Email"),
+            input({
+              oninput: NewValue("email"),
+              type: "text",
+              class: "input",
+              placeholder: "E.g. example@gmail.com",
+            }),
+          ])
+        ),
       ])
     ),
 
     div(
-      { class: "column is-full" },
-      label([
-        text("Last name"),
-        input({
-          oninput: NewValue("lname"),
-          type: "text",
-          class: "input",
-        }),
-      ])
+      { class: "column is-half" },
+      button({ class: "button is-fullwidth py-5", onclick: back }, text("Back"))
     ),
 
     div(
-      { class: "column is-full" },
-      label([
-        text("Phone number (+65)"),
-        input({
-          oninput: NewValue("number"),
-          type: "tel",
-          class: "input",
-        }),
-      ])
-    ),
-
-    div(
-      { class: "column is-full" },
-      label([
-        text("Email"),
-        input({
-          oninput: NewValue("email"),
-          type: "text",
-          class: "input",
-        }),
-      ])
-    ),
-
-    div(
-      { class: "column is-full" },
+      { class: "column is-half" },
       button(
-        { class: "button is-light is-danger is-fullwidth", onclick: back },
-        text("Back")
-      )
-    ),
-
-    div(
-      { class: "column is-full" },
-      button(
-        { class: "button is-light is-success is-fullwidth", onclick: book },
+        {
+          class: "button is-fullwidth py-5 is-light is-success",
+          onclick: book,
+        },
         text("Book")
       )
     ),

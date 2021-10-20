@@ -34,7 +34,7 @@ Whatsapp us through https://wa.me/6588022177
 
 Email us at ministryofpup@gmail.com
 
-Or call us at 88022177 daily between 10am - 8pm for help`;
+Or call us at 8802,2177 daily between 10am - 8pm for help`;
 
 // Generate event object for the calendar links using data from state
 const getCalendarEventObj = (state) => ({

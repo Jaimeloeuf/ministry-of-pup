@@ -1,5 +1,3 @@
-/* Defaults to a hyperapp demo application */
-
 import { app } from "hyperapp";
 import { main } from "@hyperapp/html";
 
@@ -85,7 +83,8 @@ else
       details,
       appointmentID,
     }) =>
-      main({ style: { cssText: "max-width: 40em;" } }, [
+      main(
+        { style: { cssText: "max-width: 40em;" } },
         loader
           ? loaderView
           : (function () {
@@ -108,8 +107,8 @@ else
                   // @todo Load it asynchronously   return import("./notFound.js");
                   return notFoundView;
               }
-            })(),
-      ]),
+            })()
+      ),
 
     node: document.getElementById("app"),
   });

@@ -70,6 +70,7 @@ const selectDateView = (datesAvailable) =>
                 })()
               ),
 
+              // Why is the HR alternating in boldness?
               hr({ style: { "background-color": "#dedede" } }),
             ])
           )
@@ -90,12 +91,12 @@ const view = ({ dog, datesAvailable }) =>
     div({ class: "columns is-multiline" }, [
       div(
         { class: "column is-full" },
-        h1({ class: "title is-4" }, text("Book a session"))
+        h1({ class: "title is-4" }, text("Book a play session!"))
       ),
 
-      div({ class: "column is-full" }, [
-        h3({ class: "subtitle" }, text(`For ${dog.name}`)),
-      ]),
+      // div({ class: "column is-full" }, [
+      //   h3({ class: "subtitle" }, text(`For ${dog.name}`)),
+      // ]),
 
       div({ class: "column is-full" }, selectDateView(datesAvailable)),
     ]),

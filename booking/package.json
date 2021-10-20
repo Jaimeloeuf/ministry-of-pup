@@ -14,7 +14,7 @@
     "bulma": "^0.9.3",
     "calendar-link": "^2.1.1",
     "hyperapp": "^2.0.19",
-    "simpler-fetch": "^1.0.0"
+    "simpler-fetch": "^2.1.0"
   },
   "keywords": [
     "hyperapp",
@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/Enkel-Digital/mop-booking#readme",
   "devDependencies": {
-    "esbuild": "^0.12.28",
+    "esbuild": "^0.13.5",
     "live-server": "^1.2.1",
     "purgecss": "^4.0.3"
   }
