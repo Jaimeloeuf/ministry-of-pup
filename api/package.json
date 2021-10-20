@@ -6,6 +6,7 @@
   "scripts": {
     "docker:build": "docker build -t gcr.io/ministryofpup-ekd/api -f ./.Dockerfile .",
     "docker:push": "docker push gcr.io/ministryofpup-ekd/api",
+    "deploy": "npm run docker:build && npm run docker:push",
     "serve": "nodemon ./src/index.js",
     "start": "node ./src/index.js"
   },

@@ -174,7 +174,7 @@ router.post(
       to: email,
       from: process.env.notificationEmailSender,
       subject: `Ministry Of Pup: Appointment booked for ${timeString}!`,
-      html: emailString(fname, timeString, appointmentID),
+      text: emailString(fname, timeString, appointmentID),
     });
 
     // await sendMail.send({
@@ -187,7 +187,7 @@ router.post(
     // Notify admins about new appointment using the telegram notification bot
     const notifyAdmin = require("../utils/tAdminNotification.js");
     notifyAdmin(`*New appointment*
-  
+
 ${timeString}
 User: *${fname}*
 ID: _${appointmentID}_`);
@@ -208,6 +208,8 @@ router.post(
   "/cancel/:appointmentID",
   asyncWrap(async (req, res) => {
     const { appointmentID } = req.params;
+
+    // @todo Handle the recaptcha token
 
     const docRef = fs.collection("appointments").doc(appointmentID);
 

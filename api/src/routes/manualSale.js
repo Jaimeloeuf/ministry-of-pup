@@ -105,8 +105,8 @@ router.post(
         postal_code: customer.postalCode,
       },
 
-      // Converting amount/currency from dollars to cents
-      totalPrice: totalPrice * 100,
+      // Total price of sale in cents
+      totalPrice,
 
       // Note that all amount/currency must be in cents
       items,

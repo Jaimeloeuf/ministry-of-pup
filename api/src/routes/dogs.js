@@ -11,6 +11,8 @@ const fs = require("../utils/fs");
 const { asyncWrap } = require("express-error-middlewares");
 
 // @todo A /sold API for all dogs that are already sold
+// These routes can be replaced, by making admin app access these data from firestore directly,
+// as no processing is needed just data access and is only for admin, to reduce load on cloud run.
 
 /**
  * Get all available pets from the system

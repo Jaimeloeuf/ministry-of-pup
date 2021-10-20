@@ -22,7 +22,9 @@ function nextFiveAvailableDates(startingDate) {
   // with the value as the `after` value. Which means that we have to increment the
   // date by 1 to ensure that we only get timeslots "after" that date.
   const start = startingDate
-    ? DateTime.fromMillis(startingDate).plus({ days: 1 })
+    ? DateTime.fromMillis(startingDate)
+        .setZone("Asia/Singapore")
+        .plus({ days: 1 })
     : DateTime.now().setZone("Asia/Singapore").startOf("day");
 
   // Create an empty array of [0, 0, 0, 0, 0] and map to create 5 object with start and end datetimes
@@ -114,8 +116,6 @@ function availableTimeSlots(allTimeSlots, appointments) {
   // Return timeslots after current appointments have been filtered out from it
   return allTimeSlots;
 }
-
-//  Maybe instead of hard caching do a TTL type caching?
 
 // Function that gets the opening time from the DB
 // This only gets and reads a single Doc from DB as all the opening time for the entire week,
