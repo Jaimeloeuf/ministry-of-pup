@@ -1,13 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ministry Of Pup</title>
+
+  <!--
+    Load the recaptcha library asynchronously to not block the main JS app from loading
+    <script src="https://www.google.com/recaptcha/api.js?render=6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z" async defer>
+
+    However that causes an issue where the library might be loaded after the main app runs
+    And if running the cancel appointment app, and the cancel appointment effect runs, it will fail as grecaptcha is not defined yet
+    Thus this is loaded synchronously asap
+
+    Here is a solution to use if the library should be loaded asynchronously inside the JS module
+    https://github.com/AurityLab/recaptcha-v3
+  -->
+  <script src="https://www.google.com/recaptcha/api.js?render=6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z"></script>
+</head>
+
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>

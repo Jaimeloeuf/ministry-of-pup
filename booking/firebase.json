@@ -1,7 +1,7 @@
 {
   "hosting": {
     "target": "ministryofpup-booking",
-    "public": "dist",
+    "public": "vue3/dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [{ "source": "**", "destination": "/index.html" }]
   }

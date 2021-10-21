@@ -1,42 +1,51 @@
 <template>
-  <div class="px-5 pt-5">
+  <div class="px-5 py-5">
     <div class="columns is-multiline">
       <div class="column is-full">
-        <p class="title is-4">Book a play session!</p>
+        <p class="title is-3">Book a play session!</p>
       </div>
 
       <div class="column is-full">
         <div class="card px-5">
           <div class="card-content content">
-            <p class="subtitle is-6">Select a date</p>
+            <p class="subtitle is-4">Select a date</p>
 
-            <div
-              class="level is-mobile"
-              v-for="(date, i) in datesAvailable"
-              :key="i"
-              @click="selectDate(date)"
-            >
-              <div class="level-item">
-                {{
-                  new Date(date.date).toLocaleString("default", {
-                    weekday: "long",
-                  })
-                }}
+            <div v-for="(date, i) in datesAvailable" :key="i">
+              <div
+                class="level is-mobile my-4"
+                style="cursor: pointer"
+                @click="selectDate(date)"
+              >
+                <div class="level-left">
+                  <div class="level-item">
+                    {{
+                      new Date(date.date).toLocaleString("default", {
+                        weekday: "long",
+                      })
+                    }}
+                  </div>
+                </div>
+
+                <div class="level-right">
+                  <div class="level-item">
+                    {{ new Date(date.date).getDate() }}
+
+                    {{
+                      new Date(date.date).toLocaleString("default", {
+                        month: "long",
+                      })
+                    }}
+                  </div>
+                </div>
               </div>
 
-              <div class="level-item">
-                {{ new Date(date.date).getDate() }}
-
-                {{
-                  new Date(date.date).toLocaleString("default", {
-                    month: "long",
-                  })
-                }}
-              </div>
-
-              <!-- Why is the HR alternating in boldness? -->
-              <hr class="my-0" style="background-color: #dedede" />
+              <!-- @todo Why is the HR alternating in boldness? -->
+              <hr style="background-color: #dedede" />
             </div>
+
+            <button class="button is-light is-fullwidth" @click="getMoreDates">
+              See More Available Dates
+            </button>
           </div>
         </div>
       </div>
@@ -44,22 +53,41 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
+<script>
+import { mapState } from "vuex";
 
-defineProps({
-  msg: String,
-});
+export default {
+  name: "Booking",
 
-const datesAvailable = ref([]);
+  created() {
+    // Only run this on first load, so that if user navigates back from timeslots dates will not be loaded again
+    if (this.datesAvailable.length === 0) this.loadDates();
+  },
 
-function selectDate(date) {
-  console.log("selectDate", date);
-}
+  computed: mapState(["datesAvailable"]),
+
+  methods: {
+    async loadDates(after) {
+      this.$store.commit("loading", true);
+      await this.$store.dispatch("loadDates", after);
+      this.$store.commit("loading", false);
+    },
+
+    async getMoreDates() {
+      this.loadDates(
+        // Get the last date in available dates to get more timeslots after that date
+        // SADLY SAFARI does not support .at() ... smh
+        // state.datesAvailable.at(-1)?.date,
+        this.$store.state.datesAvailable[
+          this.$store.state.datesAvailable.length - 1
+        ]?.date
+      );
+    },
+
+    selectDate(date) {
+      this.$store.commit("setSelectedDate", date);
+      this.$router.push({ name: "select-timeslot" });
+    },
+  },
+};
 </script>
-
-<style scoped>
-a {
-  color: #42b983;
-}
-</style>

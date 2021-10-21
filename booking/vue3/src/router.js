@@ -5,6 +5,12 @@ import Booking from "./components/Booking.vue";
 const router = createRouter({
   history: createWebHashHistory(),
 
+  // Always scroll to top of view on first visit and no savedPosition, else reuse savedPosition
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition;
+    else return { top: 0 };
+  },
+
   /**
    * @notice
    * Routes uses lazily loaded components with route level code-splitting
@@ -14,19 +20,32 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "Booking",
+      name: "booking",
       component: Booking,
     },
-    // {
-    //   path: "/about",
-    //   name: "about",
-    //   component: () => import("../components/AboutUs.vue"),
-    // },
-    // {
-    //   path: "/faq",
-    //   name: "faq",
-    //   component: () => import("../components/FAQ.vue"),
-    // },
+    {
+      path: "/select-timeslot",
+      name: "select-timeslot",
+      component: () => import("./components/Timeslots.vue"),
+    },
+    {
+      path: "/details",
+      name: "details",
+      component: () => import("./components/Details.vue"),
+    },
+    {
+      path: "/complete",
+      name: "complete",
+      component: () => import("./components/Complete.vue"),
+    },
+    {
+      path: "/cancel/:appointmentID",
+      props: true,
+      name: "cancel",
+      component: () => import("./components/Cancel.vue"),
+    },
+
+    // @todo Add a 404 not found
   ],
 });
 
