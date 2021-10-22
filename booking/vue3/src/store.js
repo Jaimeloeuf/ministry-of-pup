@@ -82,13 +82,11 @@ export default createStore({
 
       const res = await oof
         .POST("/appointment/book")
+        .header({ "x-recaptcha-token": token })
         .data({
           // @todo Might figure out how to pass dogID or preference into the system later on
           // Tmp fake value used here to prevent firestore document insert from failing
           dogID: null,
-
-          // Include recaptcha token in API call
-          token,
 
           time: state.selectedTimeslot,
 
@@ -113,7 +111,8 @@ export default createStore({
       const token = await getRecaptchaToken("cancelAppointment");
 
       const res = await oof
-        .POST(`/appointment/cancel/${appointmentID}?token=${token}`)
+        .POST(`/appointment/cancel/${appointmentID}`)
+        .header({ "x-recaptcha-token": token })
         .run()
         .then((res) => res.json());
 
