@@ -9,6 +9,7 @@ const express = require("express");
 const router = express.Router();
 const sendMail = require("../utils/sendMail");
 const fs = require("../utils/fs");
+const verifyRecaptcha = require("../utils/verifyRecaptcha");
 const unixseconds = require("unixseconds");
 const { asyncWrap } = require("express-error-middlewares");
 
@@ -89,36 +90,10 @@ const getTimeString = (time) =>
  */
 router.post(
   "/book",
+  verifyRecaptcha,
   express.json(),
   asyncWrap(async (req, res) => {
-    const { token, dogID, time, fname, lname, email } = req.body;
-
-    if (!token) throw new Error("Missing recaptcha token!");
-
-    // Lazily loading the HTTP client library to help with serverless cold start time
-    const recaptchaRes = await require("tiny-json-http")
-      .post({
-        // No freaking idea why but sending data over as a req.body JSON does not work
-        // Need to put all the parameters as query string params which is kinda weird...
-        // But I have spent too much time on this and since the below works, just sticking with it
-        // url: "https://www.google.com/recaptcha/api/siteverify",
-        // data: {
-        //   secret: process.env.recaptchaSecret,
-        //   response: token,
-        //   remoteip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
-        // },
-
-        url: `https://www.google.com/recaptcha/api/siteverify?secret=${
-          process.env.recaptchaSecret
-        }&response=${token}&remoteip=${
-          req.headers["x-forwarded-for"] || req.socket.remoteAddress
-        }`,
-      })
-      .then((resp) => resp.body);
-
-    if (!recaptchaRes.success) throw new Error(recaptchaRes["error-codes"]);
-    if (recaptchaRes.score < 0.6)
-      throw new Error(`Recaptcha score too low: ${recaptchaRes.score}`);
+    const { dogID, time, fname, lname, email } = req.body;
 
     // Remove all white space from phone number
     const number = req.body.number.replace(" ", "");
@@ -206,10 +181,9 @@ ID: _${appointmentID}_`);
  */
 router.post(
   "/cancel/:appointmentID",
+  verifyRecaptcha,
   asyncWrap(async (req, res) => {
     const { appointmentID } = req.params;
-
-    // @todo Handle the recaptcha token
 
     const docRef = fs.collection("appointments").doc(appointmentID);
 
