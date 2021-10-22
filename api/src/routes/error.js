@@ -9,8 +9,6 @@ const express = require("express");
 const router = express.Router();
 const { asyncWrap } = require("express-error-middlewares");
 
-const fs = require("../utils/fs");
-
 /**
  * Register new error from client
  * @name POST /error/new/
@@ -25,20 +23,22 @@ router.post(
 
     // Save error and time into a new doc with a random key
     // https://firebase.google.com/docs/firestore/manage-data/add-data#add_a_document
-    const errorDoc = await fs
+    const errorDoc = await require("../utils/fs")
       .collection("errors")
       .add({ error, description, time });
 
-    // Construct the error message
-    const message =
-      `Hello developer, new error '${time}' has been reported to the API!\n\n` +
-      `Error ID: ${errorDoc.id}\n` +
-      `Error: ${error}\n` +
-      `Description: ${description}\n`;
+    // Notify developers about error using the telegram notification bot
+    const notifyAdmin = require("../utils/tAdminNotification.js");
+    notifyAdmin(`*ERROR*
 
-    // @todo Send telegram message via telegram bot to notify developers of error
-    // Get the telegram chat ID from env
-    process.env.developer_telegram_chat_id;
+${new Intl.DateTimeFormat("en-SG", {
+  dateStyle: "full",
+  timeStyle: "short",
+  timeZone: "Asia/Singapore",
+}).format(new Date())}
+Error ID: ${errorDoc.id}
+Error: ${error}
+Description: ${description}`);
 
     res.status(201).json({ ok: true });
   })
