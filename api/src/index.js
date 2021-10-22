@@ -11,37 +11,38 @@ app.use(require("cors")({ origin: [/ministryofpup\.com$/, /localhost/] }));
 // middleware to add http headers
 app.use(require("helmet")());
 
-const authMiddleware = require("firebase-auth-express-middleware")(
-  require("firebase-admin")
-);
+const authnMiddleware = require("./utils/authnMiddleware");
+// const authzMiddleware = require("./utils/authzMiddleware");
+const adminOnly = require("./utils/adminOnly");
 
 /**
  * @notice Import and Mount all the routers for the different routes
  */
-app.use("/", require("./routes/default.js"));
+app.use("/", adminOnly, require("./routes/default.js"));
+// Rename this to /user/appointments and file to userAppointments
 app.use("/appointment", require("./routes/appointment.js"));
 app.use("/appointment/available", require("./routes/available.js"));
 // @todo Ensure only admin access this route with a authorization middleware
 app.use(
   "/admin/appointment/scheduled",
-  authMiddleware,
+  authnMiddleware,
   require("./routes/scheduledAppointment")
 );
-app.use("/admin/pet", authMiddleware, require("./routes/dogs.js"));
-app.use("/admin/pet/new", authMiddleware, require("./routes/newDog.js"));
-app.use("/admin/pet/sold", authMiddleware, require("./routes/sold.js"));
+app.use("/admin/pet", authnMiddleware, require("./routes/dogs.js"));
+app.use("/admin/pet/new", authnMiddleware, require("./routes/newDog.js"));
+app.use("/admin/pet/sold", authnMiddleware, require("./routes/sold.js"));
 app.use(
   "/admin/schedule",
-  authMiddleware,
+  authnMiddleware,
   require("./routes/adminSchedule.js")
 );
 app.use(
   "/admin/sale/manual",
-  authMiddleware,
+  authnMiddleware,
   require("./routes/manualSale.js")
 );
-// app.use("/help", authMiddleware, require("./routes/help.js"));
-// app.use("/rbac", authMiddleware, require("./routes/RBAC.js"));
+// app.use("/help", authnMiddleware, require("./routes/help.js"));
+// app.use("/rbac", authnMiddleware, require("./routes/RBAC.js"));
 // app.use("/error", require("./routes/error"));
 
 // Mount the 404 and 500 error handling middleware last
