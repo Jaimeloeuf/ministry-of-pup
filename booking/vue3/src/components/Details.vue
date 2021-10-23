@@ -114,12 +114,15 @@ export default {
     async book() {
       this.$store.commit("loading", true);
 
-      this.$store.commit("setDetails", {
-        fname: this.fname,
-        lname: this.lname,
-        number: this.number,
-        email: this.email,
-      });
+      this.$store.commit("setter", [
+        "details",
+        {
+          fname: this.fname,
+          lname: this.lname,
+          number: this.number,
+          email: this.email,
+        },
+      ]);
 
       this.$store.commit("setter", ["preference", this.preference || ""]);
 

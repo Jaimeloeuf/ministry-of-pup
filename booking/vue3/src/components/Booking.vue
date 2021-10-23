@@ -85,7 +85,7 @@ export default {
     },
 
     selectDate(date) {
-      this.$store.commit("setSelectedDate", date);
+      this.$store.commit("setter", ["selectedDate", date]);
       this.$router.push({ name: "select-timeslot" });
     },
   },

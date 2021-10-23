@@ -67,7 +67,7 @@ export default {
       formatMsToTime(timeslotTimeInMilliseconds + 1800000),
 
     selectTimeslot(timeslot) {
-      this.$store.commit("setSelectedTimeslot", timeslot);
+      this.$store.commit("setter", ["selectedTimeslot", timeslot]);
       this.$router.push({ name: "details" });
     },
   },

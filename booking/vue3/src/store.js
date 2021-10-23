@@ -50,12 +50,6 @@ export default createStore({
     setter: (state, payload) => (state[payload[0]] = payload[1]),
 
     setAvailableDates: (state, dates) => state.datesAvailable.push(...dates),
-    setSelectedDate: (state, date) => (state.selectedDate = date),
-    setSelectedTimeslot: (state, timeslot) =>
-      (state.selectedTimeslot = timeslot),
-    setDetails: (state, details) => (state.details = details),
-    setAppointmentID: (state, appointmentID) =>
-      (state.appointmentID = appointmentID),
   },
 
   actions: {
@@ -106,7 +100,7 @@ export default createStore({
           confirm(`Error: \n${res.error}\n\nTry again?`) && dispatch("book")
         );
 
-      commit("setAppointmentID", res.appointmentID);
+      commit("setter", ["appointmentID", res.appointmentID]);
     },
 
     async cancel({ dispatch }, appointmentID) {
