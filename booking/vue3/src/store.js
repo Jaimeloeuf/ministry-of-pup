@@ -60,8 +60,7 @@ export default createStore({
             ? `/appointment/available/date?after=${after}`
             : "/appointment/available/date"
         )
-        .run()
-        .then((res) => res.json());
+        .runJSON();
 
       // If the API call failed, recursively dispatch itself again if user wants to retry,
       // And always make sure that this method call ends right here by putting it in a return expression
@@ -90,8 +89,7 @@ export default createStore({
           // fname / lname / number / email
           ...state.details,
         })
-        .run()
-        .then((res) => res.json());
+        .runJSON();
 
       // If the API call failed, recursively dispatch itself again if user wants to retry,
       // And always make sure that this method call ends right here by putting it in a return expression
@@ -109,8 +107,7 @@ export default createStore({
       const res = await oof
         .POST(`/appointment/cancel/${appointmentID}`)
         .header({ "x-recaptcha-token": token })
-        .run()
-        .then((res) => res.json());
+        .runJSON();
 
       // If the API call failed, recursively dispatch itself again if user wants to retry,
       // And always make sure that this method call ends right here by putting it in a return expression
