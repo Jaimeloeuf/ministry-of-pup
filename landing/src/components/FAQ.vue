@@ -16,11 +16,7 @@
       <div v-for="(faq, i) in faqs" :key="i" class="column is-4">
         <div @click="faq.show = !faq.show" class="card" style="cursor: pointer">
           <div class="card-content">
-            <p class="subtitle has-text-weight-bold">
-              {{ faq.ques }}
-            </p>
-
-            <!-- <span v-if="faq.show" v-html="faq.ans">{{ faq.ans }}</span> -->
+            <p class="subtitle has-text-weight-bold" v-html="faq.ques" />
             <span v-if="faq.show" v-html="faq.ans"></span>
           </div>
         </div>
@@ -28,7 +24,7 @@
 
       <div class="column is-full" />
 
-      <div class="column is-8">
+      <div class="column is-one-third">
         <div class="card">
           <div class="card-content">
             <p class="title" style="color: lightcoral">
@@ -58,8 +54,9 @@ export default {
     return {
       faqs: [
         {
-          ques: "Whats your operating hours?",
-          ans: "Mon to Sun, 10am to 8pm",
+          ques: "What is your operating hours?",
+          ans:
+            "Mon to Sun, 11am to 8pm by appointment only. Book your appointment <a href='https://booking.ministryofpup.com'>here</a>.",
           show: false,
         },
         {
@@ -70,7 +67,7 @@ export default {
         {
           ques: "Do you have pedigree dogs?",
           ans:
-            "Yes we do! See the listing details for each dog, and you can learn more during your on site viewing session",
+            "Yes we do! See the listing details for each dog, and you can also learn more during your on site play session with the dogs.",
           show: false,
         },
         {

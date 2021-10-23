@@ -56,51 +56,6 @@
 
 <script>
 export default {
-  name: "OurDogs",
-
-  data() {
-    return {
-      faqs: [
-        {
-          ques: "Whats your operating hours?",
-          ans: "Mon to Sun, 10am to 8pm",
-          hide: true,
-        },
-        {
-          ques: "Where are your puppies from?",
-          ans: "United Kingdom",
-          hide: true,
-        },
-      ],
-    };
-  },
+  name: "AboutUs",
 };
 </script>
-
-<style scoped>
-/* The overlay effect - lays on top of the container and over the image */
-.overlay {
-  position: absolute;
-  /* bottom: 0; */
-  right: 100;
-
-  /* Pink see-through */
-  background: rgba(255, 103, 103, 0.8);
-
-  /* Color of the icons */
-  color: white;
-  opacity: 0;
-
-  transition: 0.5s ease;
-
-  width: 100%;
-  font-size: 1.4em;
-  padding: 0.2em;
-  /* text-align: center; */
-}
-
-/* When you mouse over the container, fade in the overlay title */
-.container:hover .overlay {
-  opacity: 1;
-}
-</style>

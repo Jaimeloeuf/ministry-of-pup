@@ -14,22 +14,21 @@
 
     <div class="columns is-multiline">
       <!-- At most 4 per row, as 12/3==4 -->
-      <div v-for="(teamMember, i) in teamMembers" :key="i" class="column is-3">
+      <div v-for="(dogs, i) in dogss" :key="i" class="column is-3">
         <div class="card">
           <div class="card-image">
             <figure class="image is-square">
               <!-- Use native lazy loading, on none supported devices, fallback to eager loading. -->
               <img
                 loading="lazy"
-                :src="require(`../assets/dog_pics/${teamMember.imageSrc}.jpg`)"
-                :alt="teamMember.name"
+                :src="require(`../assets/dog_pics/${dogs.imageSrc}.jpg`)"
+                :alt="dogs.name"
               />
 
-              <!-- Social media links, only shown on hover for desktop and shown on click for mobile -->
-              <!-- <div class="overlay" width="2em">
+              <!-- <div>
                 <ul>
                   <li
-                    v-for="(social, i) in teamMember.social"
+                    v-for="(social, i) in dogs.social"
                     :key="i"
                     v-html="social.icon"
                   >
@@ -40,8 +39,8 @@
             </figure>
           </div>
           <div class="card-content">
-            <p class="title">{{ teamMember.name }}</p>
-            <p class="subtitle">{{ teamMember.title }}</p>
+            <p class="title">{{ dogs.name }}</p>
+            <p class="subtitle">{{ dogs.title }}</p>
           </div>
         </div>
       </div>
@@ -50,11 +49,34 @@
         <div class="card">
           <div class="card-content">
             <p class="title" style="color: lightcoral">
+              Love dogs?
+              <br />
+              <br />
+              Book a play session now!
+            </p>
+            <a
+              href="https://booking.ministryofpup.com"
+              class="button is-fullwidth"
+              target="_blank"
+              style="background: lightcoral; color: white"
+            >
+              Book appointment
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- @todo Google form first? -->
+      <!-- Or a form built in landing page, that submits to API and save in DB + notify in tele -->
+      <div class="column is-3">
+        <div class="card">
+          <div class="card-content">
+            <p class="title" style="color: lightcoral">
               Have a special dog you want?
             </p>
             <a
               href="#ContactUs"
-              class="button"
+              class="button is-fullwidth"
               style="background: lightcoral; color: white"
             >
               Tell us now!
@@ -72,29 +94,29 @@ export default {
 
   data() {
     return {
-      teamMembers: [
+      dogss: [
         {
-          name: "Catherine",
+          name: "Mochi",
           title: "French Bulldog",
           imageSrc: "dog",
         },
         {
-          name: "Joshua",
+          name: "Skyy",
           title: "French Bulldog",
           imageSrc: "dog",
         },
         {
-          name: "Nicholas",
+          name: "Mochirooooo",
           title: "Shiba Inu",
           imageSrc: "dog1",
         },
         {
-          name: "Jin",
+          name: "Jinny",
           title: "Shiba Inu",
           imageSrc: "dog2",
         },
         {
-          name: "Olivia",
+          name: "Oliy",
           title: "Shiba Inu",
           imageSrc: "dog2",
         },
@@ -103,31 +125,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-/* The overlay effect - lays on top of the container and over the image */
-.overlay {
-  position: absolute;
-  /* bottom: 0; */
-  right: 100;
-
-  /* Pink see-through */
-  background: rgba(255, 103, 103, 0.8);
-
-  /* Color of the icons */
-  color: white;
-  opacity: 0;
-
-  transition: 0.5s ease;
-
-  width: 100%;
-  font-size: 1.4em;
-  padding: 0.2em;
-  /* text-align: center; */
-}
-
-/* When you mouse over the container, fade in the overlay title */
-.container:hover .overlay {
-  opacity: 1;
-}
-</style>

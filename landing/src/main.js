@@ -13,8 +13,7 @@
 import Vue from "vue";
 import App from "./App.vue";
 
-// @todo Does not use the router by default
-import router from "./router";
+import router from "./router.js";
 
 Vue.config.productionTip = false;
 
