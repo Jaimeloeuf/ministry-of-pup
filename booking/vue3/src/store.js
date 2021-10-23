@@ -35,6 +35,8 @@ export default createStore({
         email: undefined,
       },
 
+      preference: undefined,
+
       // Set after appointment is booked, where this is returned from booking API
       appointmentID: undefined,
     };
@@ -43,6 +45,9 @@ export default createStore({
   mutations: {
     // Mutation to update the shared global loading state
     loading: (state, loadingState) => (state.loading = loadingState),
+
+    // Generic mutation to set anything in state
+    setter: (state, payload) => (state[payload[0]] = payload[1]),
 
     setAvailableDates: (state, dates) => state.datesAvailable.push(...dates),
     setSelectedDate: (state, date) => (state.selectedDate = date),
@@ -84,11 +89,8 @@ export default createStore({
         .POST("/appointment/book")
         .header({ "x-recaptcha-token": token })
         .data({
-          // @todo Might figure out how to pass dogID or preference into the system later on
-          // Tmp fake value used here to prevent firestore document insert from failing
-          dogID: null,
-
           time: state.selectedTimeslot,
+          preference: state.preference,
 
           // Add in these fields to submit
           // fname / lname / number / email

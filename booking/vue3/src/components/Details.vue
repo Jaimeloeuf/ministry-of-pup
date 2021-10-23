@@ -62,6 +62,20 @@
             </label>
           </div>
 
+          <div class="column is-full">
+            <label>
+              <b>Preference</b>
+              <br />
+
+              <textarea
+                v-model="preference"
+                class="textarea"
+                placeholder="Optional preferences, tell us what you like!
+E.g. Cream coloured / French bulldogs / Female dog"
+              />
+            </label>
+          </div>
+
           <div class="column is-half">
             <button class="button is-fullwidth py-5" @click="$router.back">
               Back
@@ -92,6 +106,7 @@ export default {
       lname: undefined,
       number: undefined,
       email: undefined,
+      preference: undefined,
     };
   },
 
@@ -105,6 +120,8 @@ export default {
         number: this.number,
         email: this.email,
       });
+
+      this.$store.commit("setter", ["preference", this.preference || ""]);
 
       await this.$store.dispatch("book");
 
