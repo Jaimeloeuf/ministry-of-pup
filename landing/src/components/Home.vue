@@ -6,14 +6,16 @@
     </section>
 
     <OurDogs id="OurDogs" />
-    <AboutUs id="AboutUs" />
     <FAQ id="FAQ" />
+    <ContactUs id="ContactUs" />
+    <AboutUs id="AboutUs" />
   </div>
 </template>
 
 <script>
 import HeroBody from "@/components/HeroBody";
 import OurDogs from "@/components/OurDogs";
+import ContactUs from "@/components/ContactUs";
 import AboutUs from "@/components/AboutUs";
 import FAQ from "@/components/FAQ";
 
@@ -22,6 +24,7 @@ export default {
   components: {
     HeroBody,
     OurDogs,
+    ContactUs,
     AboutUs,
     FAQ,
   },
