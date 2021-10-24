@@ -1,7 +1,11 @@
 <template>
-  <div class="columns is-multiline" style="max-width: 50em">
+  <div class="columns is-multiline is-vcentered" style="max-width: 50em">
     <div class="column">
       <p class="subtitle">See all upcoming appointments</p>
+    </div>
+
+    <div class="column is-narrow">
+      <button class="button" @click="getAppointments">Refresh</button>
     </div>
 
     <div class="column is-narrow">
@@ -47,13 +51,7 @@
           <!-- @todo Hightlight the current appointment green and the next appointment yellow, and add a note to explain the colors -->
           <div class="card">
             <div class="card-content">
-              On:
-              <b>{{
-                new Date(appointment.time).toLocaleString("default", {
-                  dateStyle: "medium",
-                  timeStyle: "short",
-                })
-              }}</b>
+              <b>{{ formatDate(appointment.time) }}</b>
               <br />
 
               Name: {{ `${appointment.lname} ${appointment.fname}` }}
@@ -74,11 +72,15 @@
 
 <script>
 import { mapGetters } from "vuex";
+import formatDate from "../utils/formatDate.js";
 
 export default {
   name: "AllAppointments",
 
   created() {
+    // Load appointments on created
+    // this.getAppointments();
+
     // Async arrow IIFE (so this binding is not lost) to dispatch action on created and remove loading once completed
     (async () => {
       // Trigger the action to load all scheduled appointments from API as user enters this view
@@ -93,6 +95,21 @@ export default {
 
   data() {
     return { loading: true };
+  },
+
+  methods: {
+    formatDate,
+
+    async getAppointments() {
+      // Show loader
+      this.loading = true;
+
+      // Trigger the action to load all scheduled appointments from API as user enters this view
+      await this.$store.dispatch("appointment/getAppointments");
+
+      // Stop showing loader
+      this.loading = false;
+    },
   },
 };
 </script>

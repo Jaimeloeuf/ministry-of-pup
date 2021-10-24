@@ -8,12 +8,7 @@
 
     <div class="column is-narrow">
       <b>
-        {{
-          new Date(appointment.time).toLocaleString("default", {
-            dateStyle: "medium",
-            timeStyle: "short",
-          })
-        }}
+        {{ formatDate(appointment.time) }}
       </b>
     </div>
 
@@ -84,12 +79,18 @@
         </div>
       </div>
 
+      <div v-else-if="appointment.preference">
+        {{ appointment.preference }}
+      </div>
+
       <p v-else class="subtitle">Looking for specific dog? <b>No</b></p>
     </div>
   </div>
 </template>
 
 <script>
+import formatDate from "../utils/formatDate.js";
+
 export default {
   name: "Appointment",
 
@@ -134,6 +135,10 @@ export default {
           }
         : {};
     },
+  },
+
+  methods: {
+    formatDate,
   },
 };
 </script>
