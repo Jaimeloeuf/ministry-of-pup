@@ -11,8 +11,8 @@
           <input
             v-autofocus
             type="text"
-            v-model="email"
-            placeholder="Email"
+            v-model="username"
+            placeholder="Username"
             @keypress.enter="login"
             class="input mb-4"
             style="width: 100%"
@@ -64,7 +64,7 @@ export default {
       // Used to toggle loader component's visibility
       loader: false,
 
-      email: "",
+      username: "",
       password: "",
     };
   },
@@ -83,25 +83,25 @@ export default {
 
       try {
         // Remove empty spaces to prevent whitespaces from causing signin issues
-        this.email = this.email.trim();
+        const email = this.username.trim() + "@ministryofpup.com";
 
         // Only need the user object from the userCredential object
         const { user } = await signInWithEmailAndPassword(
           auth,
-          this.email,
+          email,
           this.password
         );
 
         // Get the JWT from user object
-        // const token = await user.getIdTokenResult();
+        const token = await user.getIdTokenResult();
 
         // Check explicitly that isAdmin is Boolean true, as JSON value can be any other truthy primitive too
-        // if (token.claims.isAdmin !== true) {
-        //   // Throw new error with pre-defined code to get the right error_msg
-        //   const error = new Error();
-        //   error.code = "user/not-admin";
-        //   throw error;
-        // }
+        if (token.claims.admin !== true) {
+          // Throw new error with pre-defined code to get the right error_msg
+          const error = new Error();
+          error.code = "user/not-admin";
+          throw error;
+        }
 
         // Ensure user must verify their emails first before being able to access portal
         // if (!user.emailVerified) {
@@ -111,7 +111,7 @@ export default {
         //   throw error;
         // }
 
-        this.$store.commit("user/setEmail", user.email);
+        this.$store.commit("user/setEmail", email);
 
         // Await for async dispatch to ensure app only starts after vuex init action is completed
         // await this.$store.dispatch("init");
