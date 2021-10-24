@@ -134,11 +134,11 @@ router.post(
 
     // Notify admins about new appointment using the telegram notification bot
     const notifyAdmin = require("../utils/tAdminNotification.js");
-    notifyAdmin(`*New appointment*
-
+    notifyAdmin(`<b>New appointment</b>
+   
 ${timeString}
-User: *${fname}*
-ID: _${appointmentID}_`);
+User: <b>${fname}</b>
+ID: <i>${appointmentID}</i>`);
 
     // appointmentID is returned so that the booking app can generate the calendar event,
     // with a link for cancelling appointment using this appointmentID
@@ -175,11 +175,11 @@ router.post(
 
     // Notify admins about new appointment using the telegram notification bot
     const notifyAdmin = require("../utils/tAdminNotification.js");
-    notifyAdmin(`*Appointment cancelled*
+    notifyAdmin(`<b>Appointment cancelled</b>
    
 ${getTimeString(docData.time)}
-User: *${docData.fname}*
-ID: _${doc.id}_`);
+User: <b>${docData.fname}</b>
+ID: <i>${doc.id}</i>`);
 
     res.status(200).json({ ok: true });
   })
