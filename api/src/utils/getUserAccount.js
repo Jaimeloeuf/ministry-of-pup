@@ -1,3 +1,5 @@
+const fs = require("./fs");
+
 /** @typedef {String} DocumentID Alphanumeric ID of a firestore document */
 
 /**
@@ -35,7 +37,7 @@ async function getUserAccountIfExists(phoneNumber) {
  * @returns {DocumentID | undefined} User ID if exists, else undefined
  */
 const getUserAccountIdIfExists = async (phoneNumber) =>
-  (await getUserAccountIdIfExists(phoneNumber))?.id;
+  (await getUserAccountIfExists(phoneNumber))?.id;
 
 module.exports = {
   getUserAccount,

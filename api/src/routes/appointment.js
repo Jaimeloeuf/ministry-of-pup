@@ -65,7 +65,7 @@ router.post(
   verifyRecaptcha,
   express.json(),
   asyncWrap(async (req, res) => {
-    const { dogID, time, fname, lname, email, preference } = req.body;
+    const { time, fname, lname, email, preference } = req.body;
 
     // Remove all white space from phone number
     const number = req.body.number.replace(" ", "");
@@ -102,7 +102,6 @@ router.post(
       // 3. It is better to keep these 2 seperate and not have our appointments DB rely on google cal for doc ID
       googleCalendarEventID,
 
-      dogID,
       time,
       fname,
       lname,

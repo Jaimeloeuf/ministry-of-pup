@@ -28,7 +28,7 @@ router.post(
       description,
       mc,
       pedigree,
-      breedID,
+      breed,
       cost,
       msrp,
     } = req.body;
@@ -50,7 +50,7 @@ router.post(
       description,
       mc,
       pedigree,
-      breedID,
+      breed,
       cost,
       msrp,
 
