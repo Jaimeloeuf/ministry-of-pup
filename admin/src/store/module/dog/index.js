@@ -15,6 +15,7 @@ export default {
   state: initialState(),
   getters: {
     // Get the dogs as an array
+    // Object.values(state.dogs).sort((a, b) => a.createdAt - b.createdAt),
     dogs: (state) => Object.values(state.dogs),
   },
   mutations: {

@@ -52,8 +52,8 @@
       <label>
         <b>Final sale price</b> (MSRP is {{ formatCurrency(dog.msrp) }})
         <br />
-        <p v-if="salePrice < dog.msrp">*Less than MSRP</p>
-        <p v-if="salePrice > dog.msrp">*More than MSRP</p>
+        <p v-if="salePrice * 100 < dog.msrp">*Less than MSRP</p>
+        <p v-if="salePrice * 100 > dog.msrp">*More than MSRP</p>
 
         <input
           type="number"
@@ -62,8 +62,8 @@
           placeholder="E.g. 10000 for $10,000 where unit is dollars"
           class="input"
           :class="{
-            'is-danger': salePrice < dog.msrp,
-            'is-warning': salePrice > dog.msrp,
+            'is-danger': salePrice * 100 < dog.msrp,
+            'is-warning': salePrice * 100 > dog.msrp,
           }"
         />
       </label>

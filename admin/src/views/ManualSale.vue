@@ -318,6 +318,8 @@ export default {
         lname: undefined,
         number: undefined,
         email: undefined,
+        address: undefined,
+        postalCode: undefined,
       },
 
       /* Paynow QR code values */
@@ -411,6 +413,13 @@ export default {
       // Close the payment modal in case it is not closed
       this.showModal = false;
 
+      // @todo This is ran if paynow is used... but not if Payment (others) is choosen
+      // Specify amount of to pay, this just sums up the price of all items
+      this.totalPrice = this.items.reduce(
+        (acc, cur) => acc + cur.price * cur.quantity,
+        0
+      );
+
       const res = await oof
         .POST("/admin/sale/manual")
         .header(await getAuthHeader())
@@ -425,9 +434,19 @@ export default {
 
           // Process the items to ensure that all the price are in cents
           items: this.items.map(function (item) {
-            let finalItem = { ...item, amount: item.price * 100 };
-            delete finalItem.price;
-            return finalItem;
+            // Ensure that quantity is Number instead of String as it came from the HTML input tag
+            item.quantity = parseInt(item.quantity);
+
+            // Save the item price in cents instead of dollars
+            item.amount = item.price * 100;
+            // Remove the unused price field now
+            delete item.price;
+
+            return item;
+
+            // let finalItem = { ...item, amount: item.price * 100 };
+            // delete finalItem.price;
+            // return finalItem;
           }),
         })
         .runJSON();

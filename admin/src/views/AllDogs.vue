@@ -45,7 +45,7 @@
               <div>
                 <p class="title is-4">{{ dog.name }}</p>
                 <p class="subtitle is-6">
-                  {{ dog.breedID === 1 ? "French Bulldog" : "Shiba Inu" }}
+                  {{ dog.breed }}
                 </p>
               </div>
 
