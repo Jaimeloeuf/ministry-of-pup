@@ -4,6 +4,11 @@
       <div class="column is-full">
         <p class="title is-4">Appointment booked</p>
         <p class="subtitle">See you soon!</p>
+        <p class="subtitle has-background-light box">
+          Please check out for a appointment confirmation email sent to you,
+          unfortunately it might be sent to your junk/spam despite our cute dogs
+          🥺
+        </p>
       </div>
 
       <div class="column is-full">

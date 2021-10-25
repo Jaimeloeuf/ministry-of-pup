@@ -112,6 +112,9 @@ export default {
 
   methods: {
     async book() {
+      if (!(fname && lname && number && email))
+        return alert("All fields are required except 'preference'");
+
       this.$store.commit("loading", true);
 
       this.$store.commit("setter", [

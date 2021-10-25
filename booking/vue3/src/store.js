@@ -74,8 +74,6 @@ export default createStore({
     },
 
     async book({ commit, dispatch, state }) {
-      // @todo validate all the inputs
-
       const token = await getRecaptchaToken("submit");
 
       const res = await oof
