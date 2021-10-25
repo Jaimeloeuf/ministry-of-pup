@@ -72,12 +72,13 @@ function nextAvailableDate(afterThisDate) {
     return { start: date.startOf("day"), end: date.endOf("day") };
   } else {
     // If no date cursor provided, create new date of current time in SGT,
-    // Add 2 hours and some minutes to current time to ensure that the earliest booking time available for booking is at least 2 hours away
-    // Reset seconds and milliseconds to 0 to ensure that it will be a perfect Hour/Minute representation
+    // To get the first timeslot of the date cursor, first round it up to the nearest 30 minutes interval,
+    // Then add a 1 hour buffer to current time so that the earliest available booking time is at least 1 hour away
+    // Reset seconds and milliseconds to 0 to ensure that it will be a Hour/Minute only representation
     const dt = DateTime.now().setZone("Asia/Singapore");
     const remainder = 30 - (dt.minute % 30);
     const date = dt
-      .plus({ hours: 2, minutes: remainder })
+      .plus({ hours: 1, minutes: remainder })
       .set({ second: 0, millisecond: 0 });
 
     // Add datetime as the cursor so that available timeslots of given date can be calculated correctly
@@ -294,6 +295,11 @@ async function nextFiveAvailableDates(after) {
       });
   }
 
+  // @todo Deal with how to return to show on UI
+  // The only time when the for loop will stop is if the array is filled or if date exceeded `maxDateAllowed`
+  // Empty timeslot array means that user requested for timeslots after a date that has exceeded `maxDateAllowed`
+  // if (timeslots.length === 0) return `no more dates`;
+
   return timeslots;
 }
 
@@ -305,14 +311,13 @@ async function nextFiveAvailableDates(after) {
  */
 router.get(
   "/date",
-  asyncWrap(async (req, res) => {
-    res.status(200).json({
-      ok: true,
-      timeslots: await nextFiveAvailableDates(
-        req.query.after && parseInt(req.query.after)
-      ),
-    });
-  })
+  asyncWrap(async (req, res) =>
+    // Generate an array of the next 5 dates, where each element is an obj with start and end timestamp of that date
+    // If the "after" query param is used, parse it from String to Int first before passing it to function
+    nextFiveAvailableDates(req.query.after && parseInt(req.query.after)).then(
+      (timeslots) => res.status(200).json({ ok: true, timeslots })
+    )
+  )
 );
 
 module.exports = router;
