@@ -22,6 +22,7 @@ app.use("/", require("./routes/default.js"));
 // Rename this to /user/appointments and file to userAppointments
 app.use("/appointment", require("./routes/appointment.js"));
 app.use("/appointment/available", require("./routes/available.js"));
+app.use("/newsletter", require("./routes/newsletter.js"));
 // @todo Users can only access their own data, add authz middleware here ensure uid matches docID??
 app.use("/user", authnMiddleware, require("./routes/user.js"));
 app.use(
