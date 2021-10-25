@@ -11,7 +11,7 @@ app.use(require("cors")({ origin: [/ministryofpup\.com$/, /localhost/] }));
 // middleware to add http headers
 app.use(require("helmet")());
 
-// const authnMiddleware = require("./utils/authnMiddleware");
+const authnMiddleware = require("./utils/authnMiddleware");
 // const authzMiddleware = require("./utils/authzMiddleware");
 const adminOnly = require("./utils/adminOnly");
 
@@ -22,6 +22,8 @@ app.use("/", require("./routes/default.js"));
 // Rename this to /user/appointments and file to userAppointments
 app.use("/appointment", require("./routes/appointment.js"));
 app.use("/appointment/available", require("./routes/available.js"));
+// @todo Users can only access their own data, add authz middleware here ensure uid matches docID??
+app.use("/user", authnMiddleware, require("./routes/user.js"));
 app.use(
   "/admin/appointment/scheduled",
   adminOnly,
