@@ -27,6 +27,11 @@ app.use(
   adminOnly,
   require("./routes/scheduledAppointment")
 );
+app.use(
+  "/admin/appointment/book",
+  adminOnly,
+  require("./routes/adminAppointment")
+);
 app.use("/admin/pet", adminOnly, require("./routes/dogs.js"));
 app.use("/admin/pet/new", adminOnly, require("./routes/newDog.js"));
 app.use("/admin/pet/sold", adminOnly, require("./routes/sold.js"));
