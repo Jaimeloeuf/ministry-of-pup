@@ -27,15 +27,14 @@
         <br />
 
         <div class="select is-fullwidth">
-          <select v-on:change="updateBreedID($event)">
-            <!-- Value must be id so that when parsing value in @change handler it can get id instead of the text -->
+          <select v-on:change="(event) => (breed = event.target.value)">
             <option
-              v-for="breed in dogBreeds"
-              :value="breed.id"
-              :key="breed.id"
-              :selected="breed.id === breedID"
+              v-for="dogBreed in breeds"
+              :value="dogBreed"
+              :key="dogBreed"
+              :selected="dogBreed === breed"
             >
-              {{ breed.text }}
+              {{ dogBreed }}
             </option>
           </select>
         </div>
@@ -48,8 +47,8 @@
         <br />
 
         <div class="select is-fullwidth">
-          <select v-on:change="updateSex($event)">
-            <!-- Value must be id so that when parsing value in @change handler it can get id instead of the text -->
+          <select v-on:change="(event) => (sex = event.target.value)">
+            <!-- Value must be id so that when parsing value in @change handler above it can get id instead of text -->
             <option
               v-for="sex in dogSexes"
               :value="sex.id"
@@ -119,6 +118,48 @@
       <label>
         <input type="checkbox" v-model="pedigree" />
         Pedigree
+      </label>
+    </div>
+
+    <div class="column is-full">
+      <label>
+        <b>Country of import</b>
+        <br />
+
+        <div class="select is-fullwidth">
+          <select v-on:change="(event) => (originCountry = event.target.value)">
+            <option
+              v-for="country in countries"
+              :value="country"
+              :key="country"
+              :selected="country === originCountry"
+            >
+              {{ country }}
+            </option>
+          </select>
+        </div>
+      </label>
+    </div>
+
+    <div class="column is-full">
+      <label>
+        <input type="checkbox" v-model="hdbApproved" />
+        HDB approved?
+      </label>
+    </div>
+
+    <div class="column is-full">
+      <label>
+        <b>Dog Color</b>
+        <br />
+        *Copy exactly the full color name from the certificate
+
+        <input
+          type="text"
+          v-model="color"
+          placeholder="E.g. Blue Tan"
+          class="input"
+        />
       </label>
     </div>
 
@@ -263,16 +304,19 @@ export default {
       description: undefined,
       mc: undefined,
       pedigree: false,
+      hdbApproved: false,
+      color: undefined,
       cost: undefined,
       msrp: undefined,
 
-      breedID: 1,
-      // Chagne to breed
-      dogBreeds: [
-        // @todo Can be taken from DB if needed
-        { id: 1, text: "French Bulldog" },
-        { id: 2, text: "Shiba Inu" },
-      ],
+      // @todo Take from DB? Or manually add and embed here?
+      // Breed has to default to the first element of breeds array
+      breed: "French Bulldog",
+      breeds: ["French Bulldog", "Shiba Inu"],
+
+      // To manually update/add as new dogs of different country of origins are sourced
+      originCountry: "UK",
+      countries: ["UK"],
 
       // Files array and firebase cloud storage values
       files: [],
@@ -282,16 +326,6 @@ export default {
   },
 
   methods: {
-    updateBreedID(event) {
-      // ID is int, but if set as value of option element, it will be auto converted into String, thus parseInt back to int before saving it
-      // If not converted before saving, breedID would become a string and UI will show as edited because "1" !== 1
-      this.breedID = parseInt(event.target.value);
-    },
-
-    updateSex(event) {
-      this.sex = event.target.value;
-    },
-
     async generateDogName() {
       // Only asynchronously load the package if user wants to generate a random name
       const dogNames = await import("dog-names");
@@ -372,7 +406,10 @@ export default {
           description: this.description,
           mc: this.mc,
           pedigree: this.pedigree,
-          breedID: this.breedID,
+          breed: this.breed,
+          hdbApproved: this.hdbApproved,
+          originCountry: this.originCountry,
+          color: this.color,
 
           // HTML input type="number" returns a String, thus parseInt to Number and * 100 to convert to cents
           // Cost and MSRP of dog will not be floats as everything is stored in cents in the backend

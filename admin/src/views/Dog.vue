@@ -25,27 +25,36 @@
 
             <div>
               Sex: {{ dog.sex === "m" ? "Male" : "Female" }}
-
               <br />
+
               D.O.B: {{ new Date(dog.dob).toLocaleDateString() }}
-
               <br />
+
               Available from:
               {{ new Date(dog.availablityDate).toLocaleDateString() }}
-
               <br />
+
               Microchip: {{ dog.mc }}
-
               <br />
+
               Pedigree: {{ dog.pedigree }}
-
               <br />
+
+              HDB Approved: {{ dog.hdbApproved }}
+              <br />
+
+              Color: {{ dog.color }}
+              <br />
+
+              Country of Origin: {{ dog.originCountry }}
+              <br />
+
               Cost: {{ formatCurrency(dog.cost) }}
-
               <br />
+
               MSRP: {{ formatCurrency(dog.msrp) }}
-
               <br />
+
               Sold: {{ dog.sold }}
             </div>
           </div>
