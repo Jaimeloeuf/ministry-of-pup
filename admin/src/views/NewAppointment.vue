@@ -2,9 +2,12 @@
   <div class="columns is-multiline is-centered" style="max-width: 30em">
     <div class="column is-full">
       <label>
-        <b>Dog availablity date</b>
+        <b>Appointment time</b>
+        <br />
+        *Please enter date time in 30 minute intervals, e.g. 1pm / 130pm
 
-        <DatetimePicker v-model="time" :min="today" />
+        <!-- 30 min intervals -->
+        <DatetimePicker v-model="time" :min="today" step="1800" />
       </label>
     </div>
 
@@ -169,21 +172,17 @@ export default {
     async book() {
       // @todo Validate all required input is entered
 
-      // @todo Test to ensure this works
-      // Ensure files are successfully uploaded first before calling API
-      // If this succeeds, but API call fails then the files are just left in storage
-      // If user chooses to retry, on the next recursive call, the upload files step will be skipped
-      if (this.imgFolder === undefined && this.imgSrc === undefined)
-        return alert("");
-
-      // Convert this to milliseconds
-      this.time;
+      // Ensure required fields are filled
+      if (!(this.fname && this.lname && this.number && this.email))
+        return alert("All fields are required except 'preference'");
 
       const res = await oof
         .POST("/admin/appointment/book")
         .header(await getAuthHeader())
         .data({
-          time: this.time,
+          // Time needs to be in Milliseconds
+          time: new Date(this.time).getTime(),
+
           fname: this.fname,
           lname: this.lname,
           number: this.number,

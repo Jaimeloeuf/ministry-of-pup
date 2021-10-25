@@ -20,15 +20,18 @@ export default {
 
     // Assuming appointments do not overlap
     // Return the appointment in the appointments array that has a starting time before now and an ending time after now
-    current(_, getters) {
-      const nowInMilliseconds = new Date().getTime();
-      return getters.appointments.find(
-        (appointment) =>
-          appointment.time < nowInMilliseconds &&
-          // 30 * 60 * 1000 = 1800000 Milliseconds in a 30 minute interval
-          appointment.time + 1800000 > nowInMilliseconds
-      );
-    },
+    // Returns a function so that the time to filter with can be refreshed when used
+    getCurrent:
+      (_, getters) =>
+      (nowInMilliseconds = new Date().getTime()) =>
+        getters.appointments.find(
+          (appointment) =>
+            appointment.time < nowInMilliseconds &&
+            // 30 * 60 * 1000 = 1800000 Milliseconds in a 30 minute interval
+            appointment.time + 1800000 > nowInMilliseconds
+        ),
+
+    current: (_, getters) => getters.getCurrent(),
 
     // Assuming appointments do not overlap
     // And since appointments getter is already sorted by ascending appointment time

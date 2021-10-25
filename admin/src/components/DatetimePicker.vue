@@ -3,6 +3,7 @@
     class="input"
     type="datetime-local"
     :min="currentDatetime"
+    :step="step"
     v-bind:value="value"
     v-on:input="onUpdate($event.target.value)"
   />
@@ -22,6 +23,7 @@ export default {
     value: {
       default: currentDatetime,
     },
+    step: {},
   },
 
   data() {

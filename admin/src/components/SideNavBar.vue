@@ -66,6 +66,14 @@
             All
           </router-link>
         </li>
+        <li>
+          <router-link
+            :to="{ name: 'new-appointment' }"
+            :class="{ 'is-active': $route.name === 'new-appointment' }"
+          >
+            New
+          </router-link>
+        </li>
       </ul>
 
       <p class="menu-label">Dogs</p>
@@ -195,7 +203,7 @@ export default {
     return { name: this.$store.state.user.email.split("@")[0] };
   },
 
-  computed: mapGetters("appointment", ["current", "next"]),
+  computed: mapGetters("appointment", ["getCurrent", "current", "next"]),
 
   methods: {
     logout,
@@ -206,10 +214,13 @@ export default {
       // To ensure that the list of appointments available is the latest before getting the current appointment
       await this.$store.dispatch("appointment/getAppointments");
 
-      if (this.current)
+      // Refresh the current appointment again to filter against current time
+      const current = this.getCurrent();
+
+      if (current)
         this.$router.push({
           name: "appointment",
-          params: { appointmentID: this.current.id },
+          params: { appointmentID: current.id },
         });
       else alert("There is no appointments happening right now!");
     },
