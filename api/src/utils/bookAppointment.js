@@ -98,11 +98,7 @@ module.exports = async function bookAppointment({
     createdAt: unixseconds(),
   });
 
-  const timeString = new Intl.DateTimeFormat("en-SG", {
-    dateStyle: "full",
-    timeStyle: "short",
-    timeZone: "Asia/Singapore",
-  }).format(new Date(time));
+  const timeString = require("./getTimeString.js")(time);
 
   // Send user a email to confirm with them that their appointment has been scheduled successfully
   await sendMail.send({
@@ -112,6 +108,7 @@ module.exports = async function bookAppointment({
     text: emailString(fname, timeString, appointmentID),
   });
 
+  // @todo Use sendgrid's dynamic template
   // await sendMail.send({
   //   to: email,
   //   from: process.env.notificationEmailSender,
