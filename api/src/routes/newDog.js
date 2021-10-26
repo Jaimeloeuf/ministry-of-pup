@@ -29,6 +29,9 @@ router.post(
       mc,
       pedigree,
       breed,
+      hdbApproved,
+      originCountry,
+      color,
       cost,
       msrp,
     } = req.body;
@@ -51,6 +54,9 @@ router.post(
       mc,
       pedigree,
       breed,
+      hdbApproved,
+      originCountry,
+      color,
       cost,
       msrp,
 

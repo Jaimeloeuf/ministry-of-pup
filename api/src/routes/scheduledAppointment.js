@@ -20,8 +20,8 @@ router.get(
   asyncWrap(async (req, res) => {
     // Appointments timestamps are stored as unix time Milliseconds thus `after` is also in Milliseconds
     // If after is passed in as a query parameter it should be a number with Milliseconds as its unit,
-    // Else get the current unix milliseconds timestamp from system.
-    const after = req.query.after || new Date().getTime();
+    // Else get 30 minutes before current unix milliseconds timestamp so that current appointment will be included too.
+    const after = req.query.after || new Date().getTime() - 1800000;
 
     // Query DB for appointments that end after a given time
     // https://cloud.google.com/firestore/docs/query-data/queries#limitations
