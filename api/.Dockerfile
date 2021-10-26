@@ -11,9 +11,7 @@
 #   - Use RUN instruction to install packages required by executing commands on top of the current image to create a new layer by committing the results.
 #   - The RUN commands are all split them up as different ephemeral intermmediate images to optimize the build process for caching
 
-
-# Maybe alpine is causing the issue with the C++ addons? But we install g++ alr right? perhaps we can re write this with ubuntu and see if it works
-FROM node:10-alpine
+FROM node:16-alpine
 
 # Install git, as one of our npm dependencies is hosted on a github repo and the alpine image does not have git installed.
 RUN apk --no-cache add git
