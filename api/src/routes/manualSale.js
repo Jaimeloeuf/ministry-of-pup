@@ -12,7 +12,7 @@ const fs = require("../utils/fs");
 const unixseconds = require("unixseconds");
 const { asyncWrap } = require("express-error-middlewares");
 
-// @todo Make HTML, or make template in sendgrid, then they can also edit without changing code and deploying new version
+// @todo Use sendgrid dynamic template to edit without requiring deploying new API version
 // @todo Make the phone number click to call? add the +65
 const emailReceipt = async ({ email, userFname, receipt }) =>
   sendMail.send({
@@ -56,11 +56,17 @@ router.post(
       );
 
     // Receipt data is the data needed to generate the actual receipt,
-    // while whats stored in the manualSaleReceipts document may contain more data and metadata about the transaction
+    // while whats stored in the 'manualSale' collection document contains other meta data about the transaction too
+
+    const {
+      generateReceiptNumber,
+      generateReceiptString,
+    } = require("../utils/receipt");
 
     // All the data needed to generate the receipt except the `receiptNumber`
-    // Receipt number will be generated using the firestore's doc ID
     const receiptData = {
+      receiptNumber: generateReceiptNumber(),
+
       customer: {
         name: `${customer.lname} ${customer.fname}`,
         address: customer.address,
@@ -70,23 +76,21 @@ router.post(
       // Total price of sale in cents
       totalPrice,
 
-      // Note that all amount/currency must be in cents
+      // Note that all price must be in cents
       items,
     };
 
-    // Store receipt data and time of generation in unix seconds (this is the time of the server executing the code)
-    const { id } = await fs.collection("manualSaleReceipts").add({
-      ...receiptData,
-      userID: customer.id,
+    // Store receipt data and meta data about this transaction
+    const { id } = await fs.collection("manualSale").add({
+      receiptData,
+
       paymentMethod,
+      userID: customer.id,
       time: unixseconds(),
     });
 
     // Generate the receipt using the newly created doc's doc ID to generate receipt number
-    const receipt = await require("../utils/receipt").generateReceipt(
-      id,
-      receiptData
-    );
+    const receipt = await generateReceiptString(receiptData);
 
     // Generate and Email receipt
     await emailReceipt({

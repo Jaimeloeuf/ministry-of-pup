@@ -28,7 +28,7 @@ async function getUserAccountIfExists(phoneNumber) {
   // If the snapshot is empty, return undefined to specify user does not have an account
   // Else assume only 1 document for that user, and return the first user document data
   if (snapshot.empty) return undefined;
-  else return snapshot.docs[0].data();
+  else return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
 }
 
 /**

@@ -14,11 +14,13 @@ async function createUserAccount(userDetails) {
  * Create account if does not exists and get back customer/user object
  * @param {*} userID
  * @param {*} customer
- * @returns
+ * @returns {Customer} Returns back a customer/user data object
  */
 const createUserAccountIfDoesNotExist = async (userID, customer) =>
   userID
     ? await require("../utils/getUserAccount").getUserAccount(userID)
-    : (await require("../utils/createUserAccount")(customer)) && customer;
+    : (await require("../utils/getUserAccount").getUserAccountIfExists(
+        customer.number
+      )) || { id: await createUserAccount(customer), ...customer };
 
 module.exports = { createUserAccount, createUserAccountIfDoesNotExist };

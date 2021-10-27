@@ -121,14 +121,14 @@ router.post(
           // @todo Replace with dog sex and dog color
           description: dog.description,
           quantity: 1,
-          amount: salePrice,
+          price: salePrice,
         },
 
         {
           item: "Starter pack",
           description: "Free $500 Pawrent kick starter gift pack",
           quantity: 1,
-          amount: 0,
+          price: 0,
         },
       ],
     };

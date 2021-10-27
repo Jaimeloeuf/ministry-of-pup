@@ -33,12 +33,13 @@ const receiptYYMM = () =>
     .reverse()
     .join("");
 
-// @todo How to generate this? Do they have a tax num or smth?
-// If not just create a new receipt data collection in firestore and use the doc id?
-// Always returns a string of 6 alphanumeric chars
-// `MOP-REC-${receiptYYMM()}-${Math.random().toString(36).slice(2, 8)}`;
-const generateReceiptNumber = (docID) => `MOP-REC-${receiptYYMM()}-${docID}`;
+// Receipt number is a string that stores year and month of receipt and a random identifier
+// Receipt ID is a randomly generated 6 character alphanumeric string
+const generateReceiptNumber = (
+  receiptID = Math.random().toString(36).slice(2, 8)
+) => `MOP-REC-${receiptYYMM()}-${receiptID}`;
 
+// @todo Delete after updating sold.js to stop using this
 const generateReceipt = (docID, receiptData) =>
   generateReceiptString({
     receiptNumber: generateReceiptNumber(docID),
@@ -47,6 +48,6 @@ const generateReceipt = (docID, receiptData) =>
 
 module.exports = {
   generateReceipt,
-  //   generateReceiptNumber,
-  //   generateReceiptString,
+  generateReceiptNumber,
+  generateReceiptString,
 };
