@@ -49,11 +49,11 @@
             <label>
               <b>Item description</b>
 
-              <!-- @todo Make textarea grow automatically -->
-              <textarea
+              <input
+                type="text"
                 v-model="item.description"
-                class="textarea"
-                placeholder="Describe this item"
+                placeholder="Descibe this item, E.g. 15cm collar"
+                class="input"
               />
             </label>
           </div>
@@ -77,7 +77,7 @@
             <label>
               <b>Unit Price</b>
               <br />
-              *Price per unit (Total cost per item is "Quantity x Unit Price")
+              *Price for 1 unit (Total cost per item is "Quantity x Unit Price")
 
               <input
                 type="number"
@@ -325,9 +325,6 @@ export default {
       /* Paynow QR code values */
       showModal: false,
       imageDataURI: undefined,
-
-      // Used to store the calculated totalPrice of sale when clicking pay button
-      totalPrice: undefined,
     };
   },
 
@@ -354,7 +351,7 @@ export default {
 
     async showPaynowQR() {
       // Specify amount of to pay, this just sums up the price of all items
-      this.totalPrice = this.items.reduce(
+      const totalPrice = this.items.reduce(
         (acc, cur) => acc + cur.price * cur.quantity,
         0
       );
@@ -376,7 +373,7 @@ export default {
         uen: "T17LL2360H",
 
         // @todo Disallow if price is 0
-        amount: this.totalPrice,
+        amount: totalPrice,
 
         // Set an expiry date for the Paynow QR code (YYYYMMDD, e.g. "20211231")
         // If omitted, defaults to 5 years from current time.
@@ -414,11 +411,24 @@ export default {
       this.showModal = false;
 
       // @todo This is ran if paynow is used... but not if Payment (others) is choosen
-      // Specify amount of to pay, this just sums up the price of all items
-      this.totalPrice = this.items.reduce(
-        (acc, cur) => acc + cur.price * cur.quantity,
-        0
-      );
+      // Specify total price to pay, this just sums up the price of all items and convert to cents
+      const totalPrice =
+        this.items.reduce((acc, cur) => acc + cur.price * cur.quantity, 0) *
+        100;
+
+      // Process the items to ensure that all the price are in cents
+      // Create a new item instead of modifying the original object to prevent changing things in the form
+      const items = this.items.map((item) => ({
+        ...item,
+
+        // Ensure that quantity is Number instead of String as it came from the HTML input tag
+        quantity: parseInt(item.quantity),
+
+        // Save the item price in cents instead of dollars
+        price: item.price * 100,
+      }));
+
+      console.log(totalPrice, items);
 
       const res = await oof
         .POST("/admin/sale/manual")
@@ -427,34 +437,20 @@ export default {
           paymentMethod: "paynow",
           invoiceNumber: "MOP-INV-MAN-1001",
 
-          // Convert to cents before sending to API as everything is stored in cents in the backend
-          totalPrice: this.totalPrice * 100,
-
+          totalPrice: totalPrice,
           customer: this.customer,
 
-          // Process the items to ensure that all the price are in cents
-          items: this.items.map(function (item) {
-            // Ensure that quantity is Number instead of String as it came from the HTML input tag
-            item.quantity = parseInt(item.quantity);
-
-            // Save the item price in cents instead of dollars
-            item.amount = item.price * 100;
-            // Remove the unused price field now
-            delete item.price;
-
-            return item;
-
-            // let finalItem = { ...item, amount: item.price * 100 };
-            // delete finalItem.price;
-            // return finalItem;
-          }),
+          items,
         })
         .runJSON();
 
       // If the API call failed, recursively call itself again if user wants to retry,
       // And always make sure that this method call ends right here by putting it in a return expression
       if (!res.ok)
-        return confirm(`Error: \n${res.error}\n\nTry again?`) && this.Sell();
+        return (
+          confirm(`Error: \n${res.error}\n\nTry again?`) &&
+          this.paymentComplete()
+        );
 
       alert("Sale processed!");
 
