@@ -89,9 +89,9 @@ function generateInvoiceTable(doc, invoice) {
       position,
       item.item,
       item.description,
-      formatCurrency(item.amount),
+      formatCurrency(item.price),
       item.quantity,
-      formatCurrency(item.amount * item.quantity)
+      formatCurrency(item.price * item.quantity)
     );
 
     generateHr(doc, position + 20);

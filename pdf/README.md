@@ -44,24 +44,24 @@ const receipt = {
     postal_code: 123456,
   },
   items: [
-    // Note that all amount/currency is in cents
+    // Note that all price needs to be in cents
     {
       item: "French Bulldog",
       description: "3 month old French Bulldog",
       quantity: 1,
-      amount: 1000090,
+      price: 1000090,
     },
     {
       item: "Dog house",
       description: "1x1m dog house",
       quantity: 2,
-      amount: 20000,
+      price: 20000,
     },
     {
       item: "Gift pack",
       description: "Free gift",
       quantity: 1,
-      amount: 0,
+      price: 0,
     },
   ],
 
@@ -101,18 +101,18 @@ create(PDFDocument, {
     postal_code: 123456,
   },
   items: [
-    // Note that all amount/currency is in cents
+    // Note that all price needs to be in cents
     {
       item: "French Bulldog",
       description: "3 month old French Bulldog",
       quantity: 1,
-      amount: 1000000,
+      price: 1000000,
     },
     {
       item: "Dog house",
       description: "Free gift",
       quantity: 1,
-      amount: 0,
+      price: 0,
     },
   ],
   subtotal: 1000000,
@@ -137,18 +137,18 @@ createInvoice(PDFDocument, {
     postal_code: 123456,
   },
   items: [
-    // Note that all amount/currency is in cents
+    // Note that all price needs to be in cents
     {
       item: "French Bulldog",
       description: "3 month old French Bulldog",
       quantity: 1,
-      amount: 1000000,
+      price: 1000000,
     },
     {
       item: "Dog house",
       description: "Free gift",
       quantity: 1,
-      amount: 0,
+      price: 0,
     },
   ],
   subtotal: 1000000,
