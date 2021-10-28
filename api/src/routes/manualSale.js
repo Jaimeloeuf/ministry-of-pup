@@ -63,9 +63,9 @@ router.post(
       generateReceiptString,
     } = require("../utils/receipt");
 
-    // All the data needed to generate the receipt except the `receiptNumber`
     const receiptData = {
-      receiptNumber: generateReceiptNumber(),
+      // Generate receipt number if not passed in
+      receiptNumber: req.body.receiptNumber || generateReceiptNumber(),
 
       customer: {
         name: `${customer.lname} ${customer.fname}`,

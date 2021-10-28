@@ -16,16 +16,18 @@ async function generateReceiptString(receiptData) {
 }
 
 /**
- * 1. Create a new date in SGT and format it into a string from 21 Oct, 2021 to 10/21
+ * To get the current date in the YYMMDD format
+ * 1. Create a new date in SGT and format it into a string from 21 Oct, 2021 to 21/10/21
  * 2. Split the string by the '/' seperator into an array
  * 3. Reverse the array so the year comes before the month
  * 4. Join back the array into a string without any seperators
  * @returns Current date in the YYMM format
  */
-const receiptYYMM = () =>
+const receiptYYMMDD = () =>
   new Intl.DateTimeFormat("en-SG", {
     year: "2-digit",
     month: "2-digit",
+    day: "2-digit",
     timeZone: "Asia/Singapore",
   })
     .format(new Date())
@@ -33,11 +35,11 @@ const receiptYYMM = () =>
     .reverse()
     .join("");
 
-// Receipt number is a string that stores year and month of receipt and a random identifier
+// Receipt number is a string made up of year, month and day of issuing receipt plus a random identifier
 // Receipt ID is a randomly generated 6 character alphanumeric string
 const generateReceiptNumber = (
   receiptID = Math.random().toString(36).slice(2, 8)
-) => `MOP-REC-${receiptYYMM()}-${receiptID}`;
+) => `MOP-REC-${receiptYYMMDD()}-${receiptID}`;
 
 // @todo Delete after updating sold.js to stop using this
 const generateReceipt = (docID, receiptData) =>
