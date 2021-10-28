@@ -155,9 +155,65 @@ export default {
   },
 
   methods: {
+    /**
+     * @returns {undefined | true} Returns true if number is valid and undefined if number is invalid
+     */
+    validNumber() {
+      // Strip input number of whitespaces
+      this.number = this.number.replace(/\s/g, "");
+
+      if (this.number.length !== 8)
+        return alert("Invalid number, only 8 digit Singapore numbers accepted");
+
+      // https://en.wikipedia.org/wiki/Telephone_numbers_in_Singapore
+      // Number is still string, thus comparing with chars
+      if (
+        this.number[0] !== "8" &&
+        this.number[0] !== "9" &&
+        this.number[0] !== "6" &&
+        this.number[0] !== "3"
+      )
+        return alert(
+          "Please enter a valid Singapore number beginning with 3, 6, 8 or 9"
+        );
+
+      // Parse number from string input to Number and make sure that the parsing worked
+      this.number = parseInt(this.number);
+      if (Number.isNaN(this.number))
+        return alert("Invalid number format, please only use numerical digits");
+
+      // Return true to indicate that number if valid
+      return true;
+    },
+
+    /** @returns {Boolean} Returns boolean depending if email is valid */
+    validateEmail() {
+      // Strip input email of whitespaces
+      this.email = this.email.replace(/\s/g, "");
+
+      // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+      // This is not foolproof but should prevent most simple cases
+      // This does not prevent fake TLD and stuff like anystring@anystring.anystring
+      //
+      // However following these articles, it is probably just fine, at most we can implement mailcheck and verification
+      // https://davidcel.is/posts/stop-validating-email-addresses-with-regex/
+      // https://www.npmjs.com/package/mailcheck
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email);
+    },
+
     async book() {
-      if (!(fname && lname && number && email))
+      // Remove starting and trailing whitespaces from string inputs only as name may contain seperating spaces
+      this.fname = this.fname.trim();
+      this.lname = this.lname.trim();
+
+      if (!(this.fname && this.lname && this.number && this.email))
         return alert("All fields are required except 'preference'");
+
+      // End book method if number is invalid
+      if (!this.validNumber()) return;
+
+      // End book method if email is invalid
+      if (!this.validateEmail()) return alert("Invalid email");
 
       this.$store.commit("loading", true);
 
