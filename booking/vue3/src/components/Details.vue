@@ -76,6 +76,45 @@ E.g. Cream coloured / French bulldogs / Female dog"
             </label>
           </div>
 
+          <div class="column is-full">
+            <label>
+              <b>Where did you discover us from?</b>
+              <br />
+
+              <div class="control">
+                <label class="radio">
+                  <input
+                    type="radio"
+                    v-model="ref"
+                    value="FB"
+                    name="facebook"
+                  />
+                  FB
+                </label>
+
+                <label class="radio">
+                  <input
+                    type="radio"
+                    v-model="ref"
+                    value="IG"
+                    name="instagram"
+                  />
+                  Instagram
+                </label>
+
+                <label class="radio">
+                  <input type="radio" v-model="ref" value="GG" name="google" />
+                  Google
+                </label>
+
+                <label class="radio">
+                  <input type="radio" v-model="ref" value="OT" name="others" />
+                  Others
+                </label>
+              </div>
+            </label>
+          </div>
+
           <div class="column is-half">
             <button class="button is-fullwidth py-5" @click="$router.back">
               Back
@@ -107,6 +146,11 @@ export default {
       number: undefined,
       email: undefined,
       preference: undefined,
+
+      // Ref for referral, how did the user get referred to this booking site?
+      // Possible values:  FB / IG / GG / OT / UN
+      // UN for undefined
+      ref: "UN",
     };
   },
 
@@ -124,6 +168,7 @@ export default {
           lname: this.lname,
           number: this.number,
           email: this.email,
+          ref: this.ref,
         },
       ]);
 

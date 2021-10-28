@@ -33,6 +33,7 @@ export default createStore({
         lname: undefined,
         number: undefined,
         email: undefined,
+        ref: undefined,
       },
 
       preference: undefined,
@@ -84,7 +85,7 @@ export default createStore({
           preference: state.preference,
 
           // Add in these fields to submit
-          // fname / lname / number / email
+          // fname / lname / number / email / ref
           ...state.details,
         })
         .runJSON();
