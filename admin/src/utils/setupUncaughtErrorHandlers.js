@@ -3,6 +3,7 @@ import Vue from "vue";
 // @todo Monkeypatch before writing actual error handler...
 function newError(err) {
   console.error("Uncaught error:", err);
+  alert("Uncaught error:\n" + err);
 }
 
 /**
