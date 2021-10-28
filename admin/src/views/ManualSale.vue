@@ -191,7 +191,7 @@
           <label>
             <b>Email</b>
             <br />
-            *Sales invoice will be sent here
+            *Sales receipt will be sent here
 
             <input
               type="text"
@@ -285,7 +285,7 @@
           class="button is-fullwidth is-success is-light py-6"
           @click="paymentComplete"
         >
-          Complete
+          Complete ({{ receiptNumber }})
         </button>
       </div>
 
@@ -303,6 +303,8 @@
 // @todo Load this asynchronously in the sold method
 import { oof } from "simpler-fetch";
 import { getAuthHeader } from "../firebase.js";
+
+import generateReceiptNumber from "../utils/generateReceiptNumber.js";
 
 export default {
   name: "ManualSale",
@@ -325,6 +327,9 @@ export default {
       /* Paynow QR code values */
       showModal: false,
       imageDataURI: undefined,
+
+      // Pre-generate the receipt number so that the same one can be accessed by both paylah QR and payment complete method
+      receiptNumber: generateReceiptNumber(),
     };
   },
 
@@ -349,19 +354,18 @@ export default {
       this.showItems.splice(index, 1);
     },
 
-    async showPaynowQR() {
-      // Specify amount of to pay, this just sums up the price of all items
-      const totalPrice = this.items.reduce(
-        (acc, cur) => acc + cur.price * cur.quantity,
-        0
-      );
+    /** Sums up the price of all items and return price to pay in Dollars */
+    calculateTotalPrice() {
+      return this.items.reduce((acc, cur) => acc + cur.price * cur.quantity, 0);
+    },
 
+    async showPaynowQR() {
       const { default: PaynowQR } = await import("paynowqr");
 
-      // The QR Code should only be valid until tmr
-      // 24 hours * 60 minutes * 60 seconds * 1000 milliseconds = 86400000 milliseconds
-      const d = new Date(new Date().valueOf() + 86400000);
-      const month = d.getMonth() + 1;
+      // The QR Code should only be valid for 1 hour
+      // 60 minutes * 60 seconds * 1000 milliseconds = 3600000 milliseconds
+      const d = new Date(new Date().getTime() + 3600000);
+      const month = d.getMonth() + 1; // +1 as getMonth is 0 indexed where 0 is Jan
       const pmonth = month > 9 ? month : `0${month}`; // Month with 0 padding
       const date = d.getDate();
       const pdate = date > 9 ? date : `0${date}`; // Date with 0 padding
@@ -373,18 +377,14 @@ export default {
         uen: "T17LL2360H",
 
         // @todo Disallow if price is 0
-        amount: totalPrice,
+        amount: this.calculateTotalPrice(),
 
-        // Set an expiry date for the Paynow QR code (YYYYMMDD, e.g. "20211231")
-        // If omitted, defaults to 5 years from current time.
+        // Set an expiry date that is only valid for 1 day
         expiry: expiryDate,
 
         // @todo Call and API to generate a invoice reference number to track later (possibly have the paynow bank app on the ipad)
-        // MOP - Invoice - Manual - 1001
         // Reference number for Paynow Transaction. Useful if you need to track payments for recouncilation.
-        refNumber: "MOP-INV-MAN-1001",
-
-        // company: "ACME Pte Ltd.", // Company name to embed in the QR code. Optional.
+        refNumber: this.receiptNumber,
       });
 
       const QRCode = await import("qrcode");
@@ -410,12 +410,6 @@ export default {
       // Close the payment modal in case it is not closed
       this.showModal = false;
 
-      // @todo This is ran if paynow is used... but not if Payment (others) is choosen
-      // Specify total price to pay, this just sums up the price of all items and convert to cents
-      const totalPrice =
-        this.items.reduce((acc, cur) => acc + cur.price * cur.quantity, 0) *
-        100;
-
       // Process the items to ensure that all the price are in cents
       // Create a new item instead of modifying the original object to prevent changing things in the form
       const items = this.items.map((item) => ({
@@ -428,16 +422,18 @@ export default {
         price: item.price * 100,
       }));
 
-      console.log(totalPrice, items);
-
       const res = await oof
         .POST("/admin/sale/manual")
         .header(await getAuthHeader())
         .data({
-          paymentMethod: "paynow",
-          invoiceNumber: "MOP-INV-MAN-1001",
+          receiptNumber: this.receiptNumber,
 
-          totalPrice: totalPrice,
+          // Hack to detect which payment method was used
+          // @todo Change this and allow admin to select what is the specific payment method used
+          paymentMethod: this.imageDataURI ? "paynow" : "others",
+
+          // Get total price and convert to cents as API requires it in cents
+          totalPrice: this.calculateTotalPrice() * 100,
           customer: this.customer,
 
           items,
