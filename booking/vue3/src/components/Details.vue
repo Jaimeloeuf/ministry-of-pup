@@ -71,6 +71,7 @@
                 v-model="preference"
                 class="textarea"
                 placeholder="Optional preferences, tell us what you like!
+
 E.g. Cream coloured / French bulldogs / Female dog"
               />
             </label>
@@ -78,7 +79,7 @@ E.g. Cream coloured / French bulldogs / Female dog"
 
           <div class="column is-full">
             <label>
-              <b>Where did you discover us from?</b>
+              <b>Where did you discover us?</b>
               <br />
 
               <div class="control">
@@ -156,7 +157,7 @@ export default {
 
   methods: {
     /**
-     * @returns {undefined | true} Returns true if number is valid and undefined if number is invalid
+     * @returns {undefined | Number} Returns parsed Number if number is valid and undefined if number is invalid
      */
     validNumber() {
       // Strip input number of whitespaces
@@ -177,13 +178,14 @@ export default {
           "Please enter a valid Singapore number beginning with 3, 6, 8 or 9"
         );
 
+      // Note: parsed value cannot be set back to this.number as it will be invalid to use Number in HTML input as it expects a string
       // Parse number from string input to Number and make sure that the parsing worked
-      this.number = parseInt(this.number);
-      if (Number.isNaN(this.number))
+      const number = parseInt(this.number);
+      if (Number.isNaN(number))
         return alert("Invalid number format, please only use numerical digits");
 
-      // Return true to indicate that number if valid
-      return true;
+      // Return parsed number
+      return number;
     },
 
     /** @returns {Boolean} Returns boolean depending if email is valid */
@@ -210,7 +212,8 @@ export default {
         return alert("All fields are required except 'preference'");
 
       // End book method if number is invalid
-      if (!this.validNumber()) return;
+      const number = this.validNumber();
+      if (!number) return;
 
       // End book method if email is invalid
       if (!this.validateEmail()) return alert("Invalid email");
@@ -222,7 +225,7 @@ export default {
         {
           fname: this.fname,
           lname: this.lname,
-          number: this.number,
+          number,
           email: this.email,
           ref: this.ref,
         },
@@ -230,7 +233,9 @@ export default {
 
       this.$store.commit("setter", ["preference", this.preference || ""]);
 
-      await this.$store.dispatch("book");
+      // If booking failed, clear loader and end method to let user try again
+      if (!(await this.$store.dispatch("book")))
+        return this.$store.commit("loading", false);
 
       this.$store.commit("loading", false);
       this.$router.push({ name: "complete" });

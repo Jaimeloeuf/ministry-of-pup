@@ -75,29 +75,43 @@ export default createStore({
     },
 
     async book({ commit, dispatch, state }) {
-      const token = await getRecaptchaToken("submit");
+      try {
+        const token = await getRecaptchaToken("submit");
 
-      const res = await oof
-        .POST("/appointment/book")
-        .header({ "x-recaptcha-token": token })
-        .data({
-          time: state.selectedTimeslot,
-          preference: state.preference,
+        const res = await oof
+          .POST("/appointment/book")
+          .header({ "x-recaptcha-token": token })
+          .data({
+            time: state.selectedTimeslot,
+            preference: state.preference,
 
-          // Add in these fields to submit
-          // fname / lname / number / email / ref
-          ...state.details,
-        })
-        .runJSON();
+            // Add in these fields to submit
+            // fname / lname / number / email / ref
+            ...state.details,
+          })
+          .runJSON();
 
-      // If the API call failed, recursively dispatch itself again if user wants to retry,
-      // And always make sure that this method call ends right here by putting it in a return expression
-      if (!res.ok)
+        // If the API call failed, recursively dispatch itself again if user wants to retry,
+        // And always make sure that this method call ends right here by putting it in a return expression
+        if (!res.ok)
+          return (
+            confirm(`Error: \n${res.error}\n\nTry again?`) && dispatch("book")
+          );
+
+        commit("setter", ["appointmentID", res.appointmentID]);
+
+        // Return true to indicate that appointment was successfully booked
+        return true;
+      } catch (error) {
+        // For errors that cause API call itself to throw
+        console.error(error);
+
+        // If the API call failed, recursively dispatch itself again if user wants to retry,
+        // And always make sure that this method call ends right here by putting it in a return expression
         return (
-          confirm(`Error: \n${res.error}\n\nTry again?`) && dispatch("book")
+          confirm(`Error: \n${error.message}\n\nTry again?`) && dispatch("book")
         );
-
-      commit("setter", ["appointmentID", res.appointmentID]);
+      }
     },
 
     async cancel({ dispatch }, appointmentID) {
