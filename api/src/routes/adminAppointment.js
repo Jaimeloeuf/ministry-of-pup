@@ -1,6 +1,6 @@
 /**
- * Express Router for admin to enter a new appointment into the system
- * Mounted on /admin/appointment/book
+ * Express Router for admin to's create and cancel appointments
+ * Mounted on /admin/appointment
  * @author JJ
  * @module Admin appointment routes
  */
@@ -15,10 +15,10 @@ const { asyncWrap } = require("express-error-middlewares");
  * @returns Sucess indicator
  */
 router.post(
-  "/",
+  "/book",
   express.json(),
   asyncWrap(async (req, res) =>
-    require("../utils/bookAppointment")(req.body).then((appointmentID) =>
+    require("../utils/bookAppointment.js")(req.body).then((appointmentID) =>
       res.status(200).json({ ok: true, appointmentID })
     )
   )

@@ -6,8 +6,11 @@ const sendMail = require("./sendMail");
 const fs = require("./fs");
 const unixseconds = require("unixseconds");
 
-const { getUserAccountIdIfExists } = require("./getUserAccount");
-const { createUserAccount } = require("./createUserAccount");
+const { getUserAccountIdIfExists } = require("./getUserAccount.js");
+const { createUserAccount } = require("./createUserAccount.js");
+const { createAndInsertEvent } = require("./GoogleCalendar.js");
+const getTimeString = require("./getTimeString.js");
+const notifyAdmin = require("./tAdminNotification.js");
 
 const emailString = (name, timeString, appointmentID) =>
   `Hey ${name}!
@@ -48,17 +51,14 @@ module.exports = async function bookAppointment({
   lname,
   number,
   email,
-  ref,
-  src = "BK",
-  preference = null,
+  ref = "UN", // Default referral source is UN for undefined/unknown
+  src = "BK", // Default booking src is Booking app
+  preference = null, // Defaults to no pref, since Firestore throws on undefined
 }) {
   // Get the user ID either from an existing account, or from a newly created account
   const userID =
     (await getUserAccountIdIfExists(number)) ||
     (await createUserAccount({ fname, lname, number, email }));
-
-  // Lazily import this to keep serverless container start up time fast as this is not always used
-  const { createAndInsertEvent } = require("./GoogleCalendar");
 
   // @todo Handle on failure and still store appointment into DB + notify developer
   // Get the event ID back and store it to programmatically delete or modify it later on if needed
@@ -90,13 +90,23 @@ module.exports = async function bookAppointment({
     number,
     email,
     preference,
+
+    // src: is where did the user make the booking?
+    // By default if user booked via booking app, it is BK
+    // If user books an appointment by messaging the admins,
+    // This will be the platform (WA/FB/IG/WC/OT) where they sent the message
     src,
+
+    // ref: is where did the user discover us?
+    // This will be where they foudn us from (WA/FB/IG/WC/GG/OT)
+    // This will probably be tagged with a URL query param in the booking links
+    ref,
 
     // Store time appointment was created in unix seconds (this is the time of the server executing the code)
     createdAt: unixseconds(),
   });
 
-  const timeString = require("./getTimeString.js")(time);
+  const timeString = getTimeString(time);
 
   // Send user a email to confirm with them that their appointment has been scheduled successfully
   await sendMail.send({
@@ -115,7 +125,6 @@ module.exports = async function bookAppointment({
   // });
 
   // Notify admins about new appointment using the telegram notification bot
-  const notifyAdmin = require("./tAdminNotification.js");
   notifyAdmin(`<b>New appointment</b>
 
 ${timeString}

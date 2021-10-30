@@ -30,17 +30,17 @@ app.use(
   adminOnly,
   require("./routes/scheduledAppointment")
 );
-app.use(
-  "/admin/appointment/book",
-  adminOnly,
-  require("./routes/adminAppointment")
-);
+app.use("/admin/appointment", adminOnly, require("./routes/adminAppointment"));
 app.use("/admin/pet", adminOnly, require("./routes/dogs.js"));
 app.use("/admin/pet/new", adminOnly, require("./routes/newDog.js"));
 app.use("/admin/pet/sold", adminOnly, require("./routes/sold.js"));
 app.use("/admin/schedule", adminOnly, require("./routes/adminSchedule.js"));
 app.use("/admin/sale/manual", adminOnly, require("./routes/manualSale.js"));
-app.use("/admin/sale/manual/print", adminOnly, require("./routes/printReceipt"));
+app.use(
+  "/admin/sale/manual/print",
+  adminOnly,
+  require("./routes/printReceipt")
+);
 app.use("/contact-us-form", require("./routes/contactUsForm.js"));
 app.use("/error", require("./routes/error.js"));
 // app.use("/help", authnMiddleware, require("./routes/help.js"));
