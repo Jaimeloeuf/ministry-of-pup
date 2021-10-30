@@ -17,14 +17,11 @@ const { asyncWrap } = require("express-error-middlewares");
 router.post(
   "/",
   express.json(),
-  asyncWrap(async (req, res) => {
-    // Remove all white space from phone number
-    req.body.number = req.body.number.replace(" ", "");
-
-    const appointmentID = await require("../utils/bookAppointment")(req.body);
-
-    res.status(200).json({ ok: true, appointmentID });
-  })
+  asyncWrap(async (req, res) =>
+    require("../utils/bookAppointment")(req.body).then((appointmentID) =>
+      res.status(200).json({ ok: true, appointmentID })
+    )
+  )
 );
 
 module.exports = router;

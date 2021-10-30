@@ -48,12 +48,10 @@ module.exports = async function bookAppointment({
   lname,
   number,
   email,
+  ref,
   src = "BK",
   preference = null,
 }) {
-  // Remove all white space from phone number
-  number = number.replace(" ", "");
-
   // Get the user ID either from an existing account, or from a newly created account
   const userID =
     (await getUserAccountIdIfExists(number)) ||

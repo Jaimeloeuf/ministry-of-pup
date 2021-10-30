@@ -13,23 +13,22 @@ const { asyncWrap } = require("express-error-middlewares");
 
 /**
  * Creates an account for the user if it does not already exists, and book a appointment
+ *
+ * appointmentID is returned so that the booking app can generate the calendar event,
+ * with a link for cancelling appointment using this appointmentID
+ *
  * @name POST /appointment/book
- * @returns Sucess indicator
+ * @returns Sucess indicator and appointmentID
  */
 router.post(
   "/book",
   verifyRecaptcha,
   express.json(),
-  asyncWrap(async (req, res) => {
-    // Remove all white space from phone number
-    req.body.number = req.body.number.replace(" ", "");
-
-    const appointmentID = await require("../utils/bookAppointment")(req.body);
-
-    // appointmentID is returned so that the booking app can generate the calendar event,
-    // with a link for cancelling appointment using this appointmentID
-    res.status(200).json({ ok: true, appointmentID });
-  })
+  asyncWrap(async (req, res) =>
+    require("../utils/bookAppointment")(req.body).then((appointmentID) =>
+      res.status(200).json({ ok: true, appointmentID })
+    )
+  )
 );
 
 /**

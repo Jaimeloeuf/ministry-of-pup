@@ -89,7 +89,7 @@ router.post(
       time: unixseconds(),
     });
 
-    // Generate the receipt using the newly created doc's doc ID to generate receipt number
+    // Generate the receipt
     const receipt = await generateReceiptString(receiptData);
 
     // Generate and Email receipt
