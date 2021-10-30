@@ -240,8 +240,11 @@
     </div>
 
     <div class="column is-one-third">
-      <button @click="reset" class="button is-light is-fullwidth is-danger">
-        Reset form
+      <button
+        @click="printReceipt"
+        class="button is-light is-fullwidth is-warning"
+      >
+        Print receipt
       </button>
     </div>
 
@@ -455,6 +458,48 @@ export default {
       // Check with admin if page should be reset once sale is processed,
       // as they may want to reuse the item details and change customer details only
       if (confirm("Reset entire form?")) this.reset();
+    },
+
+    async printReceipt() {
+      // Process the items to ensure that all the price are in cents
+      // Create a new item instead of modifying the original object to prevent changing things in the form
+      const items = this.items.map((item) => ({
+        ...item,
+
+        // Ensure that quantity is Number instead of String as it came from the HTML input tag
+        quantity: parseInt(item.quantity),
+
+        // Save the item price in cents instead of dollars
+        price: item.price * 100,
+      }));
+
+      const res = await oof
+        .POST("/admin/sale/manual/print")
+        .header(await getAuthHeader())
+        .data({
+          receiptNumber: this.receiptNumber,
+
+          // Hack to detect which payment method was used
+          // @todo Change this and allow admin to select what is the specific payment method used
+          paymentMethod: this.imageDataURI ? "paynow" : "others",
+
+          // Get total price and convert to cents as API requires it in cents
+          totalPrice: this.calculateTotalPrice() * 100,
+          customer: this.customer,
+
+          items,
+        })
+        .runJSON();
+
+      // If the API call failed, recursively call itself again if user wants to retry,
+      // And always make sure that this method call ends right here by putting it in a return expression
+      if (!res.ok)
+        return (
+          confirm(`Error: \n${res.error}\n\nTry again?`) &&
+          this.printReceipt()
+        );
+
+      alert("Receipt sent to inbox");
     },
 
     resetItems() {
