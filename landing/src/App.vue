@@ -4,6 +4,15 @@
     <HeroHead />
     <router-view />
     <Footer />
+
+    <!-- FAB to link to booking site -->
+    <a
+      href="https://booking.ministryofpup.com/"
+      target="_blank"
+      class="button is-floating is-success is-light"
+    >
+      Book Appointment
+    </a>
   </div>
 </template>
 
@@ -54,5 +63,20 @@ export default {
   object-position: center center;
   width: 100%;
   height: 100%;
+}
+
+/*
+  CSS For the Book Appointment FAB modified from
+  https://github.com/alakise/bulma-floating-button/blob/master/dist/css/bulma-floating-button.min.css
+*/
+.button.is-floating {
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  border-radius: 10em;
+  text-align: center;
+  font-size: 1.2rem;
+  box-shadow: 0 0.0625em 0.125em rgba(10, 10, 10, 0.05);
+  z-index: 3;
 }
 </style>
