@@ -63,20 +63,31 @@
 <script>
 export default {
   name: "HeroHead",
+
+  created() {
+    // On component creation, trigger the method to calculate if device is mobile,
+    // And add the method as a event handler for resizes to handle orientation changes
+    // resize event preferred over screen orientation event as that is not supported on safari..
+    this.recalculateIsMobile();
+    window.addEventListener("resize", this.recalculateIsMobile);
+  },
+
+  methods: {
+    // Call method to calculate if device is mobile based on screen width and update this.isMobile accordingly
+    recalculateIsMobile() {
+      // Bulma $desktop breakpoint variable is 1024px, thus check for that to see when navbar will convert to mobile style
+      // And if less than that, then the device is considered to be a mobile device
+      this.isMobile =
+        (window.innerWidth ||
+          document.documentElement.clientWidth ||
+          document.body.clientWidth) < 1024;
+    },
+  },
+
   data() {
-    // Bulma $desktop breakpoint variable is 1024px, thus check for that to see when navbar will convert to mobile style
-    const windowIsNotDesktop = () =>
-      (window.innerWidth ||
-        document.documentElement.clientWidth ||
-        document.body.clientWidth) <= 1024;
-
-    // Device is considered a mobile device if it either matches the user agent specified or is not desktop width
-    const isMobile =
-      navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i) ||
-      windowIsNotDesktop();
-
     return {
-      isMobile,
+      // Default to not mobile to ensure the icons are not added in first render before it is calculated
+      isMobile: false,
 
       showMobileMenu: false,
 
