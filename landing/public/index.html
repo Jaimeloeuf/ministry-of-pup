@@ -51,6 +51,18 @@
       /* Firefox */
       scrollbar-width: none;
     }
+
+    /* Moves recaptcha badge/icon to the left to prevent being blocked by the book appointment FAB */
+    .grecaptcha-badge {
+      width: 70px !important;
+      overflow: hidden !important;
+      transition: all 0.3s ease !important;
+      left: 4px !important;
+    }
+
+    .grecaptcha-badge:hover {
+      width: 256px !important;
+    }
   </style>
 </head>
 
