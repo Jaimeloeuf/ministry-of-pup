@@ -433,7 +433,7 @@ export default {
 
           // Hack to detect which payment method was used
           // @todo Change this and allow admin to select what is the specific payment method used
-          paymentMethod: this.imageDataURI ? "paynow" : "others",
+          paymentMethod: this.imageDataURI ? "Paynow" : "Others",
 
           // Get total price and convert to cents as API requires it in cents
           totalPrice: this.calculateTotalPrice() * 100,
@@ -481,7 +481,7 @@ export default {
 
           // Hack to detect which payment method was used
           // @todo Change this and allow admin to select what is the specific payment method used
-          paymentMethod: this.imageDataURI ? "paynow" : "others",
+          paymentMethod: this.imageDataURI ? "Paynow" : "Others",
 
           // Get total price and convert to cents as API requires it in cents
           totalPrice: this.calculateTotalPrice() * 100,
@@ -495,8 +495,7 @@ export default {
       // And always make sure that this method call ends right here by putting it in a return expression
       if (!res.ok)
         return (
-          confirm(`Error: \n${res.error}\n\nTry again?`) &&
-          this.printReceipt()
+          confirm(`Error: \n${res.error}\n\nTry again?`) && this.printReceipt()
         );
 
       alert("Receipt sent to inbox");

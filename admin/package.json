@@ -17,7 +17,7 @@
     "firebase": "^9.1.2",
     "paynowqr": "^1.1.2",
     "qrcode": "^1.4.4",
-    "simpler-fetch": "^2.1.0",
+    "simpler-fetch": "^2.2.0",
     "vue": "^2.6.14",
     "vue-router": "^3.5.2",
     "vuex": "^3.6.2",
