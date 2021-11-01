@@ -62,6 +62,10 @@ export default {
   created() {
     // Only run this on first load, so that if user navigates back from timeslots dates will not be loaded again
     if (this.datesAvailable.length === 0) this.loadDates();
+
+    // Get the referral source if any, else UN for undefined/unknown
+    const ref = this.$route.query.ref || "UN";
+    this.$store.commit("setter", ["ref", ref]);
   },
 
   computed: mapState(["datesAvailable"]),

@@ -149,16 +149,14 @@ export default {
       preference: undefined,
 
       // Ref for referral, how did the user get referred to this booking site?
-      // Possible values:  FB / IG / GG / OT / UN
+      // Possible values:  FB / IG / GG / WC / OT / UN
       // UN for undefined
       ref: "UN",
     };
   },
 
   methods: {
-    /**
-     * @returns {undefined | Number} Returns parsed Number if number is valid and undefined if number is invalid
-     */
+    /** @returns {undefined | Number} Returns parsed Number if number is valid and undefined if number is invalid */
     validNumber() {
       // Strip input number of whitespaces
       this.number = this.number.replace(/\s/g, "");

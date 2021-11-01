@@ -24,6 +24,8 @@ export default createStore({
       // Shared global loading flag to show/hide loader in App.vue
       loading: false,
 
+      ref: "UN",
+
       datesAvailable: [],
       selectedDate: {},
       selectedTimeslot: undefined,
@@ -89,6 +91,8 @@ export default createStore({
           .header({ "x-recaptcha-token": token })
           .data({
             time: state.selectedTimeslot,
+            ref: state.ref,
+
             preference: state.preference,
 
             // Add in these fields to submit

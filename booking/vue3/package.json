@@ -9,7 +9,7 @@
   "dependencies": {
     "bulma": "^0.9.3",
     "calendar-link": "^2.1.1",
-    "simpler-fetch": "^2.1.0",
+    "simpler-fetch": "^2.2.0",
     "vue": "^3.2.16",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"
