@@ -55,12 +55,15 @@ export default createStore({
 
   actions: {
     async loadDates({ commit, dispatch }, after) {
+      const token = await getRecaptchaToken("getAvailableDates");
+
       const res = await oof
         .GET(
           after
             ? `/appointment/available/date?after=${after}`
             : "/appointment/available/date"
         )
+        .header({ "x-recaptcha-token": token })
         .runJSON();
 
       // If the API call failed, recursively dispatch itself again if user wants to retry,
@@ -71,12 +74,15 @@ export default createStore({
           dispatch("loadDates", after)
         );
 
+      if (res.timeslots.length === 0)
+        return alert("Sorry but there are no more available dates!");
+
       commit("setAvailableDates", res.timeslots);
     },
 
     async book({ commit, dispatch, state }) {
       try {
-        const token = await getRecaptchaToken("submit");
+        const token = await getRecaptchaToken("bookAppointment");
 
         const res = await oof
           .POST("/appointment/book")
