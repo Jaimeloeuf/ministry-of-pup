@@ -1,14 +1,13 @@
 {
   "name": "mop-invoice",
   "description": "Lib to generate PDF receipts and invoices for MOP sales",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "index.js",
   "files": [
     "index.js",
     "receipt.js",
     "invoice.js",
-    "commonUtils.js",
-    "logo.jpg"
+    "commonUtils.js"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

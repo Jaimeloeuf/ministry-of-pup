@@ -36,6 +36,9 @@ async function generateInvoiceString(invoiceData) {
 const receipt = {
   receiptNumber: "MOP-2110-f83j",
 
+  // Only required for receipt and not invoices
+  paymentMethod: "Paynow",
+
   customer: {
     name: "John Doe",
     address: "12 Amazing Condo",

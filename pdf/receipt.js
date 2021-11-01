@@ -108,6 +108,17 @@ function generateInvoiceTable(doc, invoice) {
     "",
     formatCurrency(invoice.totalPrice)
   );
+
+  const paymentMethodPosition = paidToDatePosition + 20;
+  generateTableRow(
+    doc,
+    paymentMethodPosition,
+    "",
+    "",
+    "Payment Method",
+    "",
+    invoice.paymentMethod
+  );
 }
 
 module.exports = create;
