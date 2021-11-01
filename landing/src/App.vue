@@ -7,7 +7,7 @@
 
     <!-- FAB to link to booking site -->
     <a
-      href="https://booking.ministryofpup.com/"
+      href="https://booking.ministryofpup.com/#/?ref=LP-FAB"
       target="_blank"
       class="button is-floating is-success is-light"
     >

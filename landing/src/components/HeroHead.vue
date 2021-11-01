@@ -116,7 +116,7 @@ export default {
         {
           name: "Book appointment",
           icon: "<i class='far fa-calendar-check' />",
-          link: "https://booking.ministryofpup.com",
+          link: "https://booking.ministryofpup.com/#/?ref=LP",
           target: "_blank",
         },
         {
