@@ -24,4 +24,20 @@ router.post(
   )
 );
 
+/**
+ * Cancel an existing appointment and delete the event in google calendar.
+ * This is a POST request instead of a DELETE request to not deal with handling CORS preflight request for DELETE methods.
+ * @name POST /admin/appointment/cancel/:appointmentID
+ * @returns Sucess indicator
+ */
+router.post(
+  "/cancel",
+  express.json(),
+  asyncWrap(async (req, res) =>
+    require("../utils/cancelAppointment.js")(req.params.appointmentID).then(
+      () => res.status(200).json({})
+    )
+  )
+);
+
 module.exports = router;
