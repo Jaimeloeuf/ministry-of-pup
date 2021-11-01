@@ -67,6 +67,8 @@ router.post(
       // Generate receipt number if not passed in
       receiptNumber: req.body.receiptNumber || generateReceiptNumber(),
 
+      paymentMethod,
+
       customer: {
         name: `${customer.lname} ${customer.fname}`,
         address: customer.address,
