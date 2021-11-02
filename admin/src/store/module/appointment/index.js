@@ -107,5 +107,19 @@ export default {
 
       commit("setAppointment", res.appointment);
     },
+
+    async cancelAppointment({ dispatch }, appointmentID) {
+      const res = await oof
+        .POST(`/appointment/cancel/${appointmentID}`)
+        .runJSON();
+
+      // If the API call failed, recursively dispatch itself again if user wants to retry,
+      // And always make sure that this method call ends right here by putting it in a return expression
+      if (!res.ok)
+        return (
+          confirm(`Error: \n${res.error}\n\nTry again?`) &&
+          dispatch("cancelAppointment", appointmentID)
+        );
+    },
   },
 };

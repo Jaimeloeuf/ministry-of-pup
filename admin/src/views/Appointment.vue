@@ -1,5 +1,8 @@
 <template>
-  <div class="columns is-multiline is-centered" style="max-width: 50em">
+  <div
+    class="columns is-multiline is-centered is-vcentered"
+    style="max-width: 50em"
+  >
     <div class="column">
       <p class="subtitle">
         Appointment <b>{{ appointmentID }}</b>
@@ -7,6 +10,12 @@
     </div>
 
     <div class="column is-narrow">
+      <button class="button is-light is-danger" @click="cancelAppointment">
+        Cancel
+      </button>
+    </div>
+
+    <div class="column is-full">
       <b>
         {{ formatDate(appointment.time) }}
       </b>
@@ -139,6 +148,19 @@ export default {
 
   methods: {
     formatDate,
+
+    // Trigger the cancel appointment action, and redirect to all-appointments once completed
+    async cancelAppointment() {
+      if (!confirm("Cancel Appointment?")) return;
+
+      this.loading = true;
+
+      // If succeeded, redirect to all appointments else do nothing
+      this.$store
+        .dispatch("appointment/cancelAppointment", this.appointmentID)
+        .then(() => this.$router.push({ name: "all-appointments" }))
+        .catch(() => confirm("Retry?") && this.cancelAppointment());
+    },
   },
 };
 </script>
