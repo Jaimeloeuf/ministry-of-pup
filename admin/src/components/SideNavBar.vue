@@ -167,6 +167,14 @@
           </router-link>
         </li>
         <li>
+          <router-link
+            :to="{ name: 'booking-links' }"
+            :class="{ 'is-active': $route.name === 'booking-links' }"
+          >
+            Booking Links
+          </router-link>
+        </li>
+        <li>
           <a>Manage Team</a>
           <ul>
             <li><a>Members</a></li>

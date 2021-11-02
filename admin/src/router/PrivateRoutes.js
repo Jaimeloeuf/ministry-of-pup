@@ -89,6 +89,12 @@ const routes = [
     component: () => import("@/views/ManualSale.vue"),
     meta: { Auth_requirements: AuthType.private },
   },
+  {
+    path: "/booking-links",
+    name: "booking-links",
+    component: () => import("@/views/BookingLinks.vue"),
+    meta: { Auth_requirements: AuthType.private },
+  },
 ];
 
 export default routes;
