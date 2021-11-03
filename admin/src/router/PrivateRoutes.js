@@ -90,6 +90,12 @@ const routes = [
     meta: { Auth_requirements: AuthType.private },
   },
   {
+    path: "/paynow",
+    name: "paynow",
+    component: () => import("@/views/Paynow.vue"),
+    meta: { Auth_requirements: AuthType.private },
+  },
+  {
     path: "/booking-links",
     name: "booking-links",
     component: () => import("@/views/BookingLinks.vue"),

@@ -142,6 +142,14 @@
             Manual Sale
           </router-link>
         </li>
+        <li>
+          <router-link
+            :to="{ name: 'paynow' }"
+            :class="{ 'is-active': $route.name === 'paynow' }"
+          >
+            Paynow
+          </router-link>
+        </li>
       </ul>
 
       <p class="menu-label">Customers</p>
