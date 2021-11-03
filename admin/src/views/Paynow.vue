@@ -40,7 +40,7 @@
       <hr class="my-0" style="background-color: #dedede" />
     </div>
 
-    <div class="column is-one-quater">
+    <div class="column is-one-quarter">
       <button @click="reset" class="button is-light is-fullwidth is-danger">
         Reset
       </button>

@@ -270,11 +270,7 @@
     <!-- @todo Tmp added a click to close for the entire modal -->
     <!-- Might want to better think about the UX and what if they accidentally click somewhere, it shouldnt close, and how to reopen? -->
     <!-- Maybe only click to close via X, and click to close via complete method call through a button -->
-    <div
-      class="modal"
-      :class="{ 'is-active': showModal }"
-      @click="showModal = false"
-    >
+    <div class="modal" :class="{ 'is-active': showModal }">
       <!-- Modal can be closed by clicking any part of the modal background -->
       <div class="modal-background" @click="showModal = false"></div>
 
@@ -531,6 +527,9 @@ export default {
 
       // Only use this if `this` is used in the data method
       // Object.assign(this.$data, this.$options.data.apply(this));
+
+      // Reset scroll position to top too to allow admin to quickly enter a new manual sale
+      window.scrollTo(0, 0);
     },
   },
 };

@@ -92,6 +92,8 @@ export default {
     async getAppointment({ state, commit, dispatch }, appointmentID) {
       if (state.appointments[appointmentID]) return;
 
+      return dispatch("getAppointments");
+      // eslint-disable-next-line no-unreachable
       const res = await oof
         .GET(`/admin/appointment/${appointmentID}`)
         .header(await getAuthHeader())

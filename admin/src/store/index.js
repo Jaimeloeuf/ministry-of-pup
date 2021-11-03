@@ -38,9 +38,9 @@ export default new Vuex.Store({
       paths: ["user"],
     }),
     // Register modules for persistent state using sessionStorage
-    createPersistedState({
-      storage: window.sessionStorage,
-      paths: ["dog"],
-    }),
+    // createPersistedState({
+    //   storage: window.sessionStorage,
+    //   paths: ["dog"],
+    // }),
   ],
 });
