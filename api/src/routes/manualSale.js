@@ -21,8 +21,11 @@ const emailReceipt = async ({ email, userFname, receipt }) =>
     subject: "Ministry Of Pup: Receipt",
 
     text: `Hey ${userFname}!
+
 Thank you so much for being our valued partner. Please find the attached receipt for your purchase!
+
 If you have any concerns regarding this receipt, please call 8802,2177 between 11am - 8pm, alternatively you can reply to this email.
+
 
 Sincerely,
 The Ministry of Pup team`,
@@ -48,12 +51,19 @@ router.post(
   asyncWrap(async (req, res) => {
     const { items, paymentMethod, totalPrice } = req.body;
 
+    // @todo Fix and remove the tmp solution below
+    // Always ensure that the customer account is updated and all, so that when the customer object is loaded, all details will be in
+
     // Create account if does not exists and get back customer/user object
-    const customer =
-      await require("../utils/createUserAccount").createUserAccountIfDoesNotExist(
+    const customer = {
+      ...(await require("../utils/createUserAccount").createUserAccountIfDoesNotExist(
         req.body.userID,
         req.body.customer
-      );
+      )),
+
+      // In case there is missing data, this at least prevent missing data from being passed to receipt data
+      ...req.body.customer,
+    };
 
     // Receipt data is the data needed to generate the actual receipt,
     // while whats stored in the 'manualSale' collection document contains other meta data about the transaction too
