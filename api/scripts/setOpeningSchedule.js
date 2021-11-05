@@ -1,5 +1,5 @@
 /**
- * Script to set opening hours for the store and blocked off timing if any
+ * Script to set opening hours for the store
  */
 
 async function addOpeningHours() {
