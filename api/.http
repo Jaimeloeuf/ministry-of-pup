@@ -12,7 +12,7 @@ POST https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={{firebaseAut
 content-type: application/json
 
 {
-    "email": "api_tester@enkeldigital.com",
+    "email": "api_tester@ministryofpup.com",
     "password": "securePassword",
     "returnSecureToken": true,
 }
@@ -24,7 +24,7 @@ POST https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={
 content-type: application/json
 
 {
-    "email": "api_tester@enkeldigital.com",
+    "email": "api_tester@ministryofpup.com",
     "password": "securePassword",
     "returnSecureToken": true,
 }
@@ -53,7 +53,7 @@ content-type: application/json
 
 {
     "dogID": 1,
-    "time": 1634281200,
+    "time": 1634544000000,
     "fname": "John",
     "lname": "Smith",
     "number": "+6599999999",
@@ -70,13 +70,18 @@ content-type: application/json
 GET {{host}}/admin/appointment/scheduled
 {{authHeader}}
 
-### Get user details
-# GET /app/user/:userID
-GET {{host}}/app/user/1
-{{authHeader}}
-
 ### Get all appointments
 POST {{host}}/admin/appointment/all
+{{authHeader}}
+
+### Get user details
+# GET /user/:userID
+GET {{host}}/user/rtx6weOBe6x9OtNsylij
+{{authHeader}}
+
+### Get user details
+# GET /user/:userID
+GET {{host}}/user/number/88888888
 {{authHeader}}
 
 ### Update available time slots for booking
