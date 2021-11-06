@@ -20,12 +20,23 @@ const { asyncWrap } = require("express-error-middlewares");
 router.get(
   "/:userID",
   asyncWrap(async (req, res) =>
-    fs
-      .collection("users")
-      .doc(req.params.userID)
-      .get()
-      .then((snapshot) => snapshot.data())
-      .then((user) => res.status(200).json({ ok: true, user }))
+    require("../utils/getUserAccount.js")
+      .getUserAccount(req.params.userID)
+      .then((user) => res.status(200).json({ user }))
+  )
+);
+
+/**
+ * Get user from phone number
+ * @name GET /user/number/:number
+ * @returns Sucess indicator and the user's data
+ */
+router.get(
+  "/number/:number",
+  asyncWrap(async (req, res) =>
+    require("../utils/getUserAccount.js")
+      .getUserAccountIfExists(req.params.number)
+      .then((user) => res.status(user ? 200 : 404).json(user ? { user } : {}))
   )
 );
 

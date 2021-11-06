@@ -5,36 +5,35 @@ const fs = require("./fs");
 /**
  * Get user document data directly because if userID exists, then the document must exists too
  * @param {DocumentID} userID User's Document ID
- * @returns {FirebaseFirestore.DocumentData} Account data
+ * @returns {Promise<FirebaseFirestore.DocumentData>} Account data
  */
-// const getUserAccount = async (userID) =>
-//   (await fs.collection("users").doc(userID).get()).data();
-async function getUserAccount(userID) {
-  const userDoc = await fs.collection("users").doc(userID).get();
-  return { id: userDoc.id, ...userDoc.data() };
-}
+const getUserAccount = async (userID) =>
+  fs
+    .collection("users")
+    .doc(userID)
+    .get()
+    .then((doc) => ({ id: doc.id, ...doc.data() }));
 
 /**
  * Checks if user already have an account, if true, return account data, else undefined
  * @param {Number} phoneNumber User's SG phone number
- * @returns {FirebaseFirestore.DocumentData | undefined} Account data if exists, else undefined
+ * @returns {Promise<FirebaseFirestore.DocumentData | false>} Account data if exists, else false
  */
-async function getUserAccountIfExists(phoneNumber) {
-  const snapshot = await fs
+const getUserAccountIfExists = (phoneNumber) =>
+  fs
     .collection("users")
     .where("number", "==", phoneNumber)
-    .get();
-
-  // If the snapshot is empty, return undefined to specify user does not have an account
-  // Else assume only 1 document for that user, and return the first user document data
-  if (snapshot.empty) return undefined;
-  else return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
-}
+    .get()
+    .then((snapshot) =>
+      snapshot.empty
+        ? false
+        : { id: snapshot.docs[0].id, ...snapshot.docs[0].data() }
+    );
 
 /**
  * Checks if user already have an account, if true, return user ID, else undefined
  * @param {Number} phoneNumber User's SG phone number
- * @returns {DocumentID | undefined} User ID if exists, else undefined
+ * @returns {Promise<DocumentID | undefined>} User ID if exists, else undefined
  */
 const getUserAccountIdIfExists = async (phoneNumber) =>
   (await getUserAccountIfExists(phoneNumber))?.id;
