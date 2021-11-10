@@ -2,7 +2,7 @@
   <div class="px-5 py-5">
     <div class="columns is-multiline">
       <div class="column is-full">
-        <p class="title is-3">Book a play session!</p>
+        <p class="title is-3">Book a viewing slot!</p>
       </div>
 
       <div class="column is-full">
