@@ -40,13 +40,13 @@
       <hr class="my-0" style="background-color: #dedede" />
     </div>
 
-    <div class="column is-one-quarter">
+    <div class="column is-narrow">
       <button @click="reset" class="button is-light is-fullwidth is-danger">
         Reset
       </button>
     </div>
 
-    <div class="column is-three-quarters">
+    <div class="column">
       <button
         @click="showPaynowQR"
         class="button is-light is-fullwidth is-success"

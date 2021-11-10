@@ -1,5 +1,9 @@
 <template>
   <div class="columns is-multiline is-centered" style="max-width: 50em">
+    <div class="column pb-0 mb-0">
+      <p class="subtitle">Items</p>
+    </div>
+
     <div class="column is-full pt-0 mt-0">
       <div v-for="(item, i) in items" :key="i">
         <div class="columns is-multiline is-vcentered mt-2">

@@ -9,7 +9,9 @@
           already booked. This only affects time slots for future bookings
         </li>
 
-        <!-- @todo Can be removed in future versions as this is kinda arbiturary to ensure easier calculations for 30 min booking intervals -->
+        <li>End at 8pm means last available appointment slot is 7pm - 8pm</li>
+
+        <!-- @todo Can be removed in future versions as this is kinda arbiturary to ensure easier calculations for 1 hour booking intervals -->
         <li>Please set time to nearest hour</li>
       </ul>
     </div>

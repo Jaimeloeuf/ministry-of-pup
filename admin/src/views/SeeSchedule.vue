@@ -46,6 +46,13 @@
         </div>
 
         <div
+          class="column is-full"
+          v-if="!blockedDates || !blockedDates.length"
+        >
+          <p class="subtitle ml-4">No blocked dates</p>
+        </div>
+
+        <div
           class="column is-three-quarters"
           v-for="(blockedDate, i) in blockedDates"
           :key="i"

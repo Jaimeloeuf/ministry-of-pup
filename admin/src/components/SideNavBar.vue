@@ -104,34 +104,6 @@
         </li>
       </ul>
 
-      <p class="menu-label">Schedule</p>
-      <ul class="menu-list">
-        <li>
-          <router-link
-            :to="{ name: 'schedule' }"
-            :class="{ 'is-active': $route.name === 'schedule' }"
-          >
-            See Schedule
-          </router-link>
-        </li>
-        <li>
-          <router-link
-            :to="{ name: 'block-schedule' }"
-            :class="{ 'is-active': $route.name === 'block-schedule' }"
-          >
-            Block Schedule
-          </router-link>
-        </li>
-        <li>
-          <router-link
-            :to="{ name: 'set-opening' }"
-            :class="{ 'is-active': $route.name === 'set-opening' }"
-          >
-            Opening hours
-          </router-link>
-        </li>
-      </ul>
-
       <p class="menu-label">E Commerce</p>
       <ul class="menu-list">
         <li>
@@ -160,6 +132,34 @@
             :class="{ 'is-active': $route.name === 'all-customers' }"
           >
             All customers
+          </router-link>
+        </li>
+      </ul>
+
+      <p class="menu-label">Schedule</p>
+      <ul class="menu-list">
+        <li>
+          <router-link
+            :to="{ name: 'schedule' }"
+            :class="{ 'is-active': $route.name === 'schedule' }"
+          >
+            See Schedule
+          </router-link>
+        </li>
+        <li>
+          <router-link
+            :to="{ name: 'block-schedule' }"
+            :class="{ 'is-active': $route.name === 'block-schedule' }"
+          >
+            Block Schedule
+          </router-link>
+        </li>
+        <li>
+          <router-link
+            :to="{ name: 'set-opening' }"
+            :class="{ 'is-active': $route.name === 'set-opening' }"
+          >
+            Opening hours
           </router-link>
         </li>
       </ul>
