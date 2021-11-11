@@ -63,8 +63,8 @@ export default {
     timeslotString: (timeslotTimeInMilliseconds) =>
       formatMsToTime(timeslotTimeInMilliseconds) +
       " - " +
-      // 30 mins * 60000 milliseconds = 1800000 milliseconds
-      formatMsToTime(timeslotTimeInMilliseconds + 1800000),
+      // 60 mins * 60000 milliseconds = 3600000 milliseconds
+      formatMsToTime(timeslotTimeInMilliseconds + 3600000),
 
     selectTimeslot(timeslot) {
       this.$store.commit("setter", ["selectedTimeslot", timeslot]);
