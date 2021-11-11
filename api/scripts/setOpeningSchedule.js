@@ -4,21 +4,23 @@
 
 async function addOpeningHours() {
   // Units in Milliseconds
-  // last appointment allowed is 7 to 730pm
-  const openingSecond = 11 * 60 * 60 * 1000; // 1100 hours
-  const closingSecond = (19 * 60 * 60 + 30 * 60) * 1000; // 1930 hours
+  const weekdayOpeningSecond = 14 * 60 * 60 * 1000; // 1400 hours
+  const weekendOpeningSecond = 11 * 60 * 60 * 1000; // 1100 hours
+
+  // last appointment slot is 7 to 8 pm
+  const closingSecond = 20 * 60 * 60 * 1000; // 2000 hours
 
   return require("../src/utils/fs.js")
     .collection("openingHours")
     .doc("openingHours")
     .set({
-      1: [{ start: openingSecond, end: closingSecond }],
-      2: [{ start: openingSecond, end: closingSecond }],
-      3: [{ start: openingSecond, end: closingSecond }],
-      4: [{ start: openingSecond, end: closingSecond }],
-      5: [{ start: openingSecond, end: closingSecond }],
-      6: [{ start: openingSecond, end: closingSecond }],
-      7: [{ start: openingSecond, end: closingSecond }],
+      1: [{ start: weekdayOpeningSecond, end: closingSecond }],
+      2: [{ start: weekdayOpeningSecond, end: closingSecond }],
+      3: [{ start: weekdayOpeningSecond, end: closingSecond }],
+      4: [{ start: weekdayOpeningSecond, end: closingSecond }],
+      5: [{ start: weekdayOpeningSecond, end: closingSecond }],
+      6: [{ start: weekendOpeningSecond, end: closingSecond }],
+      7: [{ start: weekendOpeningSecond, end: closingSecond }],
     });
 }
 
