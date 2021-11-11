@@ -53,7 +53,7 @@ const { DateTime } = require("luxon");
  *
  * @todo How does setting the zone here makes sense?
  *
- * @param {DateTime | DateInMilliseconds} afterThisDate
+ * @param {DateTime | DateInMilliseconds} [afterThisDate]
  * @returns
  */
 function nextAvailableDate(afterThisDate) {
@@ -72,11 +72,11 @@ function nextAvailableDate(afterThisDate) {
     return { start: date.startOf("day"), end: date.endOf("day") };
   } else {
     // If no date cursor provided, create new date of current time in SGT,
-    // To get the first timeslot of the date cursor, first round it up to the nearest 30 minutes interval,
+    // To get first timeslot of date cursor, first round it up to the nearest hour (since timeslots are hourly intervals),
     // Then add a 1 hour buffer to current time so that the earliest available booking time is at least 1 hour away
     // Reset seconds and milliseconds to 0 to ensure that it will be a Hour/Minute only representation
     const dt = DateTime.now().setZone("Asia/Singapore");
-    const remainder = 30 - (dt.minute % 30);
+    const remainder = 60 - (dt.minute % 60);
     const date = dt
       .plus({ hours: 1, minutes: remainder })
       .set({ second: 0, millisecond: 0 });
@@ -103,7 +103,7 @@ function allTimeSlots(openingTimeArray, currentDateStart, customStart) {
   for (const openingTimes of openingTimeArray) {
     const { start: openingSecond, end: closingSecond } = openingTimes;
 
-    // Inner recursive function that recurses with a `30 mins` increment until
+    // Inner recursive function that recurses with a `1 hour` increment until
     // The `currentSecondOfCurrentDay` matches the closing second of the same day.
     // To return an array of all the time slots in between them
     function _allTimeSlots(currentSecondOfCurrentDay) {
@@ -111,9 +111,9 @@ function allTimeSlots(openingTimeArray, currentDateStart, customStart) {
       // because if custom start time is used, it may already start after the closing second.
       if (currentSecondOfCurrentDay >= closingSecond) return [];
       else {
-        // Call itself with increment of 30 minutes in seconds
-        // 30 * 60 * 1000 = 1800000 Milliseconds in a 30 minute interval
-        const timeSlots = _allTimeSlots(currentSecondOfCurrentDay + 1800000);
+        // Call itself with increment of 1 hour in seconds
+        // 60 * 60 * 1000 = 3600000 Milliseconds in a 1 hour interval
+        const timeSlots = _allTimeSlots(currentSecondOfCurrentDay + 3600000);
 
         // Storing the available timeslot in Milliseconds
         // Unshift is more efficient than calling spread operator to create new array
@@ -295,10 +295,10 @@ async function nextFiveAvailableDates(after) {
       });
   }
 
-  // @todo Deal with how to return to show on UI
+  // For client UI:
   // The only time when the for loop will stop is if the array is filled or if date exceeded `maxDateAllowed`
   // Empty timeslot array means that user requested for timeslots after a date that has exceeded `maxDateAllowed`
-  // if (timeslots.length === 0) return `no more dates`;
+  // if (timeslots.length === 0) return alert("No more available timeslots");
 
   return timeslots;
 }
@@ -315,7 +315,7 @@ router.get(
     // Generate an array of the next 5 dates, where each element is an obj with start and end timestamp of that date
     // If the "after" query param is used, parse it from String to Int first before passing it to function
     nextFiveAvailableDates(req.query.after && parseInt(req.query.after)).then(
-      (timeslots) => res.status(200).json({ ok: true, timeslots })
+      (timeslots) => res.status(200).json({ timeslots })
     )
   )
 );
