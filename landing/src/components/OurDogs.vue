@@ -4,7 +4,6 @@
     <br />
 
     <!-- Section heading -->
-    <!-- Wrapped in a column div class to put it in a single block on the left matching the profile pic columns -->
     <div class="column is-one-quarter">
       <h1 class="title mb-6" style="color: #e81050">Our Lovely Dogs</h1>
       <p class="subtitle mb-6" style="font-size: 1em; color: grey">

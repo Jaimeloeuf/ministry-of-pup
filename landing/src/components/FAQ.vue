@@ -4,7 +4,6 @@
     <br />
 
     <!-- Section heading -->
-    <!-- Wrapped in a column div class to put it in a single block on the left matching the profile pic columns -->
     <div class="column is-one-quarter">
       <h1 class="title mb-6" style="color: #e81050">FAQ</h1>
       <p class="subtitle mb-6" style="font-size: 1em; color: grey">
@@ -13,12 +12,16 @@
     </div>
 
     <div class="columns is-multiline">
-      <div v-for="(faq, i) in faqs" :key="i" class="column is-4">
-        <div @click="faq.show = !faq.show" class="card" style="cursor: pointer">
-          <div class="card-content">
-            <p class="subtitle has-text-weight-bold" v-html="faq.ques" />
-            <span v-if="faq.show" v-html="faq.ans"></span>
-          </div>
+      <div class="column is-4">
+        <router-link class="box" :to="{ name: 'directions' }">
+          <p class="subtitle has-text-weight-bold">Where is Ministry Of Pup?</p>
+        </router-link>
+      </div>
+
+      <div class="column is-4" v-for="(faq, i) in faqs" :key="i">
+        <div class="box" @click="faq.show = !faq.show" style="cursor: pointer">
+          <p class="subtitle has-text-weight-bold" v-html="faq.ques" />
+          <span v-if="faq.show" v-html="faq.ans"></span>
         </div>
       </div>
 

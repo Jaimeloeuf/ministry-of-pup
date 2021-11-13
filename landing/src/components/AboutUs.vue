@@ -4,7 +4,6 @@
     <br />
 
     <!-- Section heading -->
-    <!-- Wrapped in a column div class to put it in a single block on the left matching the profile pic columns -->
     <div class="column is-one-quarter">
       <h1 class="title mb-6" style="color: #e81050">About Us</h1>
       <p class="subtitle mb-6" style="font-size: 1em; color: grey">
@@ -12,7 +11,7 @@
       </p>
     </div>
 
-    <div class="column is-multiline">
+    <div class="column">
       <p>
         Ministry of Pup is created by Angelynn and Cloris when they took a leap
         of faith to leave their full time jobs in retail and education in early
