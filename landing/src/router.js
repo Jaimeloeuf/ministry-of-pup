@@ -16,6 +16,11 @@ const routes = [
     name: "Home",
     component: Home,
   },
+  {
+    path: "/directions",
+    name: "directions",
+    component: () => import("./components/Directions.vue"),
+  },
 ];
 
 export default new VueRouter({ routes });
