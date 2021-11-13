@@ -7,9 +7,9 @@
       <!-- Container to force nav bar into center with wider side margins -->
       <div class="container">
         <div class="navbar-brand">
-          <a class="navbar-item pt-0" href="#">
+          <router-link class="navbar-item pt-0" :to="{ name: 'Home' }">
             <img src="../assets/logo_navbar.jpg" alt="Logo" />
-          </a>
+          </router-link>
 
           <!-- Using <a> instead of button as it does not need an icon and dont have the inverted colors on click behaviour -->
           <a
