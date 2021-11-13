@@ -124,14 +124,32 @@
         </li>
       </ul>
 
-      <p class="menu-label">Customers</p>
+      <p class="menu-label">Users</p>
       <ul class="menu-list">
         <li>
           <router-link
-            :to="{ name: 'all-customers' }"
-            :class="{ 'is-active': $route.name === 'all-customers' }"
+            :to="{ name: 'user-create' }"
+            :class="{ 'is-active': $route.name === 'user-create' }"
           >
-            All customers
+            Create
+          </router-link>
+        </li>
+
+        <li>
+          <router-link
+            :to="{ name: 'user-details' }"
+            :class="{ 'is-active': $route.name === 'user-details' }"
+          >
+            View / Update
+          </router-link>
+        </li>
+
+        <li>
+          <router-link
+            :to="{ name: 'user-all' }"
+            :class="{ 'is-active': $route.name === 'user-all' }"
+          >
+            View All
           </router-link>
         </li>
       </ul>
