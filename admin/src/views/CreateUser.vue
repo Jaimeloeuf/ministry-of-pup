@@ -190,23 +190,6 @@ export default {
       this.showModal = true;
     },
 
-    async showQROld() {
-      const QRCode = await import("qrcode");
-
-      const userID = "";
-
-      // Generate the QR code image data URL and set onto component data value
-      this.imageDataURI = await QRCode.toDataURL(
-        `https://user.ministryofpup.com/#/update/${userID}`,
-
-        // Use high error resistance rate of ~ 30%
-        { errorCorrectionLevel: "H" }
-      );
-
-      // Open up modal to show the QR Code image
-      this.showModal = true;
-    },
-
     async create() {
       // Show confirmation dialog box to ensure it is not accidentally clicked on
       if (!confirm("Confirm?")) return;
@@ -214,9 +197,7 @@ export default {
       // @todo Validate all required input is entered
       // Address and postal code is not required, BUT REQUIRED if buying something
 
-      // Check with admin if page should be reset once sale is processed,
-      // as they may want to reuse the item details and change customer details only
-      if (confirm("Reset entire form?")) this.reset();
+      this.reset();
     },
 
     reset() {
