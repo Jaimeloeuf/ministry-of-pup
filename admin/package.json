@@ -15,6 +15,7 @@
     "core-js": "^3.6.5",
     "dog-names": "^2.0.0",
     "firebase": "^9.1.2",
+    "fuse.js": "^6.4.6",
     "paynowqr": "^1.1.2",
     "qrcode": "^1.4.4",
     "simpler-fetch": "^2.2.0",
