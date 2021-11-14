@@ -23,6 +23,18 @@
         <br />
         *Enter number <b>without</b> the +65 prefix
 
+        <!--
+          Login function is binded here with login() instead of just function name
+          Because login function expects a userID or undefined as the first parameter,
+          this is to allow the function to be reused by both created hook and event handler here.
+          
+          The problem is that for event handlers, the first parameter passed automatically to
+          the function is the event object, which is not what we want, as the login function
+          will attempt to treat the event object as the userID after stringifying it.
+          
+          The solution to this is to simply ensure that the login function is called without any
+          parameters over here by defining the call semantics directly instead of leaving it to vue.
+        -->
         <div class="field has-addons">
           <div class="control is-expanded">
             <input
@@ -33,11 +45,11 @@
               v-model="number"
               placeholder="E.g. 92345678"
               class="input"
-              @keypress.enter="login"
+              @keypress.enter="login()"
             />
           </div>
           <div class="control">
-            <button class="button is-success" @click="login">Login</button>
+            <button class="button is-success" @click="login()">Login</button>
           </div>
         </div>
       </label>
