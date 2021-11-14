@@ -13,7 +13,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Home",
+    name: "home",
     component: Home,
   },
   {
@@ -24,10 +24,25 @@ const routes = [
 ];
 
 export default new VueRouter({
-  // Always scroll to top of view on first visit and no savedPosition, else reuse savedPosition
+  /**
+   * Scroll to savedPosition if there is a savedPosition from supported browser,
+   * triggered by user clicking back and forward navigation buttons.
+   * If there is no savedPosition, check if there is a anchor/hash,
+   * if there is one, scroll to that selector, and scroll to it "instantly".
+   * It must be instant to work, because router uses hash mode, and in this mode,
+   * there will be 2 hash in the URL when using scroll to anchor too,
+   * which will cause the browser to mess up the scrolling if "smooth" behavior is used.
+   * Thus by scrolling to it instantly, it is not a "scroll" but rather immediate positioning.
+   * If there is no savedPosition and no anchor to scroll to, just scroll to top of view,
+   * "scroll" instantly too, to make it feel more responsive.
+   *
+   * Alternative solution for smooth scrolling to anchor
+   * https://github.com/vuejs/vue-router/issues/1668#issuecomment-437744248
+   */
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition;
-    else return { x: 0, y: 0 };
+    else if (to.hash) return { selector: to.hash, behavior: "instant" };
+    else return { x: 0, y: 0, behavior: "instant" };
   },
 
   routes,

@@ -7,7 +7,7 @@
       <!-- Container to force nav bar into center with wider side margins -->
       <div class="container">
         <div class="navbar-brand">
-          <router-link class="navbar-item pt-0" :to="{ name: 'Home' }">
+          <router-link class="navbar-item pt-0" :to="{ name: 'home' }">
             <img src="../assets/logo_navbar.jpg" alt="Logo" />
           </router-link>
 
@@ -33,25 +33,45 @@
         >
           <!-- Show the menu at the other end -->
           <div class="navbar-end">
-            <!-- <a class="navbar-item is-active"> </a> -->
-
-            <!-- Using v-html instead of string interpolation to support html link names like using icons -->
             <span
               v-for="(menuItem, i) in menuItems"
               :key="i"
               @click="showMobileMenu = false"
               :class="{ 'greyed-link': showMobileMenu && i & 1 }"
             >
-              <a
-                v-if="menuItem.name !== `<hr />`"
-                class="navbar-item"
-                v-html="
-                  isMobile ? menuItem.name + ' ' + menuItem.icon : menuItem.name
-                "
-                :href="menuItem.link"
-                :target="menuItem.target"
-              />
-              <span v-else v-html="menuItem.name" />
+              <hr v-if="menuItem.name === 'hr'" />
+
+              <span v-else>
+                <!--
+                  Use either anchor tag or router-link depending on type of route passed in,
+                  anchor tag is used for all external links, while router-link is for internal navigation with vue-router.
+                  All external links will be opened in a new tab.
+                  
+                  Using v-html instead of string interpolation to support html link names like using icons
+                -->
+                <a
+                  v-if="menuItem.link"
+                  class="navbar-item"
+                  v-html="
+                    isMobile
+                      ? menuItem.name + ' ' + menuItem.icon
+                      : menuItem.name
+                  "
+                  :href="menuItem.link"
+                  target="_blank"
+                />
+
+                <router-link
+                  v-else
+                  class="navbar-item"
+                  v-html="
+                    isMobile
+                      ? menuItem.name + ' ' + menuItem.icon
+                      : menuItem.name
+                  "
+                  :to="menuItem.routerLink"
+                />
+              </span>
             </span>
           </div>
         </div>
@@ -96,42 +116,51 @@ export default {
           name: "Instagram",
           icon: "<i class='fab fa-instagram' />",
           link: "https://instagram.com/ministryofpup/",
-          target: "_blank",
         },
         {
           name: "Facebook",
           icon: "<i class='fab fa-facebook-square' />",
           link: "https://www.facebook.com/Ministry-of-PUP-422583404451946/",
-          target: "_blank",
         },
         {
           name: "Whatsapp",
           icon: "<i class='fab fa-whatsapp' />",
           link: "https://wa.me/6588022177?text=I%20have%20a%20question%21",
-          target: "_blank",
         },
-        { name: "<hr />" },
-        { name: "Puppies", icon: "<i class='fas fa-dog' />", link: "#OurDogs" },
-        // { name: "Puppies", icon: "<i class='fas fa-paw' />", link: "#OurDogs" },
+        { name: "hr" },
+        {
+          name: "Puppies",
+          icon: "<i class='fas fa-dog' />",
+          // icon: "<i class='fas fa-paw' />",
+          routerLink: { name: "home", hash: "#OurDogs" },
+        },
         {
           name: "Book appointment",
           icon: "<i class='far fa-calendar-check' />",
           link: "https://booking.ministryofpup.com/#/?ref=LP",
-          target: "_blank",
+        },
+        // @todo Temporarily hidding app link until app is deployed
+        // {
+        //   name: "App",
+        //   icon: "<i class='fas fa-mobile-alt' />",
+        //   link: "https://app.ministryofpup.com",
+        // },
+        { name: "hr" },
+        {
+          name: "FAQ",
+          icon: "<i class='fas fa-question' />",
+          routerLink: { name: "home", hash: "#FAQ" },
         },
         {
-          name: "App",
-          icon: "<i class='fas fa-mobile-alt' />",
-          link: "https://app.ministryofpup.com",
-          target: "_blank",
+          name: "Directions",
+          icon: "<i class='far fa-map' />",
+          routerLink: { name: "directions" },
         },
-        { name: "<hr />" },
-        { name: "FAQ", icon: "<i class='fas fa-question' />", link: "#FAQ" },
         {
           name: "About Us",
           // Even though there is no icon, there needs to be an empty string to prevent concatenating 'undefined'
           icon: "",
-          link: "#AboutUs",
+          routerLink: { name: "home", hash: "#AboutUs" },
         },
       ],
     };
