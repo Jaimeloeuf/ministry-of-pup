@@ -10,6 +10,15 @@
             <br />
             We are based in Singapore with a international team and presence.
           </p>
+          <br />
+
+          <p style="font-size: 0.7em">
+            <a href="https://ministryofpup.com/#/terms" target="_blank">
+              Terms of use and privacy policy
+            </a>
+            <br />
+            <a href="/dpn.pdf" target="_blank">Data Protection Notice</a>
+          </p>
         </div>
 
         <br />
