@@ -130,6 +130,19 @@ E.g. Cream coloured / French bulldogs / Female dog"
               Book
             </button>
           </div>
+
+          <div class="column is-half">
+            <p style="font-size: 0.6em">
+              By booking an appointment, you agree to the
+              <a href="https://ministryofpup.com/#/terms" target="_blank">
+                terms of use and privacy policy.
+              </a>
+              Here is our
+              <a href="https://ministryofpup.com/dpn.pdf" target="_blank">
+                Data Protection Notice.
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -206,6 +219,7 @@ export default {
       this.fname = this.fname.trim();
       this.lname = this.lname.trim();
 
+      // @todo Fix this for iOS
       if (!(this.fname && this.lname && this.number && this.email))
         return alert("All fields are required except 'preference'");
 
