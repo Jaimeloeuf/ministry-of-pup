@@ -10,7 +10,7 @@
         <span class="title-bg title-color">Find your dream dog</span>
       </h2>
 
-      <a href="#OurDogs">
+      <router-link :to="{ name: 'home', hash: '#OurDogs' }">
         <figure class="scroll-icon">
           <svg
             version="1.1"
@@ -44,7 +44,7 @@
             />
           </svg>
         </figure>
-      </a>
+      </router-link>
     </div>
   </div>
 </template>

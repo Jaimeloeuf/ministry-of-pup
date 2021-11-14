@@ -16,7 +16,7 @@
       <div v-for="(dogs, i) in dogss" :key="i" class="column is-3">
         <div class="card">
           <div class="card-image">
-            <figure class="image is-square">
+            <figure class="image">
               <!-- Use native lazy loading, on none supported devices, fallback to eager loading. -->
               <img
                 loading="lazy"
@@ -48,10 +48,7 @@
         <div class="card">
           <div class="card-content">
             <p class="title" style="color: lightcoral">
-              Love dogs?
-              <br />
-              <br />
-              Book a play session now!
+              Want to have your own puppy?
             </p>
             <a
               href="https://booking.ministryofpup.com"
@@ -59,7 +56,7 @@
               target="_blank"
               style="background: lightcoral; color: white"
             >
-              Book appointment
+              Book Appointment
             </a>
           </div>
         </div>

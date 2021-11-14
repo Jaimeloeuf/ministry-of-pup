@@ -2,6 +2,7 @@
   <div id="main">
     <!-- Where app contains the shared components and the router-view component to show the different views -->
     <HeroHead />
+    <!-- @todo Change this into a herobody and make full width, so that the footer always stick at the bootom -->
     <router-view />
     <Footer />
 
