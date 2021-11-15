@@ -222,11 +222,33 @@ export default {
         address: undefined,
         postalCode: undefined,
       },
+      // Original user starts the same like 'user' but it is not binded to any inputs,
+      // and is used to detect if user has been modified.
+      originalUser: {
+        fname: undefined,
+        lname: undefined,
+        number: undefined,
+        email: undefined,
+        address: undefined,
+        postalCode: undefined,
+      },
 
       /* Paynow QR code values */
       showModal: false,
       imageDataURI: undefined,
     };
+  },
+
+  computed: {
+    isChanged() {
+      // Hard coded lists of props as these props wont be changing anytime
+      // If any of the props differ between the 2 objects, a boolean true is returned
+      return Boolean(
+        ["fname", "lname", "number", "email", "address", "postalCode"].find(
+          (key) => this.user[key] !== this.originalUser[key]
+        )
+      );
+    },
   },
 
   methods: {
@@ -239,16 +261,20 @@ export default {
         .header(await getAuthHeader())
         .runJSON();
 
+      this.loading = false;
+
       // @todo If account does not exists, ask user if they would like to create account instead, then redirect to create user
 
       // If the API call failed, recursively call itself again if user wants to retry,
       // And always make sure that this method call ends right here by putting it in a return expression
       if (!res.ok)
-        return confirm(`Error: \n${res.error}\n\nTry again?`) && this.login();
+        return confirm(`Failed to login\nTry again?`) && this.login();
 
       this.user = res.user;
 
-      this.loading = false;
+      // Clone user data object to preserve its original state to check if it has been changed later
+      this.originalUser = Object.assign({}, res.user);
+
       this.loggedIn = true;
     },
 
