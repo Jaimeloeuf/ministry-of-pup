@@ -154,6 +154,13 @@
           <hr class="my-0" style="background-color: #dedede" />
         </div>
 
+        <div class="column is-narrow">
+          <!-- Log out is just an alias for resetting the state of this view component -->
+          <button @click="reset" class="button is-light is-danger">
+            logout
+          </button>
+        </div>
+
         <div class="column">
           <button
             @click="update"
@@ -295,7 +302,7 @@ export default {
       this.showModal = true;
     },
 
-    async create() {
+    async update() {
       // Show confirmation dialog box to ensure it is not accidentally clicked on
       if (!confirm("Confirm?")) return;
 
@@ -307,9 +314,6 @@ export default {
       // https://github.com/vuejs/vue/issues/702#issuecomment-308991548
       // https://www.carlcassar.com/articles/reset-data-in-a-vue-component
       Object.assign(this.$data, this.$options.data());
-
-      // Only use this if `this` is used in the data method
-      // Object.assign(this.$data, this.$options.data.apply(this));
 
       // Reset scroll position to top too to allow admin to quickly create a new user
       window.scrollTo(0, 0);
