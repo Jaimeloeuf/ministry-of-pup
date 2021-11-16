@@ -161,6 +161,12 @@
           </button>
         </div>
 
+        <div class="column is-narrow">
+          <button @click="resetDetails" class="button is-light is-warning">
+            reset
+          </button>
+        </div>
+
         <div class="column">
           <button
             @click="update"
@@ -307,6 +313,11 @@ export default {
       if (!confirm("Confirm?")) return;
 
       // @todo Validate all required input is entered
+    },
+
+    resetDetails() {
+      // Clone the original user data object and set it as user object.
+      this.user = Object.assign({}, this.originalUser);
     },
 
     reset() {
