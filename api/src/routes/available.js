@@ -254,11 +254,11 @@ async function nextFiveAvailableDates(after) {
   // Create the array to hold timeslots first before filling it up with the for loop
   const timeslots = [];
 
-  // Can only book up to 3 weeks in advance
+  // Can only book up to 10 days in advance
   const maxDateAllowed = DateTime.now()
     .setZone("Asia/Singapore")
     .startOf("day")
-    .plus({ days: 21 });
+    .plus({ days: 10 });
 
   // Start on the first available date, and keep looping until there is 5 timeslots or till maxDateAllowed is exceeded.
   // On every loop, get the next available date using the start of current date as the date cursor
