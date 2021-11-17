@@ -104,6 +104,9 @@ router.post(
     // Generate the receipt
     const receipt = await generateReceiptString(receiptData);
 
+    // @todo Generate a reference link so that user can look up this
+    // receipt.ministryofpup.com/#/view/${id}
+
     // Generate and Email receipt
     await emailReceipt({
       email: customer.email,

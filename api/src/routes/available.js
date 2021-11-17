@@ -306,6 +306,9 @@ async function nextFiveAvailableDates(after) {
 /**
  * Get up to the first 5 available dates through the booking app
  * An available date is defined as a date from the earliest available booking date that includes at least 1 free time slot
+ *
+ * Avail dates = base allowed date timings - blocked off timings - already booked timings
+ *
  * @name GET /appointment/available/date
  * @returns Sucess indicator and a list of up to 5 unix seconds time stamp denoting start of a date (00:00), note this has timezone of +0
  */

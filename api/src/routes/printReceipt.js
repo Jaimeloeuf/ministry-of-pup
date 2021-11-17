@@ -48,7 +48,7 @@ router.post(
       sendMail.send({
         to: "ministryofpup@gmail.com",
         from: process.env.notificationEmailSender,
-        subject: "Ministry Of Pup: Receipt to print",
+        subject: `Ministry Of Pup: Printable Receipt for ${customer.fname}`,
         text: `Receipt request`,
 
         attachments: [
