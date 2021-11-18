@@ -18,11 +18,7 @@
               >
                 <div class="level-left">
                   <div class="level-item">
-                    {{
-                      new Date(date.date).toLocaleString("default", {
-                        weekday: "long",
-                      })
-                    }}
+                    {{ toWeekday(i, new Date(date.date)) }}
                   </div>
                 </div>
 
@@ -56,6 +52,11 @@
 <script>
 import { mapState } from "vuex";
 
+const isToday = (someDate, today = new Date()) =>
+  someDate.getDate() == today.getDate() &&
+  someDate.getMonth() == today.getMonth() &&
+  someDate.getFullYear() == today.getFullYear();
+
 export default {
   name: "Booking",
 
@@ -86,6 +87,14 @@ export default {
           this.$store.state.datesAvailable.length - 1
         ]?.date
       );
+    },
+
+    toWeekday(i, date) {
+      // If this is the first available date, check if it is today
+      // Only check if it is the first available date to prevent doing extra work checking the other further dates
+      return i === 0 && isToday(date)
+        ? "Today"
+        : date.toLocaleString("default", { weekday: "long" });
     },
 
     selectDate(date) {
