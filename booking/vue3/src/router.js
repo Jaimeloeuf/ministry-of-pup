@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-
+import store from "./store.js";
 import Booking from "./components/Booking.vue";
 
 const router = createRouter({
@@ -22,6 +22,8 @@ const router = createRouter({
       path: "/",
       name: "booking",
       component: Booking,
+      // Pass URL query parameters as prop to component
+      props: (route) => route.query,
     },
     {
       path: "/select-timeslot",
