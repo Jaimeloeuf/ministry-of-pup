@@ -26,6 +26,12 @@ export default createStore({
 
       ref: "UN",
 
+      // Indicate if user is making a new appointment or rescheduling
+      reschedule: false,
+      // If user is rescheduling, router will insert the original appointment time here
+      // Expects a number timestamp in milliseconds
+      originalTimeslot: undefined,
+
       datesAvailable: [],
       selectedDate: {},
       selectedTimeslot: undefined,
