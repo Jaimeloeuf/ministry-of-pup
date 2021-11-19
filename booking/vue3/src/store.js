@@ -124,6 +124,36 @@ export default createStore({
       }
     },
 
+    async reschedule({ commit, dispatch, state }) {
+      try {
+        const token = await getRecaptchaToken("rescheduleAppointment");
+
+        const res = await oof
+          .POST(`/appointment/reschedule/${state.appointmentID}`)
+          .header({ "x-recaptcha-token": token })
+          .data({ time: state.selectedTimeslot })
+          .runJSON();
+
+        // If the API call failed, recursively dispatch itself again if user wants to retry,
+        // And always make sure that this method call ends right here by putting it in a return expression
+        if (!res.ok)
+          return (
+            confirm(`Error: \n${res.error}\n\nTry again?`) &&
+            dispatch("reschedule")
+          );
+      } catch (error) {
+        // For errors that cause API call itself to throw
+        console.error(error);
+
+        // If the API call failed, recursively dispatch itself again if user wants to retry,
+        // And always make sure that this method call ends right here by putting it in a return expression
+        return (
+          confirm(`Error: \n${error.message}\n\nTry again?`) &&
+          dispatch("reschedule")
+        );
+      }
+    },
+
     async cancel({ dispatch }, appointmentID) {
       const token = await getRecaptchaToken("cancelAppointment");
 
