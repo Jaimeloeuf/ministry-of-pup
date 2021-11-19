@@ -68,7 +68,12 @@ export default {
 
     selectTimeslot(timeslot) {
       this.$store.commit("setter", ["selectedTimeslot", timeslot]);
-      this.$router.push({ name: "details" });
+
+      // After the user has selected a timeslot, route user to different views,
+      // depending on whether they are making a new appointment or rescheduling one.
+      this.$router.push({
+        name: this.$store.state.reschedule ? "reschedule" : "details",
+      });
     },
   },
 };
