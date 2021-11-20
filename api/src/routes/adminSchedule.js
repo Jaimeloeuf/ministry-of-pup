@@ -22,13 +22,17 @@ router.get(
     // This only gets and reads a single Doc from DB as all the opening time for the entire week,
     // is stored in a single doc to make it cheaper to access repeatedly as Firestore charge by docs read
     // Day of the weeks are Mon to Sun, mapped to 1 to 7
-    const openingTime = (
-      await fs.collection("openingHours").doc("openingHours").get()
-    ).data();
+    const openingTime = await fs
+      .collection("openingHours")
+      .doc("openingHours")
+      .get()
+      .then((snapshot) => snapshot.data());
 
-    const blockedDates = (
-      await fs.collection("openingHours").doc("blockedDates").get()
-    ).data();
+    const blockedDates = await fs
+      .collection("openingHours")
+      .doc("blockedDates")
+      .get()
+      .then((snapshot) => snapshot.data());
 
     res.status(200).json({ ok: true, openingTime, blockedDates });
   })
