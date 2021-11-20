@@ -128,7 +128,7 @@ export default {
       event: {
         title: "Play session at Ministry Of Pup!",
         start: state.selectedTimeslot,
-        duration: [30, "minutes"],
+        duration: [1, "hours"],
         busy: true,
         description: calendarDescription(
           state.details.fname,
