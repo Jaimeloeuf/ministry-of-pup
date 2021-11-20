@@ -80,6 +80,31 @@ function createEvent({ summary, description, start, end }) {
 const createAndInsertEvent = async ({ summary, description, start, end }) =>
   insertEvent(createEvent({ summary, description, start, end }));
 
+// Update the event with id of `eventID`
+// Returns true if succeeded and throws error if failed
+async function updateEvent(eventId, newTimeslot) {
+  try {
+    const res = await google.calendar({ version: "v3" }).events.patch({
+      ...getConfig(),
+
+      eventId,
+      resource: createEvent({ start: newTimeslot }),
+    });
+
+    if (res.status !== 200)
+      throw new Error(`Update event status code: ${res.status}`);
+    if (res.statusText !== "OK")
+      throw new Error(`Update event status: ${res.statusText}`);
+
+    return true;
+  } catch (error) {
+    console.error(`Error at updateEvent --> ${error}`);
+
+    // Rethrow error to let API server handle it
+    throw error;
+  }
+}
+
 // Delete the event with id of `eventID`
 // Returns true if succeeded and throws error if failed
 async function deleteEvent(eventId) {
@@ -105,6 +130,7 @@ module.exports = {
   createAndInsertEvent,
   createEvent,
   insertEvent,
+  updateEvent,
   deleteEvent,
 };
 
