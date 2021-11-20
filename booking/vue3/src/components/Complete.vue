@@ -132,7 +132,8 @@ export default {
         busy: true,
         description: calendarDescription(
           state.details.fname,
-          state.appointmentID
+          state.appointmentID,
+          state.selectedTimeslot
         ),
         location: "43 Kampong Bahru Rd, Singapore 169359",
       },

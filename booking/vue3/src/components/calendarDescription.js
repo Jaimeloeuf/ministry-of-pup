@@ -1,6 +1,5 @@
-// @todo Add reschedule appointment link
 // @todo Add a link where they can click to request for us to contact them
-export default (name, appointmentID) =>
+export default (name, appointmentID, time) =>
   `Hey ${name}!
 
 Our puppies can't wait to see you!
@@ -21,7 +20,12 @@ https://goo.gl/maps/WQe1cVQo5d8Ztgz76
 
 -----
 
-In the event where your schedule got blocked up and you need to cancel your appointment. Click on the link below!
+In the event where your schedule got blocked up and you need to reschedule your appointment. Click on the link below!
+https://booking.ministryofpup.com/#/reschedule/${appointmentID}/${time}
+
+-----
+
+If you need to cancel your appointment. Click on the link below!
 https://booking.ministryofpup.com/#/cancel/${appointmentID}
 
 -----
