@@ -38,4 +38,40 @@ router.get(
   })
 );
 
+/**
+ * @todo Test API
+ *
+ * Set opening time
+ * @name POST /admin/schedule/opening
+ * @returns Sucess indicator
+ */
+router.post(
+  "/opening",
+  express.json(),
+  asyncWrap(async (req, res) => {
+    // @todo NEED TO SET THE FULL ARRAY back if not will get overwritten
+    await fs.collection("openingHours").doc("openingHours").update(req.body);
+
+    res.status(200).json({ ok: true });
+  })
+);
+
+/**
+ * @todo Test API
+ *
+ * Add blocked dates
+ * @name POST /admin/schedule/block
+ * @returns Sucess indicator
+ */
+router.post(
+  "/block",
+  express.json(),
+  asyncWrap(async (req, res) => {
+    // @todo When setting blocked dates, must ensure that the date is not already booked
+    await fs.collection("openingHours").doc("blockedDates").update(req.body);
+
+    res.status(200).json({ ok: true });
+  })
+);
+
 module.exports = router;
