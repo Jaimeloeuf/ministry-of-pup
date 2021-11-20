@@ -57,8 +57,9 @@ function createEvent({ summary, description, start, end }) {
   // Start needs to be a Unix time stamp in Milliseconds
   start = new Date(start);
 
-  // End defaults to 30 minutes after start datetime or a Unix time stamp in Milliseconds should be used
-  end = new Date(end || new Date(start).setMinutes(start.getMinutes() + 30));
+  // End defaults to 1 hour after start datetime or a Unix time stamp in Milliseconds should be used
+  // Wrapped in a new Date to ensure that 'end' is in this format 2021-11-25T07:00:00.000Z
+  end = new Date(end || new Date(start).setHours(start.getHours() + 1));
 
   return {
     summary,
