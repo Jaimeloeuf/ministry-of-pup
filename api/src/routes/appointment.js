@@ -32,6 +32,43 @@ router.post(
 );
 
 /**
+ * Updates appointment time of an existing appointment
+ * @name POST /appointment/reschedule/:appointmentID
+ * @returns Sucess indicator
+ */
+router.post(
+  "/reschedule/:appointmentID",
+  verifyRecaptcha,
+  express.json(),
+  asyncWrap(async (req, res) => {
+    const appointmentID = req.params.appointmentID;
+    const newTimeslot = req.body.time;
+
+    const docRef = await fs.collection("appointments").doc(appointmentID);
+
+    // Update the time and add a prop to denote that this appointment has been rescheduled before
+    await docRef.update({ time: newTimeslot, rescheduled: true });
+
+    const doc = await docRef.get().then((snapshot) => snapshot.data());
+
+    // Update google calendar event
+    await require("../utils/GoogleCalendar.js").updateEvent(
+      doc.googleCalendarEventID,
+      newTimeslot
+    );
+
+    // Notify admins about new appointment using the telegram notification bot
+    require("../utils/tAdminNotification.js")(`<b>Appointment Rescheduled</b>
+
+${require("../utils/getTimeString.js")(newTimeslot)}
+User: <b>${doc.fname}</b>
+ID: <i>${appointmentID}</i>`);
+
+    res.status(200).json({});
+  })
+);
+
+/**
  * Cancel an existing appointment and delete the event in google calendar.
  * This is a POST request instead of a DELETE request to not deal with handling CORS preflight request for DELETE methods.
  * @name POST /appointment/cancel/:appointmentID
