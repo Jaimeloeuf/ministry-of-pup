@@ -12,7 +12,7 @@ const { createAndInsertEvent } = require("./GoogleCalendar.js");
 const getTimeString = require("./getTimeString.js");
 const notifyAdmin = require("./tAdminNotification.js");
 
-const emailString = (name, timeString, appointmentID) =>
+const emailString = (name, time, timeString, appointmentID) =>
   `Hey ${name}!
 
 Your appointment has been scheduled successfully, and our puppies can't wait to see you on ${timeString}!
@@ -33,7 +33,12 @@ https://goo.gl/maps/WQe1cVQo5d8Ztgz76
 
 -----
 
-In the event where your schedule got blocked up and you need to cancel your appointment. Click on the link below!
+In the event where your schedule got blocked up and you need to reschedule your appointment. Click on the link below!
+https://booking.ministryofpup.com/#/reschedule/${appointmentID}/${time}
+
+-----
+
+If you need to cancel your appointment. Click on the link below!
 https://booking.ministryofpup.com/#/cancel/${appointmentID}
 
 -----
@@ -113,7 +118,7 @@ module.exports = async function bookAppointment({
     to: email,
     from: process.env.notificationEmailSender,
     subject: `Ministry Of Pup: Appointment booked for ${timeString}!`,
-    text: emailString(fname, timeString, appointmentID),
+    text: emailString(fname, time, timeString, appointmentID),
   });
 
   // @todo Use sendgrid's dynamic template
