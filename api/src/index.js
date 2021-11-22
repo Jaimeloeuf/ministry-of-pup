@@ -11,9 +11,15 @@ app.use(require("cors")({ origin: [/ministryofpup\.com$/, /localhost/] }));
 // middleware to add http headers
 app.use(require("helmet")());
 
+// @todo Put all these middleware into a auth middleware folder
 const authnMiddleware = require("./utils/authnMiddleware");
 // const authzMiddleware = require("./utils/authzMiddleware");
 const adminOnly = require("./utils/adminOnly");
+
+// @todo
+// Need a way to pass multiple predicates into authz middleware,
+// so that if any 1 of the predicate returns true, then user is authorized
+// Usecase: Users API can only be accessed by the user themselves for their own account, else if user is admin, can access any accounts
 
 /**
  * @notice Import and Mount all the routers for the different routes
@@ -24,6 +30,7 @@ app.use("/appointment", require("./routes/appointment.js"));
 app.use("/appointment/available", require("./routes/available.js"));
 app.use("/newsletter", require("./routes/newsletter.js"));
 // @todo Users can only access their own data, add authz middleware here ensure uid matches docID??
+// @todo However if user is admin, then allow access to all data
 app.use("/user", authnMiddleware, require("./routes/user.js"));
 app.use(
   "/admin/appointment/scheduled",

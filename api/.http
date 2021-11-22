@@ -38,6 +38,7 @@ GET {{host}}/health
 ### Get up to the first 5 available dates through the booking app
 ### An available date is defined as a date from the earliest available booking date that includes at least 1 free time slot
 ### Returns an array of 5 timeslots object with a time stamp denoting start of a date (00:00) and available timeslots of that date
+# @name availableTimeslots
 GET {{host}}/appointment/available/date
 
 ### Get up to 5 available dates after the specified timestamp through the booking app
@@ -53,12 +54,18 @@ content-type: application/json
 
 {
     "dogID": 1,
-    "time": 1634544000000,
+    "time": {{availableTimeslots.response.body.timeslots[2].timeslots[0]}},
     "fname": "John",
     "lname": "Smith",
     "number": "+6599999999",
     "email": "JJ@enkeldigital.com"
 }
+
+### Reschedule an appointment with a link sent to user either via confirmation or reminder emails/SMS
+### POST Request instead of PUT to not have to deal with CORS preflight request for PUT
+# POST {{host}}/appointment/reschedule/:appointmentID/:time
+POST {{host}}/appointment/reschedule/{{bookAppointment.response.body.appointmentID}}/{{availableTimeslots.response.body.timeslots[2].timeslots[0]}}
+content-type: application/json
 
 ### Cancel an appointment with a link sent to user either via confirmation or reminder emails/SMS
 ### POST Request instead of DELETE to not have to deal with CORS preflight request for DELETE

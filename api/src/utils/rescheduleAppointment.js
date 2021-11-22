@@ -67,7 +67,7 @@ ID: <i>${appointmentID}</i>`);
 
   // Send user a email to confirm with them that their appointment has been rescheduled successfully
   await sendMail.send({
-    to: email,
+    to: doc.email,
     from: process.env.notificationEmailSender,
     subject: `Ministry Of Pup: Appointment rescheduled to ${timeString}!`,
     text: emailString(doc.fname, newTimeslot, timeString, appointmentID),

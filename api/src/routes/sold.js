@@ -60,7 +60,7 @@ async function updateUser(userID, dogID) {
     Firestore.FieldValue.arrayUnion({ dogID, time: unixseconds() })
   );
 
-  return (await docRef.get()).data();
+  return docRef.get().then((snapshot) => snapshot.data());
 }
 
 /**
