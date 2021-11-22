@@ -1,5 +1,5 @@
 <template>
-  <div id="cancel" class="px-5 py-5">
+  <div class="px-5 py-5 centered">
     <div v-if="cancelled" class="columns is-multiline">
       <div class="column is-full">
         <p class="title is-4 has-text-danger">
@@ -63,13 +63,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-#cancel {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-  align-items: center;
-  justify-content: center;
-}
-</style>

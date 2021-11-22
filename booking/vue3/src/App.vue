@@ -44,4 +44,13 @@ html {
 input:not(:placeholder-shown):invalid {
   background-color: lightpink;
 }
+
+/* Shared style class used by Cancel.vue and Reschedule.vue */
+.centered {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  align-items: center;
+  justify-content: center;
+}
 </style>
