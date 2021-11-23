@@ -22,27 +22,6 @@
       </label>
     </div>
 
-    <div class="column is-full">
-      <label>
-        <b>Sold to</b>
-        <br />
-
-        <div class="select is-fullwidth">
-          <select v-on:change="updateUserID($event)">
-            <!-- Value must be id so that when parsing value in @change handler it can get id instead of the text -->
-            <option
-              v-for="user in users"
-              :value="user.id"
-              :key="user.id"
-              :selected="user.id === userID"
-            >
-              {{ user.text }}
-            </option>
-          </select>
-        </div>
-      </label>
-    </div>
-
     <!-- 
       Show MSRP without auto fill to force admin to type it out again
       Then if differs from MSRP, warn user before allowing them to proceed
@@ -69,6 +48,52 @@
       </label>
     </div>
 
+    <div class="column is-full pb-0">
+      <b>Customer from</b>
+    </div>
+
+    <div class="column is-full">
+      <div class="tabs is-toggle is-centered is-fullwidth">
+        <ul>
+          <li>
+            <a @click="show = 'a'">Appointment</a>
+          </li>
+          <li>
+            <a @click="show = 'w'">Walk In</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="column is-full" v-if="show === 'a'">
+      <!-- Embed the component here -->
+    </div>
+
+    <div class="column is-full" v-if="show === 'w'">
+      <!-- Embed the component here -->
+    </div>
+
+    <div class="column is-full">
+      <label>
+        <b>Sold to</b>
+        <br />
+
+        <div class="select is-fullwidth">
+          <select v-on:change="updateUserID($event)">
+            <!-- Value must be id so that when parsing value in @change handler it can get id instead of the text -->
+            <option
+              v-for="user in users"
+              :value="user.id"
+              :key="user.id"
+              :selected="user.id === userID"
+            >
+              {{ user.text }}
+            </option>
+          </select>
+        </div>
+      </label>
+    </div>
+
     <div class="column">
       <hr class="my-0" style="background-color: #dedede" />
     </div>
@@ -79,25 +104,6 @@
         Sold
       </button>
     </div>
-
-    <!-- @todo Address input form, is there a way that i can validate the address using google or smth? -->
-    <!-- <div class="column is-full">
-      <p class="subtitle">Address</p>
-    </div>
-
-    <div class="column is-full">
-      <label>
-        <b>Address</b>
-
-        <input
-          type="number"
-          v-model="salePrice"
-          pattern="[\s0-9]+"
-          placeholder="E.g. 10000 for $10,000 where unit is dollars"
-          class="input"
-        />
-      </label>
-    </div> -->
 
     <!-- @todo Tmp added a click to close for the entire modal -->
     <!-- Might want to better think about the UX and what if they accidentally click somewhere, it shouldnt close, and how to reopen? -->
@@ -188,7 +194,7 @@ export default {
 
       // The QR Code should only be valid until tmr
       // 24 hours * 60 minutes * 60 seconds * 1000 milliseconds = 86400000 milliseconds
-      const d = new Date(new Date().valueOf() + 86400000);
+      const d = new Date(new Date().getTime() + 86400000);
       const month = d.getMonth() + 1;
       const pmonth = month > 9 ? month : `0${month}`; // Month with 0 padding
       const date = d.getDate();
