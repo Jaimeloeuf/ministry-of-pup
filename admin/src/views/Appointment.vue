@@ -40,9 +40,19 @@
     </div>
 
     <div class="column">
+      <b>Source</b>
+      <br />
+      <!-- Convert the source to its full name, else if not defined, use the abbreviated name directly-->
+      {{ appointmentSrc[appointment.src] || appointment.src }}
+    </div>
+
+    <!-- Use a full offset to add a empty row without adding additional Y axis padding -->
+    <div class="column is-offset-12 py-0"></div>
+
+    <div class="column">
       <b>Number</b> (click to call)
       <br />
-      <a class="button" :href="'tel:' + appointment.number">
+      <a class="button is-fullwidth" :href="'tel:' + appointment.number">
         {{ appointment.number }}
       </a>
     </div>
@@ -50,7 +60,7 @@
     <div class="column">
       <b>Email</b> (click to email)
       <br />
-      <a class="button" :href="'mailto:' + appointment.email">
+      <a class="button is-fullwidth" :href="'mailto:' + appointment.email">
         {{ appointment.email }}
       </a>
     </div>
@@ -106,7 +116,19 @@ export default {
   props: ["appointmentID"],
 
   data() {
-    return { loading: true };
+    return {
+      loading: true,
+
+      // @todo Maybe dont hard code this here? Or have a way to easily update this
+      appointmentSrc: {
+        BK: "Booking Site",
+        LA: "Landing Page",
+        IG: "Instagram",
+        FB: "Facebook",
+        WA: "Whatsapp",
+        GG: "Google",
+      },
+    };
   },
 
   created() {
