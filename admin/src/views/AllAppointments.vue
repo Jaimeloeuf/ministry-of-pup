@@ -62,6 +62,9 @@
 
               Email: {{ appointment.email }}
               <br />
+
+              Source: {{ appointmentSrcMapping[appointment.src] }}
+              <br />
             </div>
           </div>
         </router-link>
@@ -73,6 +76,7 @@
 <script>
 import { mapGetters } from "vuex";
 import formatDate from "../utils/formatDate.js";
+import appointmentSrcMapping from "appointment_src_mapping";
 
 export default {
   name: "AllAppointments",
@@ -94,7 +98,7 @@ export default {
   computed: mapGetters("appointment", ["appointments"]),
 
   data() {
-    return { loading: true };
+    return { loading: true, appointmentSrcMapping };
   },
 
   methods: {
