@@ -101,6 +101,8 @@ export default {
 
   methods: {
     async showPaynowQR() {
+      if (!this.price) return alert("Please enter a price!");
+
       const { default: PaynowQR } = await import("paynowqr");
 
       // @todo Call and API to generate a invoice reference number to track later (possibly have the paynow bank app on the ipad)
