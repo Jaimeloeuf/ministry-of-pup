@@ -253,9 +253,6 @@ export default {
           // If admin manually keys in an appointment, it means that the platform where user talked to admin,
           // is considered both where the user found out about MOP and also where the user booked from
           src: this.src,
-
-          // @todo is this where they found us from or is this where they got the link from?
-          ref: this.src,
         })
         .runJSON();
 
