@@ -243,13 +243,24 @@
       <hr class="my-0" style="background-color: #dedede" />
     </div>
 
-    <div class="column is-one-third">
-      <button
-        @click="printReceipt"
-        class="button is-light is-fullwidth is-warning"
-      >
-        Print receipt
-      </button>
+    <div class="column is-full">
+      <label>
+        <b>Payment Method</b>
+        <br />
+
+        <div class="select is-fullwidth">
+          <select v-on:change="(event) => (paymentMethod = event.target.value)">
+            <option
+              v-for="method in availablePaymentMethods"
+              :value="method"
+              :key="method"
+              :selected="method === paymentMethod"
+            >
+              {{ method }}
+            </option>
+          </select>
+        </div>
+      </label>
     </div>
 
     <!-- @todo Maybe change to Pay (others) then open up a modal to show how much to pay and all, and a button to show payment complete -->
@@ -326,6 +337,10 @@ export default {
         address: undefined,
         postalCode: undefined,
       },
+
+      // Defaults to paynow payment method
+      paymentMethod: "Paynow",
+      availablePaymentMethods: ["Paynow", "Credit Card", "Others"],
 
       /* Paynow QR code values */
       showModal: false,
@@ -430,10 +445,7 @@ export default {
         .header(await getAuthHeader())
         .data({
           receiptNumber: this.receiptNumber,
-
-          // Hack to detect which payment method was used
-          // @todo Change this and allow admin to select what is the specific payment method used
-          paymentMethod: this.imageDataURI ? "Paynow" : "Others",
+          paymentMethod: this.paymentMethod,
 
           // Get total price and convert to cents as API requires it in cents
           totalPrice: this.calculateTotalPrice() * 100,
@@ -461,6 +473,8 @@ export default {
     },
 
     async printReceipt() {
+      if (!confirm("Send a receipt to MOP gmail to print?")) return;
+
       // Process the items to ensure that all the price are in cents
       // Create a new item instead of modifying the original object to prevent changing things in the form
       const items = this.items.map((item) => ({
@@ -478,10 +492,7 @@ export default {
         .header(await getAuthHeader())
         .data({
           receiptNumber: this.receiptNumber,
-
-          // Hack to detect which payment method was used
-          // @todo Change this and allow admin to select what is the specific payment method used
-          paymentMethod: this.imageDataURI ? "Paynow" : "Others",
+          paymentMethod: this.paymentMethod,
 
           // Get total price and convert to cents as API requires it in cents
           totalPrice: this.calculateTotalPrice() * 100,
