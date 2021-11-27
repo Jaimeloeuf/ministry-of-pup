@@ -43,7 +43,7 @@
       <b>Source</b>
       <br />
       <!-- Convert the source to its full name, else if not defined, use the abbreviated name directly-->
-      {{ appointmentSrc[appointment.src] || appointment.src }}
+      {{ appointmentSrcMapping[appointment.src] || appointment.src }}
     </div>
 
     <!-- Use a full offset to add a empty row without adding additional Y axis padding -->
@@ -109,6 +109,7 @@
 
 <script>
 import formatDate from "../utils/formatDate.js";
+import appointmentSrcMapping from "appointment_src_mapping";
 
 export default {
   name: "Appointment",
@@ -116,19 +117,7 @@ export default {
   props: ["appointmentID"],
 
   data() {
-    return {
-      loading: true,
-
-      // @todo Maybe dont hard code this here? Or have a way to easily update this
-      appointmentSrc: {
-        BK: "Booking Site",
-        LA: "Landing Page",
-        IG: "Instagram",
-        FB: "Facebook",
-        WA: "Whatsapp",
-        GG: "Google",
-      },
-    };
+    return { loading: true, appointmentSrcMapping };
   },
 
   created() {

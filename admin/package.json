@@ -10,6 +10,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "appointment_src_mapping": "github:Enkel-Digital/mop-appointment-src",
     "bulma": "^0.9.3",
     "chart.js": "^3.5.1",
     "core-js": "^3.6.5",
