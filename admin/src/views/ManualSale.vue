@@ -263,44 +263,119 @@
       </label>
     </div>
 
-    <!-- @todo Maybe change to Pay (others) then open up a modal to show how much to pay and all, and a button to show payment complete -->
+    <div class="column is-full">
+      <hr class="my-0" style="background-color: #dedede" />
+    </div>
+
     <div class="column is-one-third">
       <button
-        @click="paymentComplete"
+        @click="printReceipt"
         class="button is-light is-fullwidth is-warning"
       >
-        Payment Complete
+        Print receipt
       </button>
     </div>
 
-    <div class="column is-one-third">
+    <div class="column is-two-third">
       <button
-        @click="showPaynowQR"
+        @click="
+          paymentMethod === 'Paynow' ? showPaynowQR() : (showModal = true)
+        "
         class="button is-light is-fullwidth is-success"
       >
-        Paynow
+        Pay
       </button>
     </div>
 
-    <!-- @todo Tmp added a click to close for the entire modal -->
-    <!-- Might want to better think about the UX and what if they accidentally click somewhere, it shouldnt close, and how to reopen? -->
-    <!-- Maybe only click to close via X, and click to close via complete method call through a button -->
     <div class="modal" :class="{ 'is-active': showModal }">
       <!-- Modal can be closed by clicking any part of the modal background -->
       <div class="modal-background" @click="showModal = false"></div>
 
-      <!-- The whole modal content can be clicked to close the modal -->
-      <div class="modal-content" @click="showModal = false">
-        <span class="image is-square">
-          <img :src="imageDataURI" />
-        </span>
+      <div class="modal-content">
+        <div v-if="paymentMethod === 'Paynow'">
+          <span class="image is-square">
+            <img :src="imageDataURI" />
+          </span>
 
-        <button
-          class="button is-fullwidth is-success is-light py-6"
-          @click="paymentComplete"
-        >
-          Complete ({{ receiptNumber }})
-        </button>
+          <button
+            class="button is-fullwidth is-success is-light py-6"
+            @click="paymentComplete"
+          >
+            Payment Received ({{ receiptNumber }})
+          </button>
+        </div>
+
+        <div v-else-if="paymentMethod === 'Credit Card'">
+          <div class="box">
+            <p class="title">Payment Method: Credit Card</p>
+
+            <p class="subtitle">
+              Please request for payment from customer.
+              <br />
+              <br />
+
+              If possible, enter receipt number in the POS terminal for to track
+              the transaction.
+              <br />
+              <br />
+
+              Receipt Number: {{ receiptNumber }}
+            </p>
+          </div>
+
+          <button
+            class="button is-fullwidth is-success is-light py-6"
+            @click="paymentComplete"
+          >
+            Payment Received ({{ receiptNumber }})
+          </button>
+        </div>
+
+        <div v-else-if="paymentMethod === 'Others'">
+          <div class="box">
+            <p class="title">Payment Method: Others</p>
+
+            <p class="subtitle">
+              Please request for payment from customer, if possible, ask them to
+              include in the receipt number for you to easily verify.
+              <br />
+              <br />
+
+              For example, ask customer to write receipt number as transaction
+              message in a bank direct transfer transaction.
+              <br />
+              <br />
+
+              Receipt Number: {{ receiptNumber }}
+            </p>
+          </div>
+
+          <button
+            class="button is-fullwidth is-success is-light py-6"
+            @click="paymentComplete"
+          >
+            Payment Received ({{ receiptNumber }})
+          </button>
+        </div>
+
+        <!-- This case should normally not appear unless there is a bug -->
+        <div v-else>
+          <div class="box">
+            <p class="subtitle">
+              INTERNAL ERROR: Invalid payment method selected
+              <br />
+              Please ensure payment method field is correctly selected!
+            </p>
+          </div>
+
+          <!-- Button resets payment method to the default payment method and closes the modal -->
+          <button
+            class="button is-fullwidth is-success is-light py-6"
+            @click="(paymentMethod = 'Paynow') && (showModal = false)"
+          >
+            Reset payment method & Close
+          </button>
+        </div>
       </div>
 
       <!-- Modal can be closed by clicking the top right X -->
@@ -314,7 +389,7 @@
 </template>
 
 <script>
-// @todo Load this asynchronously in the sold method
+// @todo Load this asynchronously
 import { oof } from "simpler-fetch";
 import { getAuthHeader } from "../firebase.js";
 
@@ -373,6 +448,7 @@ export default {
     },
 
     /** Sums up the price of all items and return price to pay in Dollars */
+    // @todo use this
     calculateTotalPrice() {
       return this.items.reduce((acc, cur) => acc + cur.price * cur.quantity, 0);
     },
