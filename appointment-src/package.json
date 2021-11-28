@@ -1,11 +1,8 @@
 {
-  "name": "appointment_src_mapping",
-  "version": "0.0.1",
+  "name": "mop-appointment-src",
+  "version": "0.0.2",
   "description": "Mapping of appointment src abbrevation to full name",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "main": "index.json",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Enkel-Digital/mop-appointment-src.git"
