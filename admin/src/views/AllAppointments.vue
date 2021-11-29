@@ -76,7 +76,7 @@
 <script>
 import { mapGetters } from "vuex";
 import formatDate from "../utils/formatDate.js";
-import appointmentSrcMapping from "appointment_src_mapping";
+import appointmentSrcMapping from "mop-appointment-src";
 
 export default {
   name: "AllAppointments",
