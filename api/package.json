@@ -25,6 +25,7 @@
     "googleapis": "^88.2.0",
     "helmet": "^4.6.0",
     "luxon": "^2.0.2",
+    "mop-appointment-src": "github:Enkel-Digital/mop-appointment-src",
     "mop-invoice": "github:Enkel-Digital/mop-invoice",
     "pdfkit": "^0.12.3",
     "tiny-json-http": "^7.3.1",

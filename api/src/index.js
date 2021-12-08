@@ -49,6 +49,11 @@ app.use(
   require("./routes/printReceipt")
 );
 app.use("/admin/user/all", adminOnly, require("./routes/allUsers.js"));
+app.use(
+  "/analytics",
+  adminOnly,
+  require("./routes/analytics/appointmentSrc.js")
+);
 app.use("/contact-us-form", require("./routes/contactUsForm.js"));
 app.use("/error", require("./routes/error.js"));
 // app.use("/help", authnMiddleware, require("./routes/help.js"));
