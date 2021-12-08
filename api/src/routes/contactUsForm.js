@@ -33,7 +33,7 @@ ${new Intl.DateTimeFormat("en-SG", {
 Name: ${lname} ${fname}
 Number: ${number}
 Email: ${email}
-Message: ${message | ""}`);
+Message: ${message || ""}`);
 
     res.status(201).json({ ok: true });
   })

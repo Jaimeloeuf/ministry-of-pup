@@ -7,7 +7,6 @@
 
 const express = require("express");
 const router = express.Router();
-const fs = require("../utils/fs");
 const verifyRecaptcha = require("../utils/verifyRecaptcha");
 const { asyncWrap } = require("express-error-middlewares");
 
