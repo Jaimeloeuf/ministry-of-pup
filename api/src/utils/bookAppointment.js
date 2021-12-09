@@ -56,8 +56,7 @@ module.exports = async function bookAppointment({
   lname,
   number,
   email,
-  ref = "UN", // Default referral source is UN for undefined/unknown
-  src = "BK", // Default booking src is Booking app
+  src = "UN", // Default src where they discovered MOP is UN for undefined if nothing is passed in
   preference = null, // Defaults to no pref, since Firestore throws on undefined
 }) {
   // Get the user ID either from an existing account, or from a newly created account
@@ -96,16 +95,11 @@ module.exports = async function bookAppointment({
     email,
     preference,
 
-    // src: is where did the user make the booking?
-    // By default if user booked via booking app, it is BK
+    // src: Where did the user find out about MOP? Did they find out about us via IG Ads? Or through a friend?
     // If user books an appointment by messaging the admins,
-    // This will be the platform (WA/FB/IG/WC/OT) where they sent the message
+    // This will default to the platform (WA/FB/IG/WC/OT) where they sent the message,
+    // But users can change that in the booking app where we ask them how did they find out about us
     src,
-
-    // ref: is where did the user discover us?
-    // This will be where they foudn us from (WA/FB/IG/WC/GG/OT)
-    // This will probably be tagged with a URL query param in the booking links
-    ref,
 
     // Store time appointment was created in unix seconds (this is the time of the server executing the code)
     createdAt: unixseconds(),
@@ -134,7 +128,10 @@ module.exports = async function bookAppointment({
 
 ${timeString}
 User: <b>${fname}</b>
-ID: <i>${appointmentID}</i>`);
+ID: <i>${appointmentID}</i>
+From: ${require("mop-appointment-src")[src]}
+Number: ${number}
+Email: ${email}`);
 
   return appointmentID;
 };
