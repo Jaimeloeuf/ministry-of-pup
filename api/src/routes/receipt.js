@@ -21,7 +21,7 @@ router.get(
     const { receiptID } = req.params;
 
     // @todo Support getting either via receiptID or receiptNumber
-    const snapshot = await fs.collection("manualSale").doc(receiptID).get();
+    const snapshot = await fs.collection("receipts").doc(receiptID).get();
     if (!snapshot.exists)
       return res.status(404).json({ error: "Receipt not found" });
 
@@ -30,7 +30,7 @@ router.get(
 
     // Generate receipt, pipe it back to the client and end the connection
     await require("../utils/receipt")
-      .generateReceiptString(snapshot.data().receiptData, res)
+      .generateReceiptString(snapshot.data(), res)
       .then(res.status(200).end);
   })
 );

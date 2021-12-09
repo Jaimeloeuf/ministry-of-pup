@@ -65,8 +65,8 @@ router.post(
       ...req.body.customer,
     };
 
-    // Receipt data is the data needed to generate the actual receipt,
-    // while whats stored in the 'manualSale' collection document contains other meta data about the transaction too
+    // Receipt data is the data needed to generate the actual receipt and this is stored in 'receipts' collection
+    // while the 'manualSale' collection document stores the receipt ID and other meta data about the transaction
 
     const {
       generateReceiptNumber,
@@ -92,10 +92,12 @@ router.post(
       items,
     };
 
-    // Store receipt data and meta data about this transaction
-    const { id } = await fs.collection("manualSale").add({
-      receiptData,
+    // Store receipt data and get back the receipt ID
+    const { id: receiptID } = await fs.collection("receipts").add(receiptData);
 
+    // Store receipt ID and meta data about this transaction
+    await fs.collection("manualSale").add({
+      receiptID,
       paymentMethod,
       userID: customer.id,
       time: unixseconds(),
@@ -105,7 +107,7 @@ router.post(
     const receipt = await generateReceiptString(receiptData);
 
     // @todo Generate a reference link so that user can look up this
-    // receipt.ministryofpup.com/#/view/${id}
+    // `receipt.ministryofpup.com/#/view/${receiptID}`;
 
     // Generate and Email receipt
     await emailReceipt({

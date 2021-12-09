@@ -54,6 +54,12 @@ app.use(
   adminOnly,
   require("./routes/analytics/appointmentSrc.js")
 );
+app.use(
+  "/receipt",
+  // @todo This should be either admin OR recaptcha, since admin portal cannot do recaptcha
+  // adminOnly,
+  require("./routes/receipt.js")
+);
 app.use("/contact-us-form", require("./routes/contactUsForm.js"));
 app.use("/error", require("./routes/error.js"));
 // app.use("/help", authnMiddleware, require("./routes/help.js"));
