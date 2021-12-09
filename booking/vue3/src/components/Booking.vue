@@ -60,13 +60,18 @@ const isToday = (someDate, today = new Date()) =>
 export default {
   name: "Booking",
 
+  props: ["src"],
+
   created() {
     // Only run this on first load, so that if user navigates back from timeslots dates will not be loaded again
     if (this.datesAvailable.length === 0) this.loadDates();
 
     // Get the referral source if any, else UN for undefined/unknown
-    const ref = this.$route.query.ref || "UN";
-    this.$store.commit("setter", ["ref", ref]);
+    // Only set it if the src is undefined
+    // So to prevent cases where user navigates to timeslot and back, the src query param might be removed
+    // So if it was set again it might be removed or defaulted to UN
+    if (!this.$store.state.src)
+      this.$store.commit("setter", ["src", this.src || "UN"]);
   },
 
   computed: mapState(["datesAvailable"]),

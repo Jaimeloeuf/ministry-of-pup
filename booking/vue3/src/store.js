@@ -24,7 +24,10 @@ export default createStore({
       // Shared global loading flag to show/hide loader in App.vue
       loading: false,
 
-      ref: "UN",
+      // Not parsing data out from route here as router imports store,
+      // So if import router here, ends up with a circular import.
+      // Src will be set by Booking vue if there is any src query params used
+      src: undefined,
 
       // Indicate if user is making a new appointment or rescheduling
       reschedule: false,
