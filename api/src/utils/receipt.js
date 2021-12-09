@@ -1,12 +1,21 @@
-// Generate the PDF receipt and convert it to base64 string before returning
-async function generateReceiptString(receiptData) {
-  // Lazily import this to keep serverless container start up time fast as this is not always used
-  const create = require("mop-invoice").receipt;
-  const PDFDocument = require("pdfkit");
-  const { Base64Encode } = require("base64-stream");
+/**
+ * Generate the PDF receipt and convert it to base64 string before returning
+ * @param {object} receiptData All the data required by mop-invoice.receipt to generate the receipt
+ * @param {Stream} streamTarget A target for the document chunks to be streamed to, if not set, default to base64 encoded string
+ * @returns Promise<String | undefined> Resolves to a string only if no streamTarget is set
+ */
+async function generateReceiptString(
+  receiptData,
+  // Need to have bracket around Base64Encode to ensure new is used on that class rather than on the require function call
+  streamTarget = new (require("base64-stream").Base64Encode)()
+) {
+  // Lazily import dependencies to keep serverless container start up time fast as this is not always used
+  let stream = require("mop-invoice")
+    .receipt(require("pdfkit"), receiptData)
+    .pipe(streamTarget);
 
-  let string = ""; // Contains the final base64 string after concatenation
-  let stream = create(PDFDocument, receiptData).pipe(new Base64Encode());
+  // Contains the final base64 string after concatenation
+  let string = "";
 
   return new Promise((resolve, reject) => {
     stream.on("data", (chunk) => (string += chunk));
