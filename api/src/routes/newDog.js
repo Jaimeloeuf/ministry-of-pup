@@ -69,7 +69,7 @@ router.post(
       createdAt: unixseconds(),
     });
 
-    res.status(200).json({ ok: true, dogID });
+    res.status(200).json({ dogID });
   })
 );
 

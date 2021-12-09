@@ -4,11 +4,7 @@ module.exports = async function verifyRecaptcha(req, res, next) {
   const token = req.headers["x-recaptcha-token"];
 
   // If no token found return 401 Missing recaptcha token thus unauthorised
-  if (!token)
-    return res.status(401).json({
-      ok: false,
-      error: "Missing recaptcha token",
-    });
+  if (!token) return res.status(401).json({ error: "Missing recaptcha token" });
 
   try {
     // Lazily loading the HTTP client library to help with serverless cold start time
@@ -39,9 +35,6 @@ module.exports = async function verifyRecaptcha(req, res, next) {
     return next();
   } catch (error) {
     // 403 identity known but denied / failed authentication
-    return res.status(403).json({
-      ok: false,
-      error: errorMessage(error), // Generate the error message
-    });
+    return res.status(403).json({ error });
   }
 };

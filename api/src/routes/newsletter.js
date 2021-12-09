@@ -72,11 +72,9 @@ router.post("/subscribe", verifyRecaptcha, express.json(), async (req, res) => {
           cancelled: require("firebase-admin").firestore.FieldValue.delete(),
         });
 
-    res.status(200).json({ ok: true });
+    res.status(200).json({});
   } catch (error) {
-    res
-      .status(400)
-      .json({ ok: false, error: `Failed to subscribe\n${error.message}` });
+    res.status(400).json({ error: `Failed to subscribe\n${error.message}` });
   }
 });
 
@@ -93,8 +91,8 @@ router.post(
       .collection("newsletter")
       .doc(req.params.newsletterDocID)
       .update({ cancelled: true })
-      .then(() => res.status(200).json({ ok: true }))
-      .catch(() => res.status(400).json({ ok: false, error: "Cancel failed" }))
+      .then(() => res.status(200).json({}))
+      .catch(() => res.status(400).json({ error: "Cancel failed" }))
   )
 );
 

@@ -13,7 +13,8 @@ module.exports = function setup(
   firebaseAdmin,
   predicate,
   {
-    errorJSON = { ok: false },
+    // @todo Is errorJSON actually needed?
+    errorJSON = {},
     errorMessage = (errorObject) => errorObject.message || "UNAUTHORIZED",
     errorHandler, // Allow users to pass in an error handler to deal with every error, for example to log to APM service
   } = {} // Last argument is optional
@@ -46,10 +47,7 @@ module.exports = function setup(
       if (predicate(user.customClaims) === true) return next();
 
       // Else if predicate failed, means user is unauthorised to access resource, thus end with 403 unauthorised
-      return res.status(403).json({
-        ok: false,
-        error: "UNAUTHORIZED",
-      });
+      return res.status(403).json({ error: "UNAUTHORIZED" });
     } catch (error) {
       // 403 identity known but denied / failed authentication
       res.status(403).json({

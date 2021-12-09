@@ -35,7 +35,7 @@ Number: ${number}
 Email: ${email}
 Message: ${message || ""}`);
 
-    res.status(201).json({ ok: true });
+    res.status(201).json({});
   })
 );
 

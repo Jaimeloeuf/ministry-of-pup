@@ -40,7 +40,7 @@ Error ID: ${errorDoc.id}
 Error: ${error}
 Description: ${description}`);
 
-    res.status(201).json({ ok: true });
+    res.status(201).json({});
   })
 );
 

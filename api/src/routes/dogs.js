@@ -43,7 +43,7 @@ router.get(
     // it might actually be better to just load all at once through this API.
     // const dogs = snapshot.docs.map((doc) => doc.id);
 
-    res.status(200).json({ ok: true, dogs });
+    res.status(200).json({ dogs });
   })
 );
 
@@ -54,14 +54,15 @@ router.get(
  */
 router.get(
   "/:dogID",
-  asyncWrap(async (req, res) => {
-    const dogDoc = await fs.collection("dogs").doc(req.params.dogID).get();
-
-    res.status(200).json({
-      ok: true,
-      dog: { id: dogDoc.id, ...dogDoc.data() },
-    });
-  })
+  asyncWrap(async (req, res) =>
+    fs
+      .collection("dogs")
+      .doc(req.params.dogID)
+      .get()
+      .then((doc) =>
+        res.status(200).json({ dog: { id: doc.id, ...doc.data() } })
+      )
+  )
 );
 
 module.exports = router;

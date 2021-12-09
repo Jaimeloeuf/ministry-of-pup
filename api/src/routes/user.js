@@ -51,7 +51,7 @@ router.post(
   asyncWrap(async (req, res) =>
     require("../utils/createUserAccount")
       .createUserAccount(req.body)
-      .then((userID) => res.status(200).json({ ok: true, userID }))
+      .then((userID) => res.status(200).json({ userID }))
   )
 );
 
@@ -68,7 +68,7 @@ router.put(
       .collection("users")
       .doc(req.params.userID)
       .update(req.body)
-      .then(() => res.status(200).json({ ok: true }))
+      .then(() => res.status(200).json({}))
   )
 );
 

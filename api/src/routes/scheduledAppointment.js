@@ -34,8 +34,6 @@ router.get(
       .get();
 
     res.status(200).json({
-      ok: true,
-
       // If snapshot is empty, return an empty array, else,
       // Map the array of doc references to an array of doc data and doc ID
       // Filter out cancelled appointments

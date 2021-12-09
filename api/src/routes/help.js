@@ -55,7 +55,7 @@ router.post(
       )
     );
 
-    res.status(200).json({ ok: true });
+    res.status(200).json({});
   })
 );
 

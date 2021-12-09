@@ -25,7 +25,7 @@ router.post(
   express.json(),
   asyncWrap(async (req, res) =>
     require("../utils/bookAppointment.js")(req.body).then((appointmentID) =>
-      res.status(200).json({ ok: true, appointmentID })
+      res.status(200).json({ appointmentID })
     )
   )
 );

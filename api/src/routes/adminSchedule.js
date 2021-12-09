@@ -34,7 +34,7 @@ router.get(
       .get()
       .then((snapshot) => snapshot.data());
 
-    res.status(200).json({ ok: true, openingTime, blockedDates });
+    res.status(200).json({ openingTime, blockedDates });
   })
 );
 
@@ -52,7 +52,7 @@ router.post(
     // @todo NEED TO SET THE FULL ARRAY back if not will get overwritten
     await fs.collection("openingHours").doc("openingHours").update(req.body);
 
-    res.status(200).json({ ok: true });
+    res.status(200).json({});
   })
 );
 
@@ -70,7 +70,7 @@ router.post(
     // @todo When setting blocked dates, must ensure that the date is not already booked
     await fs.collection("openingHours").doc("blockedDates").update(req.body);
 
-    res.status(200).json({ ok: true });
+    res.status(200).json({});
   })
 );
 
