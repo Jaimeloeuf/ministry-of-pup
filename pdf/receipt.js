@@ -35,8 +35,12 @@ function generateCustomerInformation(doc, invoice) {
     .text(invoice.receiptNumber, 140, customerInformationTop)
     .font("Helvetica")
     .text("Date of Sale:", 50, customerInformationTop + 15)
-    // For now the date is always today's date
-    .text(formatDate(new Date()), 140, customerInformationTop + 15)
+    // If createdAt unix seconds is passed in, then use it else input will be undefined and will be today's date
+    .text(
+      formatDate(new Date(invoice.createdAt && invoice.createdAt * 1000)),
+      140,
+      customerInformationTop + 15
+    )
     .font("Helvetica-Bold")
     .text(invoice.customer.name, 300, customerInformationTop)
     .font("Helvetica")

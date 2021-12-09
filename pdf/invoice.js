@@ -38,8 +38,12 @@ function generateCustomerInformation(doc, invoice) {
     .text(invoice.invoiceNumber, 150, customerInformationTop)
     .font("Helvetica")
     .text("Date of Invoice:", 50, customerInformationTop + 15)
-    // For now the date is always today's date
-    .text(formatDate(new Date()), 150, customerInformationTop + 15)
+    // If createdAt unix seconds is passed in, then use it else input will be undefined and will be today's date
+    .text(
+      formatDate(new Date(invoice.createdAt && invoice.createdAt * 1000)),
+      150,
+      customerInformationTop + 15
+    )
     .text("Balance Due:", 50, customerInformationTop + 30)
     .text(
       formatCurrency(invoice.subtotal - invoice.paid),
