@@ -105,16 +105,6 @@
 </template>
 
 <script>
-// @todo Load this asynchronously when used
-import { oof } from "simpler-fetch";
-
-// Set baseUrl before using in actions
-oof.baseUrl(
-  process.env.NODE_ENV === "production"
-    ? "https://api.ministryofpup.com"
-    : "http://localhost:3000"
-);
-
 export default {
   name: "ContactUs",
 
@@ -146,6 +136,11 @@ export default {
           )
         );
 
+        const { oof } = await import("simpler-fetch");
+        oof._baseUrl =
+          process.env.NODE_ENV === "production"
+            ? "https://api.ministryofpup.com"
+            : "http://localhost:3000";
         const res = await oof
           .POST("/contact-us-form")
           .header({ "x-recaptcha-token": token })
