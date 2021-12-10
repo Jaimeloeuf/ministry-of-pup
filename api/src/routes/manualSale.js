@@ -73,7 +73,12 @@ router.post(
       generateReceiptString,
     } = require("../utils/receipt");
 
+    // Get the current time in unix seconds to use in both receiptData and manualSale documents
+    const currentTime = unixseconds();
+
     const receiptData = {
+      createdAt: currentTime,
+
       // Generate receipt number if not passed in
       receiptNumber: req.body.receiptNumber || generateReceiptNumber(),
 
@@ -100,7 +105,7 @@ router.post(
       receiptID,
       paymentMethod,
       userID: customer.id,
-      time: unixseconds(),
+      time: currentTime,
     });
 
     // Generate the receipt
