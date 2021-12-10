@@ -44,10 +44,8 @@ export default createStore({
         lname: undefined,
         number: undefined,
         email: undefined,
-        ref: undefined,
+        preference: undefined,
       },
-
-      preference: undefined,
 
       // Set after appointment is booked, where this is returned from booking API
       appointmentID: undefined,
@@ -100,12 +98,10 @@ export default createStore({
           .header({ "x-recaptcha-token": token })
           .data({
             time: state.selectedTimeslot,
-            ref: state.ref,
-
-            preference: state.preference,
+            src: state.src,
 
             // Add in these fields to submit
-            // fname / lname / number / email / ref
+            // fname / lname / number / email / preference
             ...state.details,
           })
           .runJSON();

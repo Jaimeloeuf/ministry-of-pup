@@ -82,36 +82,21 @@ E.g. Cream coloured / French bulldogs / Female dog"
               <b>Where did you discover us?</b>
               <br />
 
-              <div class="control">
-                <label class="radio">
-                  <input
-                    type="radio"
-                    v-model="ref"
-                    value="FB"
-                    name="facebook"
-                  />
-                  FB
-                </label>
+              <div class="select is-fullwidth">
+                <select v-on:change="(event) => (src = event.target.value)">
+                  <option hidden disabled selected value>
+                    Please select an option
+                  </option>
 
-                <label class="radio">
-                  <input
-                    type="radio"
-                    v-model="ref"
-                    value="IG"
-                    name="instagram"
-                  />
-                  Instagram
-                </label>
-
-                <label class="radio">
-                  <input type="radio" v-model="ref" value="GG" name="google" />
-                  Google
-                </label>
-
-                <label class="radio">
-                  <input type="radio" v-model="ref" value="OT" name="others" />
-                  Others
-                </label>
+                  <option
+                    v-for="(source, key) in appointmentSource"
+                    :value="key"
+                    :key="key"
+                    :selected="key === src"
+                  >
+                    {{ source }}
+                  </option>
+                </select>
               </div>
             </label>
           </div>
@@ -131,7 +116,7 @@ E.g. Cream coloured / French bulldogs / Female dog"
             </button>
           </div>
 
-          <div class="column is-half">
+          <div class="column">
             <p style="font-size: 0.6em">
               By booking an appointment, you agree to the
               <a href="https://ministryofpup.com/#/terms" target="_blank">
@@ -150,6 +135,10 @@ E.g. Cream coloured / French bulldogs / Female dog"
 </template>
 
 <script>
+import appointmentSource from "mop-appointment-src";
+// Remove the UN/undefined option as user should not be able to choose it
+delete appointmentSource.UN;
+
 export default {
   name: "Details",
 
@@ -161,10 +150,12 @@ export default {
       email: undefined,
       preference: undefined,
 
-      // Ref for referral, how did the user get referred to this booking site?
-      // Possible values:  FB / IG / GG / WC / OT / UN
-      // UN for undefined
-      ref: "UN",
+      appointmentSource,
+
+      // Defaults to value in store, but let user modify it if needed
+      // If the value is UN for undefined, then convert it to undefined so HTML select tag will show the prompt option
+      // Else use the value as the default one so users do not need to do anything if it is already the same
+      src: this.$store.state.src === "UN" ? undefined : this.$store.state.src,
     };
   },
 
@@ -232,6 +223,9 @@ export default {
 
       this.$store.commit("loading", true);
 
+      // Only update src in state if user changed it to be something else other than undefined
+      if (this.src) this.$store.commit("setter", ["src", this.src]);
+
       this.$store.commit("setter", [
         "details",
         {
@@ -239,11 +233,9 @@ export default {
           lname: this.lname,
           number,
           email: this.email,
-          ref: this.ref,
+          preference: this.preference || "",
         },
       ]);
-
-      this.$store.commit("setter", ["preference", this.preference || ""]);
 
       // If booking failed, clear loader and end method to let user try again
       if (!(await this.$store.dispatch("book")))

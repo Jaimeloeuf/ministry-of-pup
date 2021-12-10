@@ -9,6 +9,7 @@
   "dependencies": {
     "bulma": "^0.9.3",
     "calendar-link": "^2.1.1",
+    "mop-appointment-src": "github:Enkel-Digital/mop-appointment-src",
     "simpler-fetch": "^2.2.0",
     "vue": "^3.2.16",
     "vue-router": "^4.0.12",
