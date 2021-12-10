@@ -16,10 +16,50 @@ const routes = [
     name: "home",
     component: Home,
   },
+
   {
     path: "/directions",
     name: "directions",
     component: () => import("./components/Directions.vue"),
+  },
+
+  {
+    path: "/unsubscribe/:newsletterDocID",
+
+    // Call API to unsubscribe and redirect
+    // Since API call is async, it is a Promise, so redirect returns, Promise<any> && HomeRoute
+    // Since && will short circuit to return HomeRoute object, this is fine as the API call will run in the background
+    redirect: (to) =>
+      // Get the recaptcha token
+      Promise.all([
+        new Promise((resolve, reject) =>
+          window.grecaptcha.ready(() =>
+            window.grecaptcha
+              .execute("6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z", {
+                action: "unsubscribeNewsletter",
+              })
+              .then(resolve)
+              .catch(reject)
+          )
+        ),
+
+        // Import oof and parse it out
+        import("simpler-fetch").then(({ oof }) => oof),
+
+        // Resolve the full API URL
+        Promise.resolve(
+          (process.env.NODE_ENV === "production"
+            ? "https://api.ministryofpup.com"
+            : "http://localhost:3000") +
+            `/newsletter/cancel/${to.params.newsletterDocID}`
+        ),
+      ]).then(([token, oof, URL]) =>
+        oof
+          .POST(URL)
+          .header({ "x-recaptcha-token": token })
+          .runJSON()
+          .then((res) => alert(res.ok ? "Subscription Cancelled" : res.error))
+      ) && { name: "home" },
   },
 ];
 
