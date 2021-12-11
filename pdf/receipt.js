@@ -37,7 +37,9 @@ function generateCustomerInformation(doc, invoice) {
     .text("Date of Sale:", 50, customerInformationTop + 15)
     // If createdAt unix seconds is passed in, then use it else input will be undefined and will be today's date
     .text(
-      formatDate(new Date(invoice.createdAt && invoice.createdAt * 1000)),
+      formatDate(
+        invoice.createdAt ? new Date(invoice.createdAt * 1000) : new Date()
+      ),
       140,
       customerInformationTop + 15
     )
