@@ -118,6 +118,12 @@
             </div>
 
             <div class="column is-full">
+              <hr class="mt-0" style="background-color: #dedede" />
+              *Address & Postal Code are required if buying anything to generate
+              the receipt correctly.
+            </div>
+
+            <div class="column is-full">
               <label>
                 <b>Address</b>
                 <br />
@@ -205,7 +211,6 @@
 </template>
 
 <script>
-// @todo Load this asynchronously in the sold method
 import { oof } from "simpler-fetch";
 import { getAuthHeader } from "../firebase.js";
 
@@ -234,6 +239,9 @@ export default {
         email: undefined,
         address: undefined,
         postalCode: undefined,
+
+        // Exists but not exposed to user to edit
+        id: undefined,
       },
       // Original user starts the same like 'user' but it is not binded to any inputs,
       // and is used to detect if user has been modified.
@@ -244,6 +252,9 @@ export default {
         email: undefined,
         address: undefined,
         postalCode: undefined,
+
+        // Exists but not exposed to user to edit
+        id: undefined,
       },
 
       /* Paynow QR code values */
@@ -309,10 +320,45 @@ export default {
     },
 
     async update() {
+      // Ensure all required input is entered
+      if (
+        !this.user.fname ||
+        !this.user.lname ||
+        !this.user.number ||
+        !this.user.email
+      )
+        return alert(
+          "Missing required fields. Ensure Name/Number/Email are filled in"
+        );
+
+      // Address and postal code is ONLY REQUIRED if buying something for the receipt
+      // Check and alert user if missing
+      if (!this.user.address || !this.user.postalCode)
+        if (
+          confirm(
+            "Missing Address/PostalCode.\n\nThis is required if buying something to ensure receipt is correctly generated.\n\nFill in missing field?"
+          )
+        )
+          return;
+
       // Show confirmation dialog box to ensure it is not accidentally clicked on
       if (!confirm("Confirm?")) return;
 
-      // @todo Validate all required input is entered
+      const res = await oof
+        .POST(`/user/update/${this.originalUser.id}`)
+        .header(await getAuthHeader())
+        .data(this.user)
+        .runJSON();
+
+      // If the API call failed, recursively call itself again if user wants to retry,
+      // And always make sure that this method call ends right here by putting it in a return expression
+      if (!res.ok)
+        return confirm(`Error: \n${res.error}\n\nTry again?`) && this.update();
+
+      alert("Update Successful");
+
+      // Override the originalUser with the user object now the user object has been successfully updated in DB
+      this.originalUser = Object.assign({}, this.user);
     },
 
     resetDetails() {
@@ -328,6 +374,9 @@ export default {
 
       // Reset scroll position to top too to allow admin to quickly create a new user
       window.scrollTo(0, 0);
+
+      // Simple hack to reset data and reset URL query param so that when user logs out, the userID query is not left in the URL
+      this.$router.push({ name: "user-details" });
     },
   },
 };
