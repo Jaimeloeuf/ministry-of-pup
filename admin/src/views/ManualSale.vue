@@ -331,6 +331,21 @@
           </button>
         </div>
 
+        <div v-else-if="paymentMethod === 'Cash'">
+          <div class="box">
+            <p class="title">Payment Method: Cash</p>
+
+            <p class="subtitle">Ensure cash payment is received and counted</p>
+          </div>
+
+          <button
+            class="button is-fullwidth is-success is-light py-6"
+            @click="paymentComplete"
+          >
+            Payment Received
+          </button>
+        </div>
+
         <div v-else-if="paymentMethod === 'Others'">
           <div class="box">
             <p class="title">Payment Method: Others</p>
@@ -415,7 +430,7 @@ export default {
 
       // Defaults to paynow payment method
       paymentMethod: "Paynow",
-      availablePaymentMethods: ["Paynow", "Credit Card", "Others"],
+      availablePaymentMethods: ["Paynow", "Credit Card", "Cash", "Others"],
 
       /* Paynow QR code values */
       showModal: false,
