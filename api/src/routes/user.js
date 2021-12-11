@@ -42,11 +42,11 @@ router.get(
 
 /**
  * Create a new user in user collection
- * @name POST /user/new/:userID
+ * @name POST /user/new
  * @returns Sucess indicator
  */
 router.post(
-  "/new/:userID",
+  "/new",
   express.json(),
   asyncWrap(async (req, res) =>
     require("../utils/createUserAccount")
@@ -57,10 +57,10 @@ router.post(
 
 /**
  * Update user data by spreading given request body into user doc
- * @name PUT /user/update/:userID
+ * @name POST /user/update/:userID
  * @returns Sucess indicator
  */
-router.put(
+router.post(
   "/update/:userID",
   express.json(),
   asyncWrap(async (req, res) =>
