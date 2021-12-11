@@ -62,6 +62,7 @@
               <li>{{ user.number }}</li>
               <li>{{ user.email }}</li>
               <li>
+                Joined on
                 {{ new Date(user.createdAt * 1000).toLocaleDateString() }}
               </li>
             </ul>
@@ -73,9 +74,6 @@
 </template>
 
 <script>
-import { oof } from "simpler-fetch";
-import { getAuthHeader } from "../firebase.js";
-
 import Fuse from "fuse.js";
 
 export default {
@@ -135,6 +133,9 @@ export default {
     async getUsers() {
       this.loading = true;
 
+      const { oof } = await import("simpler-fetch");
+      const { getAuthHeader } = await import("../firebase.js");
+
       const res = await oof
         .GET("/admin/user/all")
         .header(await getAuthHeader())
@@ -143,7 +144,9 @@ export default {
       // If the API call failed, recursively call itself again if user wants to retry,
       // And always make sure that this method call ends right here by putting it in a return expression
       if (!res.ok)
-        return confirm(`Error: \n${res.error}\n\nTry again?`) && this.getUsers;
+        return (
+          confirm(`Error: \n${res.error}\n\nTry again?`) && this.getUsers()
+        );
 
       this.users = res.users;
 
