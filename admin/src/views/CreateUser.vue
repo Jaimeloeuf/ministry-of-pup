@@ -25,7 +25,7 @@
 
             <input
               type="text"
-              v-model="customer.fname"
+              v-model="user.fname"
               placeholder="E.g. Cloris"
               class="input"
             />
@@ -38,7 +38,7 @@
 
             <input
               type="text"
-              v-model="customer.lname"
+              v-model="user.lname"
               placeholder="E.g. Liu"
               class="input"
             />
@@ -55,7 +55,7 @@
               type="number"
               pattern="[\s0-9]+"
               min="0"
-              v-model="customer.number"
+              v-model="user.number"
               placeholder="E.g. 92345678"
               class="input"
             />
@@ -70,11 +70,17 @@
 
             <input
               type="text"
-              v-model="customer.email"
+              v-model="user.email"
               placeholder="E.g. johnsmith@gmail.com"
               class="input"
             />
           </label>
+        </div>
+
+        <div class="column is-full">
+          <hr class="mt-0" style="background-color: #dedede" />
+          *Address & Postal Code are required if buying anything to generate the
+          receipt correctly.
         </div>
 
         <div class="column is-full">
@@ -84,7 +90,7 @@
             *Full Address including unit number if any
 
             <textarea
-              v-model="customer.address"
+              v-model="user.address"
               class="textarea"
               placeholder="E.g. BLK 123 Tampines Street 7, #06-23"
             />
@@ -101,7 +107,7 @@
               type="number"
               pattern="[\s0-9]+"
               min="0"
-              v-model="customer.postalCode"
+              v-model="user.postalCode"
               placeholder="E.g. 169359"
               class="input"
             />
@@ -148,16 +154,12 @@
 </template>
 
 <script>
-// @todo Load this asynchronously in the sold method
-import { oof } from "simpler-fetch";
-import { getAuthHeader } from "../firebase.js";
-
 export default {
   name: "CreateUser",
 
   data() {
     return {
-      customer: {
+      user: {
         fname: undefined,
         lname: undefined,
         number: undefined,
@@ -191,13 +193,49 @@ export default {
     },
 
     async create() {
+      // Ensure all required input is entered
+      if (
+        !this.user.fname ||
+        !this.user.lname ||
+        !this.user.number ||
+        !this.user.email
+      )
+        return alert(
+          "Missing required fields. Ensure Name/Number/Email are filled in"
+        );
+
+      // Address and postal code is ONLY REQUIRED if buying something for the receipt
+      // Check and alert user if missing
+      if (!this.user.address || !this.user.postalCode)
+        if (
+          confirm(
+            "Missing Address/PostalCode.\n\nThis is required if buying something to ensure receipt is correctly generated.\n\nFill in missing field?"
+          )
+        )
+          return;
+
       // Show confirmation dialog box to ensure it is not accidentally clicked on
       if (!confirm("Confirm?")) return;
 
-      // @todo Validate all required input is entered
-      // Address and postal code is not required, BUT REQUIRED if buying something
+      const { oof } = await import("simpler-fetch");
+      const { getAuthHeader } = await import("../firebase.js");
+
+      const res = await oof
+        .POST("/user/new")
+        .header(await getAuthHeader())
+        .data(this.user)
+        .runJSON();
+
+      // If the API call failed, recursively call itself again if user wants to retry,
+      // And always make sure that this method call ends right here by putting it in a return expression
+      if (!res.ok)
+        return confirm(`Error: \n${res.error}\n\nTry again?`) && this.create();
+
+      alert("Account Created!");
 
       this.reset();
+
+      // @todo Route user away if given a redirect object
     },
 
     reset() {
