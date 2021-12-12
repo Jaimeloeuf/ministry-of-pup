@@ -27,7 +27,7 @@ function create(PDFDocument, invoice) {
 function generateCustomerInformation(doc, invoice) {
   doc.fillColor("#444444").fontSize(20).text("Invoice", 50, 160);
 
-  generateHr(doc, 185);
+  generateHr(doc);
 
   const customerInformationTop = 200;
 
@@ -66,7 +66,7 @@ function generateCustomerInformation(doc, invoice) {
     )
     .moveDown();
 
-  generateHr(doc, 252);
+  generateHr(doc);
 }
 
 // Invoice data/content with the individual rows and stuff
@@ -84,7 +84,7 @@ function generateInvoiceTable(doc, invoice) {
     "Quantity",
     "Line Total"
   );
-  generateHr(doc, invoiceTableTop + 20);
+  generateHr(doc);
   doc.font("Helvetica");
 
   for (i = 0; i < invoice.items.length; i++) {
@@ -100,7 +100,7 @@ function generateInvoiceTable(doc, invoice) {
       formatCurrency(item.price * item.quantity)
     );
 
-    generateHr(doc, position + 20);
+    generateHr(doc);
   }
 
   const subtotalPosition = invoiceTableTop + (i + 1) * 30;
