@@ -157,6 +157,8 @@
 export default {
   name: "CreateUser",
 
+  props: ["redirect"],
+
   data() {
     return {
       user: {
@@ -233,9 +235,8 @@ export default {
 
       alert("Account Created!");
 
-      this.reset();
-
-      // @todo Route user away if given a redirect object
+      // Route user away if given a redirect object, else reset the form
+      this.redirect ? this.$router.push(this.redirect) : this.reset();
     },
 
     reset() {

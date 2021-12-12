@@ -92,6 +92,9 @@ const routes = [
   {
     path: "/user/create",
     name: "user-create",
+    // Pass URL query parameters as prop to component
+    // Mainly used for the redirect prop to redirect somewhere once account created
+    props: (route) => route.query,
     component: () => import("@/views/CreateUser.vue"),
     meta: { Auth_requirements: AuthType.private },
   },
