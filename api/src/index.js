@@ -49,6 +49,7 @@ app.use(
   require("./routes/printReceipt")
 );
 app.use("/admin/user/all", adminOnly, require("./routes/allUsers.js"));
+app.use("/admin/transactions", adminOnly, require("./routes/transactions.js"));
 app.use(
   "/analytics",
   adminOnly,
