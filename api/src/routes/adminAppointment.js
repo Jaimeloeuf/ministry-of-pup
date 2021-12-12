@@ -31,7 +31,7 @@ router.post(
  * @returns Sucess indicator
  */
 router.post(
-  "/cancel",
+  "/cancel/:appointmentID",
   express.json(),
   asyncWrap(async (req, res) =>
     require("../utils/cancelAppointment.js")(req.params.appointmentID).then(

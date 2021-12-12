@@ -12,7 +12,7 @@ const { asyncWrap } = require("express-error-middlewares");
 
 /**
  * @todo Might make this directly accessible from client instead to have 1 less API
- *
+ * @todo If not moved to client, might move this into user.js API and add the adminOnly middleware there
  * Get all users
  * @name GET /admin/user/all
  * @returns Sucess indicator and all user data
