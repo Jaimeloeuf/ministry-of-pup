@@ -42,19 +42,31 @@ function generateCustomerInformation(doc, invoice) {
       ),
       140,
       customerInformationTop + 15
-    )
-    .font("Helvetica-Bold")
-    .text(invoice.customer.name, 300, customerInformationTop)
-    .font("Helvetica")
-    .text(invoice.customer.address, 300, customerInformationTop + 15)
-    .text(
-      `${invoice.customer.country || "Singapore"}, ${
-        invoice.customer.city || "SG"
-      }`,
-      300,
-      customerInformationTop + 30
-    )
-    .moveDown();
+    );
+
+  // Only add customer information if it is available
+  // Because not all receipts require customer information,
+  // e.g. sale of a small item should not require user to create an account with us
+  if (invoice.customer) {
+    doc
+      .font("Helvetica-Bold")
+      .text(invoice.customer.name, 300, customerInformationTop);
+
+    // Only add address if available, since some customer may only provide name and no address
+    if (invoice.customer.address)
+      doc
+        .font("Helvetica")
+        .text(invoice.customer.address, 300, customerInformationTop + 15)
+        .text(
+          `${invoice.customer.country || "Singapore"}, ${
+            invoice.customer.city || "SG"
+          }`,
+          300,
+          customerInformationTop + 30
+        );
+    // Move down a line to skip the address line and so that HR line can be properly generated
+    else doc.moveDown();
+  }
 
   generateHr(doc);
 }

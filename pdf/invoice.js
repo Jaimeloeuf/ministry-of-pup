@@ -52,7 +52,7 @@ function generateCustomerInformation(doc, invoice) {
       150,
       customerInformationTop + 30
     )
-
+    // Unlike receipt, invoices always expect customer details since invoices are issued to specific people at specific billing addresses
     .font("Helvetica-Bold")
     .text(invoice.customer.name, 300, customerInformationTop)
     .font("Helvetica")
@@ -63,8 +63,7 @@ function generateCustomerInformation(doc, invoice) {
       }`,
       300,
       customerInformationTop + 30
-    )
-    .moveDown();
+    );
 
   generateHr(doc);
 }
