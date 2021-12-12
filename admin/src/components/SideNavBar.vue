@@ -122,6 +122,14 @@
             Paynow
           </router-link>
         </li>
+        <li>
+          <router-link
+            :to="{ name: 'transactions' }"
+            :class="{ 'is-active': $route.name === 'transactions' }"
+          >
+            Transactions
+          </router-link>
+        </li>
       </ul>
 
       <p class="menu-label">Users</p>

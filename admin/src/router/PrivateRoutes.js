@@ -90,6 +90,12 @@ const routes = [
     meta: { Auth_requirements: AuthType.private },
   },
   {
+    path: "/transactions/all",
+    name: "transactions",
+    component: () => import("@/views/Transactions.vue"),
+    meta: { Auth_requirements: AuthType.private },
+  },
+  {
     path: "/user/create",
     name: "user-create",
     // Pass URL query parameters as prop to component

@@ -404,7 +404,6 @@
 </template>
 
 <script>
-// @todo Load this asynchronously
 import { oof } from "simpler-fetch";
 import { getAuthHeader } from "../firebase.js";
 
