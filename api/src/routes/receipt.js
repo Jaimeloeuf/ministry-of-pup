@@ -28,16 +28,17 @@ async function generateAndSendReceipt(res, receiptData) {
  */
 router.get(
   "/:receiptID",
-  asyncWrap(async (req, res) => {
-    const { receiptID } = req.params;
-
-    // @todo Support getting either via receiptID or receiptNumber
-    const snapshot = await fs.collection("receipts").doc(receiptID).get();
-    if (!snapshot.exists)
-      return res.status(404).json({ error: "Receipt not found" });
-
-    generateAndSendReceipt(res, snapshot.data());
-  })
+  asyncWrap(async (req, res) =>
+    fs
+      .collection("receipts")
+      .doc(req.params.receiptID)
+      .get()
+      .then((snapshot) =>
+        snapshot.exists
+          ? generateAndSendReceipt(res, snapshot.data())
+          : res.status(404).json({ error: "Receipt not found" })
+      )
+  )
 );
 
 /**
@@ -47,18 +48,17 @@ router.get(
  */
 router.get(
   "/number/:receiptNumber",
-  asyncWrap(async (req, res) => {
-    const { receiptNumber } = req.params;
-
-    const snapshot = await fs
+  asyncWrap(async (req, res) =>
+    fs
       .collection("receipts")
-      .where("receiptNumber", "==", receiptNumber)
-      .get();
-    if (snapshot.empty)
-      return res.status(404).json({ error: "Receipt not found" });
-
-    generateAndSendReceipt(res, snapshot.docs[0].data());
-  })
+      .where("receiptNumber", "==", req.params.receiptNumber)
+      .get()
+      .then((snapshot) =>
+        snapshot.empty
+          ? res.status(404).json({ error: "Receipt not found" })
+          : generateAndSendReceipt(res, snapshot.docs[0].data())
+      )
+  )
 );
 
 module.exports = router;
