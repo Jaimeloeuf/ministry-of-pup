@@ -61,4 +61,24 @@ router.get(
   )
 );
 
+/**
+ * API to request server to generate the receipt for the given transaction ID
+ * @name GET /receipt/transaction/:transactionID
+ * @returns Receipt
+ */
+router.get(
+  "/transaction/:transactionID",
+  asyncWrap(async (req, res) =>
+    fs
+      .collection("receipts")
+      .where("transactionID", "==", req.params.transactionID)
+      .get()
+      .then((snapshot) =>
+        snapshot.empty
+          ? res.status(404).json({ error: "Receipt not found" })
+          : generateAndSendReceipt(res, snapshot.docs[0].data())
+      )
+  )
+);
+
 module.exports = router;

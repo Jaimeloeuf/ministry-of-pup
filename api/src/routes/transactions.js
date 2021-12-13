@@ -20,9 +20,6 @@ router.get(
   "/all",
   asyncWrap(async (req, res) => {
     // @todo how to paginate data?
-    // @todo Might not point to manualSale anymore in the future
-    // @todo Maybe I should load from receipts instead??? Yea right??? Then this API should be receipts and not transactions..?
-    // Actually no, a collection for transactions, and a collection for receipts...!
     fs.collection("receipts")
       .orderBy("createdAt", "desc")
       .get()
