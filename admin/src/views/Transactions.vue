@@ -57,19 +57,24 @@
           v-for="(transaction, i) in results"
           :key="i"
         >
+          <!-- @todo Change this into a button or smth as not all transactions have receipts -->
+          <!-- Only show this link if receiptNumber is present on the transaction object -->
           <a
             class="box"
             target="_blank"
-            :href="`https://api.ministryofpup.com/receipt/${transaction.id}`"
+            :href="`https://api.ministryofpup.com/receipt/number/${transaction.receiptNumber}`"
           >
             {{ transaction.receiptNumber }}
             <br />
 
-            {{ formatDate(transaction.createdAt * 1000) }}
+            {{ formatDate(transaction.time * 1000) }}
             <br />
 
-            <b>{{ transaction.customer.name }}</b>
-            <br />
+            <!-- Show this conditionally as buyer's name may not be available for all transactions -->
+            <span v-if="transaction.buyer_name">
+              <b>{{ transaction.buyer_name }}</b>
+              <br />
+            </span>
 
             Total
             {{
@@ -122,9 +127,9 @@ export default {
       search_options: {
         // @todo Maybe give user filters to choose from instead of everything all at once
         keys: [
-          "customer.name",
+          "buyer_name",
           "receiptNumber",
-          "items.item",
+          "items.name",
           "items.description",
         ],
 
