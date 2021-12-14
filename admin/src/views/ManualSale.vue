@@ -29,7 +29,7 @@
           </div>
 
           <div class="column is-full">
-            <hr class="my-0" style="background-color: #dedede" />
+            <hr class="my-0" />
           </div>
         </div>
 
@@ -99,10 +99,8 @@
 
     <!-- Only show the line break before the add item button if the last item is opened -->
     <div class="column is-full" v-if="showItems[showItems.length - 1]">
-      <hr class="my-0" style="background-color: #dedede" />
+      <hr class="my-0" />
     </div>
-
-    <!-- @todo Show QR -->
 
     <div class="column is-half">
       <button
@@ -120,57 +118,44 @@
     </div>
 
     <div class="column is-full">
-      <hr class="my-0" style="background-color: #dedede" />
+      <hr class="my-0" />
+    </div>
+
+    <div class="column is-full pb-0">
+      <b>Customer Type</b>
     </div>
 
     <div class="column is-full">
-      <div class="columns is-multiline is-vcentered">
-        <div class="column">
-          <p class="subtitle">Customer details</p>
-        </div>
-
-        <div class="column is-narrow">
-          <button class="button is-light is-danger" @click="resetCustomer">
-            Reset
-          </button>
-        </div>
-
-        <div class="column is-narrow">
-          <button
-            class="button is-light is-success"
-            @click="showCustomerDetails = !showCustomerDetails"
-          >
-            {{ showCustomerDetails ? "Hide" : "Show" }}
-          </button>
-        </div>
+      <div class="tabs is-toggle is-centered is-fullwidth">
+        <ul>
+          <li :class="{ 'is-active': showUserLogin }">
+            <a @click="showUserLogin = true">Member</a>
+          </li>
+          <li :class="{ 'is-active': !showUserLogin }">
+            <a @click="showUserLogin = false">Anonymous</a>
+          </li>
+        </ul>
       </div>
     </div>
 
-    <div v-if="showCustomerDetails" class="column is-full">
-      <div class="columns is-multiline is-vcentered">
+    <div class="column is-full" v-if="showUserLogin">
+      <div class="columns" v-if="!loggedIn">
         <div class="column is-half">
           <label>
-            <b>First Name</b>
+            <b>Create Account</b>
+            <br />
+            *User MUST HAVE an account first
 
-            <input
-              type="text"
-              v-model="customer.fname"
-              placeholder="E.g. Cloris"
-              class="input"
-            />
-          </label>
-        </div>
-
-        <div class="column is-half">
-          <label>
-            <b>Last Name</b>
-
-            <input
-              type="text"
-              v-model="customer.lname"
-              placeholder="E.g. Liu"
-              class="input"
-            />
+            <!-- If user clicks to create account using this link, it will redirect back here once account created -->
+            <router-link
+              :to="{
+                name: 'user-create',
+                query: { redirect: { name: 'sale-manual' } },
+              }"
+              class="button is-light is-success is-fullwidth"
+            >
+              Create Account
+            </router-link>
           </label>
         </div>
 
@@ -180,67 +165,105 @@
             <br />
             *Enter number <b>without</b> the +65 prefix
 
-            <input
-              type="number"
-              pattern="[\s0-9]+"
-              min="0"
-              v-model="customer.number"
-              placeholder="E.g. 92345678"
-              class="input"
-            />
+            <div class="field has-addons">
+              <div class="control is-expanded">
+                <input
+                  type="number"
+                  pattern="[\s0-9]+"
+                  min="0"
+                  v-model="customer.number"
+                  placeholder="E.g. 92345678"
+                  class="input"
+                  @keypress.enter="login"
+                />
+              </div>
+              <div class="control">
+                <button class="button is-success" @click="login">Login</button>
+              </div>
+            </div>
           </label>
         </div>
+      </div>
 
-        <div class="column is-half">
-          <label>
+      <!-- Show user details once logged in for user to review, and to go edit details if needed -->
+      <div v-else class="column is-full box">
+        <div class="columns is-multiline is-vcentered">
+          <div class="column is-half">
+            <b>First Name</b>
+            <br />
+
+            {{ customer.fname }}
+          </div>
+
+          <div class="column is-half">
+            <b>Last Name</b>
+            <br />
+
+            {{ customer.lname }}
+          </div>
+
+          <div class="column is-half">
+            <b>Phone Number</b>
+            *Without the +65 prefix
+            <br />
+
+            {{ customer.number }}
+          </div>
+
+          <div class="column is-half">
             <b>Email</b>
-            <br />
             *Sales receipt will be sent here
+            <br />
 
-            <input
-              type="text"
-              v-model="customer.email"
-              placeholder="E.g. johnsmith@gmail.com"
-              class="input"
-            />
-          </label>
-        </div>
+            {{ customer.email }}
+          </div>
 
-        <div class="column is-full">
-          <label>
+          <div class="column is-full">
             <b>Address</b>
+            *Full Address including any unit number
             <br />
-            *Full Address including unit number if any
 
-            <textarea
-              v-model="customer.address"
-              class="textarea"
-              placeholder="E.g. BLK 123 Tampines Street 7, #06-23"
-            />
-          </label>
-        </div>
+            <span v-if="customer.address">{{ customer.address }}</span>
+            <i v-else>nil</i>
+          </div>
 
-        <div class="column is-full">
-          <label>
+          <div class="column">
             <b>Postal Code</b>
-            <br />
             *Format is 6 digits only
+            <br />
 
-            <input
-              type="number"
-              pattern="[\s0-9]+"
-              min="0"
-              v-model="customer.postalCode"
-              placeholder="E.g. 169359"
-              class="input"
-            />
-          </label>
+            <span v-if="customer.postalCode">{{ customer.postalCode }}</span>
+            <i v-else>nil</i>
+          </div>
+
+          <div class="column is-narrow">
+            <button class="button is-light is-danger" @click="loggedIn = false">
+              logout
+            </button>
+          </div>
+
+          <div class="column is-narrow">
+            <router-link
+              :to="{ name: 'user-details', query: { userID: customer.id } }"
+              class="button is-light is-warning"
+            >
+              Update Details
+            </router-link>
+          </div>
         </div>
       </div>
     </div>
 
+    <div class="column is-full" v-else>
+      Create a sale transaction for an <b><i>anonymous customer</i></b>
+      <br />
+
+      *Note that no data will be collected, only used for simple item sales, not
+      for dog sales / subscriptions.
+    </div>
+
     <div class="column is-full">
-      <hr class="my-0" style="background-color: #dedede" />
+      <hr class="my-0" />
     </div>
 
     <div class="column is-full">
@@ -264,25 +287,15 @@
     </div>
 
     <div class="column is-full">
-      <hr class="my-0" style="background-color: #dedede" />
+      <hr class="my-0" />
     </div>
 
-    <div class="column is-one-third">
-      <button
-        @click="printReceipt"
-        class="button is-light is-fullwidth is-warning"
-      >
-        Print receipt
-      </button>
+    <div class="column is-narrow">
+      <button @click="reset" class="button is-light is-danger">Reset</button>
     </div>
 
-    <div class="column is-two-third">
-      <button
-        @click="
-          paymentMethod === 'Paynow' ? showPaynowQR() : (showModal = true)
-        "
-        class="button is-light is-fullwidth is-success"
-      >
+    <div class="column">
+      <button @click="pay" class="button is-light is-success is-fullwidth">
         Pay
       </button>
     </div>
@@ -417,8 +430,11 @@ export default {
       showItems: [],
       items: [],
 
-      showCustomerDetails: true,
+      showUserLogin: true,
+      loggedIn: false,
+
       customer: {
+        id: undefined,
         fname: undefined,
         lname: undefined,
         number: undefined,
@@ -461,10 +477,45 @@ export default {
       this.showItems.splice(index, 1);
     },
 
+    async login() {
+      if (!this.customer.number) return alert("Missing phone number");
+
+      this.loading = true;
+
+      const res = await oof
+        .GET(`/user/number/${this.customer.number}`)
+        .header(await getAuthHeader())
+        .runJSON();
+
+      this.loading = false;
+
+      // If the API call failed, recursively call itself again if user wants to retry,
+      // And always make sure that this method call ends right here by putting it in a return expression
+      if (!res.ok)
+        return confirm(`Failed to login\nTry again?`) && this.login();
+
+      this.customer = res.user;
+      this.loggedIn = true;
+    },
+
     /** Sums up the price of all items and return price to pay in Dollars */
     // @todo use this
     calculateTotalPrice() {
       return this.items.reduce((acc, cur) => acc + cur.price * cur.quantity, 0);
+    },
+
+    pay() {
+      /* @todo Validate the form */
+      if (this.items.length === 0) return alert("Error: No items specified");
+
+      // If manual sale for a specific customer is selected but user did not login,
+      // Admin should either login or change it to be an anonymous customer
+      if (this.showUserLogin && !this.loggedIn)
+        return alert("Error: Either login or select Anonymous Customer");
+
+      // Paynow has its own special handler function, for all other payment methods, just show the modal
+      if (this.paymentMethod === "Paynow") this.showPaynowQR();
+      else this.showModal = true;
     },
 
     async showPaynowQR() {
@@ -534,13 +585,15 @@ export default {
         .POST("/admin/sale/manual")
         .header(await getAuthHeader())
         .data({
-          receiptNumber: this.receiptNumber,
-          paymentMethod: this.paymentMethod,
+          // Include userID if user is known + loggedIn to prove identity exists
+          userID:
+            this.showUserLogin && this.loggedIn ? this.customer.id : undefined,
 
           // Get total price and convert to cents as API requires it in cents
           totalPrice: this.calculateTotalPrice() * 100,
-          customer: this.customer,
 
+          receiptNumber: this.receiptNumber,
+          paymentMethod: this.paymentMethod,
           items,
         })
         .runJSON();
@@ -557,49 +610,7 @@ export default {
 
       // Might want to insert the sale data into store for a transactions view
 
-      // Check with admin if page should be reset once sale is processed,
-      // as they may want to reuse the item details and change customer details only
-      if (confirm("Reset entire form?")) this.reset();
-    },
-
-    async printReceipt() {
-      if (!confirm("Send a receipt to MOP gmail to print?")) return;
-
-      // Process the items to ensure that all the price are in cents
-      // Create a new item instead of modifying the original object to prevent changing things in the form
-      const items = this.items.map((item) => ({
-        ...item,
-
-        // Ensure that quantity is Number instead of String as it came from the HTML input tag
-        quantity: parseInt(item.quantity),
-
-        // Save the item price in cents instead of dollars
-        price: item.price * 100,
-      }));
-
-      const res = await oof
-        .POST("/admin/sale/manual/print")
-        .header(await getAuthHeader())
-        .data({
-          receiptNumber: this.receiptNumber,
-          paymentMethod: this.paymentMethod,
-
-          // Get total price and convert to cents as API requires it in cents
-          totalPrice: this.calculateTotalPrice() * 100,
-          customer: this.customer,
-
-          items,
-        })
-        .runJSON();
-
-      // If the API call failed, recursively call itself again if user wants to retry,
-      // And always make sure that this method call ends right here by putting it in a return expression
-      if (!res.ok)
-        return (
-          confirm(`Error: \n${res.error}\n\nTry again?`) && this.printReceipt()
-        );
-
-      alert("Receipt sent to inbox");
+      this.reset();
     },
 
     resetItems() {
@@ -612,16 +623,6 @@ export default {
       // Thus using the Vue's reactive set method to reset the items array
       this.$set(this.$data, "items", []);
       this.$set(this.$data, "showItems", []);
-    },
-
-    resetCustomer() {
-      // Reset the data values to its original state by re-running the data method
-      // https://github.com/vuejs/vue/issues/702#issuecomment-308991548
-      // https://www.carlcassar.com/articles/reset-data-in-a-vue-component
-      Object.assign(this.$data.customer, this.$options.data().customer);
-
-      // Only use this if `this` is used in the data method
-      // Object.assign(this.$data, this.$options.data.apply(this));
     },
 
     reset() {
