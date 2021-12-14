@@ -20,8 +20,8 @@ router.get(
   "/all",
   asyncWrap(async (req, res) => {
     // @todo how to paginate data?
-    fs.collection("receipts")
-      .orderBy("createdAt", "desc")
+    fs.collection("transactions")
+      .orderBy("time", "desc")
       .get()
       .then((snapshot) =>
         snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
