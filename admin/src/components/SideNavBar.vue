@@ -190,6 +190,20 @@
         </li>
       </ul>
 
+      <p class="menu-label">Analytics</p>
+      <ul class="menu-list">
+        <li>
+          <router-link
+            :to="{ name: 'analytics-appointment-source' }"
+            :class="{
+              'is-active': $route.name === 'analytics-appointment-source',
+            }"
+          >
+            Appointment Src
+          </router-link>
+        </li>
+      </ul>
+
       <p class="menu-label">Administration</p>
       <ul class="menu-list">
         <li>

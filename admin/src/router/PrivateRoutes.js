@@ -130,6 +130,12 @@ const routes = [
     component: () => import("@/views/BookingLinks.vue"),
     meta: { Auth_requirements: AuthType.private },
   },
+  {
+    path: "/analytics/appointment-source",
+    name: "analytics-appointment-source",
+    component: () => import("@/views/AppointmentSource.vue"),
+    meta: { Auth_requirements: AuthType.private },
+  },
 ];
 
 export default routes;
