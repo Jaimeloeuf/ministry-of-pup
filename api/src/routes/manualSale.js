@@ -49,24 +49,7 @@ router.post(
   "/",
   express.json(),
   asyncWrap(async (req, res) => {
-    const { items, paymentMethod, totalPrice } = req.body;
-
-    // @todo Fix and remove the tmp solution below
-    // Always ensure that the customer account is updated and all, so that when the customer object is loaded, all details will be in
-
-    // Create account if does not exists and get back customer/user object
-    const customer = {
-      ...(await require("../utils/createUserAccount").createUserAccountIfDoesNotExist(
-        req.body.userID,
-        req.body.customer
-      )),
-
-      // In case there is missing data, this at least prevent missing data from being passed to receipt data
-      ...req.body.customer,
-    };
-
-    // Receipt data is the data needed to generate the actual receipt and this is stored in 'receipts' collection
-    // while the 'manualSale' collection document stores the receipt ID and other meta data about the transaction
+    const { userID, items, paymentMethod, totalPrice } = req.body;
 
     const {
       generateReceiptNumber,
@@ -76,19 +59,15 @@ router.post(
     // Get the current time in unix seconds to use in both receiptData and manualSale documents
     const currentTime = unixseconds();
 
+    // Generate receipt number if not passed in
+    const receiptNumber = req.body.receiptNumber || generateReceiptNumber();
+
     const receiptData = {
       createdAt: currentTime,
 
-      // Generate receipt number if not passed in
-      receiptNumber: req.body.receiptNumber || generateReceiptNumber(),
+      receiptNumber,
 
       paymentMethod,
-
-      customer: {
-        name: `${customer.lname} ${customer.fname}`,
-        address: customer.address,
-        postal_code: customer.postalCode,
-      },
 
       // Total price of sale in cents
       totalPrice,
@@ -96,23 +75,40 @@ router.post(
       // Note that all price must be in cents
       items,
     };
+    // If a userID is given, get the customer object back, else customer will be undefined
+    const customer =
+      userID &&
+      (await require("../utils/getUserAccount.js").getUserAccount(userID));
+    if (customer)
+      receiptData.customer = {
+        name: `${customer.lname} ${customer.fname}`,
+        address: customer.address,
+        postal_code: customer.postalCode,
+      };
 
-    // Store receipt data and get back the receipt ID
-    const { id: receiptID } = await fs.collection("receipts").add(receiptData);
+    // Store receipt data
+    await fs.collection("receipts").add(receiptData);
 
-    // Store receipt ID and meta data about this transaction
-    await fs.collection("manualSale").add({
-      receiptID,
-      paymentMethod,
-      userID: customer.id,
+    // Create a new transaction in the system
+    const transaction = {
       time: currentTime,
-    });
+      value: totalPrice,
+      items,
+      paymentMethod,
+      receiptNumber,
 
-    // Generate the receipt
-    const receipt = await generateReceiptString(receiptData);
+      // Defaults to null to indicate it was an anonymous customer
+      buyer: userID || null,
+    };
+    if (customer) transaction.buyer_name = receiptData.customer.name;
+    await require("../DL/createTransaction.js")(transaction);
 
     // @todo Generate a reference link so that user can look up this
     // `receipt.ministryofpup.com/#/view/${receiptID}`;
+    // `https://api.ministryofpup.com/receipt/number/${receiptNumber}`;
+
+    // Generate the receipt
+    const receipt = await generateReceiptString(receiptData);
 
     // Generate and Email receipt
     await emailReceipt({
