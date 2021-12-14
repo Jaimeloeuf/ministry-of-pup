@@ -57,35 +57,48 @@
           v-for="(transaction, i) in results"
           :key="i"
         >
-          <!-- @todo Change this into a button or smth as not all transactions have receipts -->
-          <!-- Only show this link if receiptNumber is present on the transaction object -->
-          <a
-            class="box"
-            target="_blank"
-            :href="`https://api.ministryofpup.com/receipt/number/${transaction.receiptNumber}`"
-          >
-            {{ transaction.receiptNumber }}
-            <br />
+          <div class="box">
+            <div class="columns">
+              <div class="column">
+                <!-- Show this conditionally as not all transactions have an accompanying receipt -->
+                <!-- For the most part, there will usually be an accompanying receipt as most transactions are sale transactions -->
+                <span v-if="transaction.receiptNumber">
+                  <b>{{ transaction.receiptNumber }}</b>
+                  <br />
+                </span>
 
-            {{ formatDate(transaction.time * 1000) }}
-            <br />
+                {{ formatDate(transaction.time * 1000) }}
+                <br />
 
-            <!-- Show this conditionally as buyer's name may not be available for all transactions -->
-            <span v-if="transaction.buyer_name">
-              <b>{{ transaction.buyer_name }}</b>
-              <br />
-            </span>
+                <!-- Show this conditionally as buyer's name may not be available for all transactions -->
+                <span v-if="transaction.buyer_name">
+                  <b>{{ transaction.buyer_name }}</b>
+                  <br />
+                </span>
 
-            Total
-            {{
-              formatCurrency(
-                transaction.items.reduce(
-                  (acc, item) => acc + item.price * item.quantity,
-                  0
-                )
-              )
-            }}
-            <br />
+                Total
+                {{
+                  formatCurrency(
+                    transaction.items.reduce(
+                      (acc, item) => acc + item.price * item.quantity,
+                      0
+                    )
+                  )
+                }}
+                <br />
+              </div>
+
+              <!-- Only show this link if receiptNumber is present on the transaction object as not all transactions have receipts-->
+              <div class="column is-narrow" v-if="transaction.receiptNumber">
+                <a
+                  class="button is-light"
+                  target="_blank"
+                  :href="`https://api.ministryofpup.com/receipt/number/${transaction.receiptNumber}`"
+                >
+                  Receipt
+                </a>
+              </div>
+            </div>
 
             <hr class="my-2" />
 
@@ -100,7 +113,10 @@
 
               {{ formatCurrency(item.price) }} x{{ item.quantity }}
             </div>
-          </a>
+
+            <hr class="my-2" />
+            <span class="is-size-7">Transaction ID - {{ transaction.id }}</span>
+          </div>
         </div>
       </div>
     </div>
