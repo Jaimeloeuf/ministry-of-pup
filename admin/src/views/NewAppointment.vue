@@ -19,14 +19,17 @@
 
         <div class="select is-fullwidth">
           <select v-on:change="(event) => (src = event.target.value)">
-            <!-- Value must be id so that when parsing value in @change handler above it can get id instead of text -->
+            <option hidden disabled selected value>
+              Please select an option
+            </option>
+
             <option
               v-for="src in appointmentSource"
-              :value="src.id"
-              :key="src.id"
-              :selected="src.id === src"
+              :value="src[0]"
+              :key="src[0]"
+              :selected="src[0] === src"
             >
-              {{ src.text }}
+              {{ src[1] }}
             </option>
           </select>
         </div>
@@ -123,6 +126,8 @@ E.g. Cream coloured / French bulldogs / Female dog"
 import { oof } from "simpler-fetch";
 import { getAuthHeader } from "../firebase.js";
 
+import appointmentSource from "mop-appointment-src";
+
 import DatetimePicker from "../components/DatetimePicker.vue";
 import todaysDate from "../utils/todaysDate.js";
 
@@ -145,34 +150,8 @@ export default {
       email: undefined,
       preference: undefined,
 
-      // To manually update/add as new source are added
-      src: "WA",
-      appointmentSource: [
-        {
-          id: "WA",
-          text: "Whatsapp",
-        },
-        {
-          id: "IG",
-          text: "Instagram",
-        },
-        {
-          id: "FB",
-          text: "FaceBook",
-        },
-        {
-          id: "GG",
-          text: "Google messages",
-        },
-        {
-          id: "WC",
-          text: "WeChat",
-        },
-        {
-          id: "OT",
-          text: "Others",
-        },
-      ],
+      src: undefined,
+      appointmentSource: Object.entries(appointmentSource),
     };
   },
 
