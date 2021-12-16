@@ -42,7 +42,7 @@
 
               <input
                 type="text"
-                v-model="item.item"
+                v-model="item.name"
                 placeholder="E.g. Dog collar"
                 class="input"
               />
@@ -422,6 +422,23 @@ import { getAuthHeader } from "../firebase.js";
 
 import generateReceiptNumber from "../utils/generateReceiptNumber.js";
 
+/**
+ * Simple validation function for an item object
+ * @returns {boolean} Returns a boolean indicating if the item object is invalid
+ */
+const isItemInvalid = (item) =>
+  !(
+    item.name &&
+    typeof item.name === "string" &&
+    item.price &&
+    typeof item.price === "number" &&
+    item.quantity &&
+    typeof item.quantity === "number" &&
+    // Description is an optional string, only check type if it is there
+    // Else defaults to true, to let the previous boolean expression pass through in the && conditional
+    (item.description ? typeof item.description === "string" : true)
+  );
+
 export default {
   name: "ManualSale",
 
@@ -512,6 +529,11 @@ export default {
       // Admin should either login or change it to be an anonymous customer
       if (this.showUserLogin && !this.loggedIn)
         return alert("Error: Either login or select Anonymous Customer");
+
+      if (this.items.filter(isItemInvalid).length !== 0)
+        return alert(
+          `Error: Invalid 'item' in items, all fields are required except description`
+        );
 
       // Paynow has its own special handler function, for all other payment methods, just show the modal
       if (this.paymentMethod === "Paynow") this.showPaynowQR();
