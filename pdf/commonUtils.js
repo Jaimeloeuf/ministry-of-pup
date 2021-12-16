@@ -38,7 +38,7 @@ const generateHeader = (doc) =>
 function generateTableRow(
   doc,
   name,
-  description,
+  description = "",
   unitCost,
   quantity,
   lineTotal
@@ -59,7 +59,9 @@ function generateTableRow(
   // Since usually description will be the one that have word wrapping of multiple lines,
   // Here we use the same max width for description column to calculate how many lines were added for word wrap
   // Move doc's Y position down by number of lines it word wrapped, defaults to at least 1 line down.
-  doc.moveDown(Math.ceil(doc.widthOfString(description, { width: 190 }) / 190));
+  doc.moveDown(
+    Math.ceil(doc.widthOfString(description, { width: 190 }) / 190) || 1
+  );
 }
 
 /**
