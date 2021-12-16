@@ -375,8 +375,8 @@ export default {
       // Reset scroll position to top too to allow admin to quickly create a new user
       window.scrollTo(0, 0);
 
-      // Simple hack to reset data and reset URL query param so that when user logs out, the userID query is not left in the URL
-      this.$router.push({ name: "user-details" });
+      // Simple hack to reset URL query param so that when user logs out, the userID query is not left in the URL
+      if (this.userID) this.$router.push({ name: "user-details" });
     },
   },
 };
