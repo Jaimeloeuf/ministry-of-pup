@@ -11,16 +11,17 @@ const unixseconds = require("unixseconds");
  * @returns {boolean} Returns a boolean indicating if the item object is invalid
  */
 const isItemInvalid = (item) =>
-  !(item.name &&
-  typeof item.name === "string" &&
-  item.price &&
-  typeof item.price === "number" &&
-  item.quantity &&
-  typeof item.quantity === "number" &&
-  // Description is an optional string, only check type if it is there
-  item.description
-    ? typeof item.description === "string"
-    : true);
+  !(
+    item.name &&
+    typeof item.name === "string" &&
+    item.price &&
+    typeof item.price === "number" &&
+    item.quantity &&
+    typeof item.quantity === "number" &&
+    // Description is an optional string, only check type if it is there
+    // Else defaults to true, to let the previous boolean expression pass through in the && conditional
+    (item.description ? typeof item.description === "string" : true)
+  );
 
 /**
  * Creates a transaction from parameters and insert into the database
