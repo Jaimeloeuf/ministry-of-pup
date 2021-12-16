@@ -7,12 +7,12 @@ const {
   formatDate,
 } = require("./commonUtils.js");
 
-function create(PDFDocument, invoice) {
+function create(PDFDocument, data) {
   const doc = new PDFDocument({ size: "A4", margin: 50 });
 
   generateHeader(doc);
-  generateCustomerInformation(doc, invoice);
-  generateInvoiceTable(doc, invoice);
+  generateReceiptAndCustomerTable(doc, data);
+  generateItemTable(doc, data);
   generateFooter(
     doc,
     "Payment is due within 15 days. Thank you for your business."
@@ -23,8 +23,7 @@ function create(PDFDocument, invoice) {
   return doc;
 }
 
-// Invoice meta data and customer information
-function generateCustomerInformation(doc, invoice) {
+function generateReceiptAndCustomerTable(doc, data) {
   doc.fillColor("#444444").fontSize(20).text("Invoice", 50, 160);
 
   generateHr(doc);
@@ -35,48 +34,40 @@ function generateCustomerInformation(doc, invoice) {
     .fontSize(10)
     .text("Invoice Number:", 50, customerInformationTop)
     .font("Helvetica-Bold")
-    .text(invoice.invoiceNumber, 150, customerInformationTop)
+    .text(data.invoiceNumber, 150, customerInformationTop)
     .font("Helvetica")
     .text("Date of Invoice:", 50, customerInformationTop + 15)
     // If createdAt unix seconds is passed in, then use it else input will be undefined and will be today's date
     .text(
-      formatDate(
-        invoice.createdAt ? new Date(invoice.createdAt * 1000) : new Date()
-      ),
+      formatDate(data.createdAt ? new Date(data.createdAt * 1000) : new Date()),
       150,
       customerInformationTop + 15
     )
     .text("Balance Due:", 50, customerInformationTop + 30)
     .text(
-      formatCurrency(invoice.subtotal - invoice.paid),
+      formatCurrency(data.subtotal - data.paid),
       150,
       customerInformationTop + 30
     )
     // Unlike receipt, invoices always expect customer details since invoices are issued to specific people at specific billing addresses
     .font("Helvetica-Bold")
-    .text(invoice.customer.name, 300, customerInformationTop)
+    .text(data.customer.name, 300, customerInformationTop)
     .font("Helvetica")
-    .text(invoice.customer.address, 300, customerInformationTop + 15)
+    .text(data.customer.address, 300, customerInformationTop + 15)
     .text(
-      `${invoice.customer.country || "Singapore"}, ${
-        invoice.customer.city || "SG"
-      }`,
+      `${data.customer.country || "Singapore"}, ${data.customer.city || "SG"}`,
       300,
       customerInformationTop + 30
     );
 
   generateHr(doc);
+  doc.moveDown(5);
 }
 
-// Invoice data/content with the individual rows and stuff
-function generateInvoiceTable(doc, invoice) {
-  let i;
-  const invoiceTableTop = 330;
-
+function generateItemTable(doc, data) {
   doc.font("Helvetica-Bold");
   generateTableRow(
     doc,
-    invoiceTableTop,
     "Item",
     "Description",
     "Unit Cost",
@@ -84,14 +75,12 @@ function generateInvoiceTable(doc, invoice) {
     "Line Total"
   );
   generateHr(doc);
-  doc.font("Helvetica");
+  doc.moveDown(2);
 
-  for (i = 0; i < invoice.items.length; i++) {
-    const item = invoice.items[i];
-    const position = invoiceTableTop + (i + 1) * 30;
+  doc.font("Helvetica");
+  for (const item of data.items) {
     generateTableRow(
       doc,
-      position,
       item.name,
       item.description,
       formatCurrency(item.price),
@@ -100,42 +89,25 @@ function generateInvoiceTable(doc, invoice) {
     );
 
     generateHr(doc);
+    doc.moveDown(2);
   }
+  doc.moveDown();
 
-  const subtotalPosition = invoiceTableTop + (i + 1) * 30;
-  generateTableRow(
-    doc,
-    subtotalPosition,
-    "",
-    "",
-    "Subtotal",
-    "",
-    formatCurrency(invoice.subtotal)
-  );
+  generateTableRow(doc, "", "", "Subtotal", "", formatCurrency(data.subtotal));
+  doc.moveDown();
 
-  const paidToDatePosition = subtotalPosition + 20;
-  generateTableRow(
-    doc,
-    paidToDatePosition,
-    "",
-    "",
-    "Paid To Date",
-    "",
-    formatCurrency(invoice.paid)
-  );
+  generateTableRow(doc, "", "", "Paid To Date", "", formatCurrency(data.paid));
+  doc.moveDown();
 
-  const duePosition = paidToDatePosition + 25;
   doc.font("Helvetica-Bold");
   generateTableRow(
     doc,
-    duePosition,
     "",
     "",
     "Balance Due",
     "",
-    formatCurrency(invoice.subtotal - invoice.paid)
+    formatCurrency(data.subtotal - data.paid)
   );
-  doc.font("Helvetica");
 }
 
 module.exports = create;

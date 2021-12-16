@@ -29,29 +29,38 @@ const generateHeader = (doc) =>
 /**
  * Generate a new row in a table
  * @param {PDFDocument} doc
- * @param {Number} y Positional height
- * @param {String} item
- * @param {String} description
- * @param {String|Number} unitCost
- * @param {String|Number} quantity
- * @param {String|Number} lineTotal
+ * @param {String} name Name of the item
+ * @param {String} description Item's description
+ * @param {String|Number} unitCost Cost per unit of item
+ * @param {String|Number} quantity Number of item sold
+ * @param {String|Number} lineTotal unitCost * quantity
  */
-const generateTableRow = (
+function generateTableRow(
   doc,
-  y,
-  item,
+  name,
   description,
   unitCost,
   quantity,
   lineTotal
-) =>
+) {
+  // Set y to be the current y value, so that all the text methods can reuse this y method
+  // If y is not passed into text method, every new call to text will create a new line
+  // But since we want this entire row to be on the same line, they must have the same y
+  const y = doc.y;
+
   doc
     .fontSize(10)
-    .text(item, 50, y)
-    .text(description, 150, y)
-    .text(unitCost, 320, y, { width: 90, align: "right" })
-    .text(quantity, 384, y, { width: 90, align: "right" })
+    .text(name, 50, y)
+    .text(description, 150, y, { width: 190 })
+    .text(unitCost, 342, y, { width: 70, align: "right" })
+    .text(quantity, 400, y, { width: 70, align: "right" })
     .text(lineTotal, 0, y, { align: "right" });
+
+  // Since usually description will be the one that have word wrapping of multiple lines,
+  // Here we use the same max width for description column to calculate how many lines were added for word wrap
+  // Move doc's Y position down by number of lines it word wrapped, defaults to at least 1 line down.
+  doc.moveDown(Math.ceil(doc.widthOfString(description, { width: 190 }) / 190));
+}
 
 /**
  * Function to generate hr HTML seperator tag
@@ -72,7 +81,10 @@ const generateHr = (doc, y) =>
  * @param {String} string Text to show in the footer
  */
 const generateFooter = (doc, string) =>
-  doc.fontSize(10).text(string, 50, 780, { align: "center", width: 500 });
+  doc
+    .font("Helvetica")
+    .fontSize(10)
+    .text(string, 50, 780, { align: "center", width: 500 });
 
 /**
  * Format a dollar amount in cents to a string in dollars, e.g. 1090 to $10.90, e.g. 1000000 $10,000.00
