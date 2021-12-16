@@ -43,11 +43,6 @@ app.use("/admin/pet/new", adminOnly, require("./routes/newDog.js"));
 app.use("/admin/pet/sold", adminOnly, require("./routes/sold.js"));
 app.use("/admin/schedule", adminOnly, require("./routes/adminSchedule.js"));
 app.use("/admin/sale/manual", adminOnly, require("./routes/manualSale.js"));
-app.use(
-  "/admin/sale/manual/print",
-  adminOnly,
-  require("./routes/printReceipt")
-);
 app.use("/admin/user/all", adminOnly, require("./routes/allUsers.js"));
 app.use("/admin/transactions", adminOnly, require("./routes/transactions.js"));
 app.use(
