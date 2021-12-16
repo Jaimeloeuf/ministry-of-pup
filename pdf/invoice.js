@@ -92,7 +92,7 @@ function generateInvoiceTable(doc, invoice) {
     generateTableRow(
       doc,
       position,
-      item.item,
+      item.name,
       item.description,
       formatCurrency(item.price),
       item.quantity,
