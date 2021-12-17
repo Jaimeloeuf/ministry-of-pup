@@ -1,7 +1,7 @@
 {
   "name": "mop-invoice",
   "description": "Lib to generate PDF receipts and invoices for MOP sales",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "main": "index.js",
   "files": [
     "index.js",

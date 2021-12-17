@@ -50,17 +50,21 @@ function generateTableRow(
 
   doc
     .fontSize(10)
-    .text(name, 50, y)
+    .text(name, 50, y, { width: 100 })
     .text(description, 150, y, { width: 190 })
     .text(unitCost, 342, y, { width: 70, align: "right" })
     .text(quantity, 400, y, { width: 70, align: "right" })
     .text(lineTotal, 0, y, { align: "right" });
 
-  // Since usually description will be the one that have word wrapping of multiple lines,
-  // Here we use the same max width for description column to calculate how many lines were added for word wrap
-  // Move doc's Y position down by number of lines it word wrapped, defaults to at least 1 line down.
+  // Since name or description might cause word wrapping to multiple lines,
+  // Use the same max width for name and description column to calculate how many lines were added for word wrap
+  // Find the largest word wrap lines between the 2 columns or use a minimum of 1 for the number of lines to move down.
   doc.moveDown(
-    Math.ceil(doc.widthOfString(description, { width: 190 }) / 190) || 1
+    Math.max(
+      Math.ceil(doc.widthOfString(name, { width: 100 }) / 100),
+      Math.ceil(doc.widthOfString(description, { width: 190 }) / 190),
+      1
+    )
   );
 }
 
