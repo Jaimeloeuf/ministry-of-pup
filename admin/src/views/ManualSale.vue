@@ -1,5 +1,9 @@
 <template>
   <div class="columns is-multiline is-centered" style="max-width: 50em">
+    <div class="column is-full">
+      <p class="title">Manual Sale</p>
+    </div>
+
     <div class="column pb-0 mb-0">
       <p class="subtitle">Items</p>
     </div>
@@ -300,119 +304,14 @@
       </button>
     </div>
 
-    <div class="modal" :class="{ 'is-active': showModal }">
-      <!-- Modal can be closed by clicking any part of the modal background -->
-      <div class="modal-background" @click="showModal = false"></div>
-
-      <div class="modal-content">
-        <div v-if="paymentMethod === 'Paynow'">
-          <span class="image is-square">
-            <img :src="imageDataURI" />
-          </span>
-
-          <button
-            class="button is-fullwidth is-success is-light py-6"
-            @click="paymentComplete"
-          >
-            Payment Received ({{ receiptNumber }})
-          </button>
-        </div>
-
-        <div v-else-if="paymentMethod === 'Credit Card'">
-          <div class="box">
-            <p class="title">Payment Method: Credit Card</p>
-
-            <p class="subtitle">
-              Please request for payment from customer.
-              <br />
-              <br />
-
-              If possible, enter receipt number in the POS terminal for to track
-              the transaction.
-              <br />
-              <br />
-
-              Receipt Number: {{ receiptNumber }}
-            </p>
-          </div>
-
-          <button
-            class="button is-fullwidth is-success is-light py-6"
-            @click="paymentComplete"
-          >
-            Payment Received ({{ receiptNumber }})
-          </button>
-        </div>
-
-        <div v-else-if="paymentMethod === 'Cash'">
-          <div class="box">
-            <p class="title">Payment Method: Cash</p>
-
-            <p class="subtitle">Ensure cash payment is received and counted</p>
-          </div>
-
-          <button
-            class="button is-fullwidth is-success is-light py-6"
-            @click="paymentComplete"
-          >
-            Payment Received
-          </button>
-        </div>
-
-        <div v-else-if="paymentMethod === 'Others'">
-          <div class="box">
-            <p class="title">Payment Method: Others</p>
-
-            <p class="subtitle">
-              Please request for payment from customer, if possible, ask them to
-              include in the receipt number for you to easily verify.
-              <br />
-              <br />
-
-              For example, ask customer to write receipt number as transaction
-              message in a bank direct transfer transaction.
-              <br />
-              <br />
-
-              Receipt Number: {{ receiptNumber }}
-            </p>
-          </div>
-
-          <button
-            class="button is-fullwidth is-success is-light py-6"
-            @click="paymentComplete"
-          >
-            Payment Received ({{ receiptNumber }})
-          </button>
-        </div>
-
-        <!-- This case should normally not appear unless there is a bug -->
-        <div v-else>
-          <div class="box">
-            <p class="subtitle">
-              INTERNAL ERROR: Invalid payment method selected
-              <br />
-              Please ensure payment method field is correctly selected!
-            </p>
-          </div>
-
-          <!-- Button resets payment method to the default payment method and closes the modal -->
-          <button
-            class="button is-fullwidth is-success is-light py-6"
-            @click="(paymentMethod = 'Paynow') && (showModal = false)"
-          >
-            Reset payment method & Close
-          </button>
-        </div>
-      </div>
-
-      <!-- Modal can be closed by clicking the top right X -->
-      <button
-        class="modal-close is-large"
-        aria-label="close"
-        @click="showModal = false"
-      />
-    </div>
+    <PaymentModal
+      v-if="showPaymentModal"
+      v-on:close-modal="showPaymentModal = false"
+      v-on:payment-complete="paymentComplete"
+      :amount="paymentAmount"
+      :paymentMethod="paymentMethod"
+      :receiptNumber="receiptNumber"
+    />
   </div>
 </template>
 
@@ -421,6 +320,7 @@ import { oof } from "simpler-fetch";
 import { getAuthHeader } from "../firebase.js";
 
 import generateReceiptNumber from "../utils/generateReceiptNumber.js";
+import PaymentModal from "../components/PaymentModal.vue";
 
 /**
  * Simple validation function for an item object
@@ -441,6 +341,8 @@ const isItemInvalid = (item) =>
 
 export default {
   name: "ManualSale",
+
+  components: { PaymentModal },
 
   data() {
     return {
@@ -464,9 +366,8 @@ export default {
       paymentMethod: "Paynow",
       availablePaymentMethods: ["Paynow", "Credit Card", "Cash", "Others"],
 
-      /* Paynow QR code values */
-      showModal: false,
-      imageDataURI: undefined,
+      showPaymentModal: false,
+      paymentAmount: undefined,
 
       // Pre-generate the receipt number so that the same one can be accessed by both paylah QR and payment complete method
       receiptNumber: generateReceiptNumber(),
@@ -476,7 +377,7 @@ export default {
   methods: {
     addItem() {
       this.items.push({
-        item: undefined,
+        name: undefined,
         description: undefined,
         quantity: undefined,
         price: undefined,
@@ -535,52 +436,9 @@ export default {
           `Error: Invalid 'item' in items, all fields are required except description`
         );
 
-      // Paynow has its own special handler function, for all other payment methods, just show the modal
-      if (this.paymentMethod === "Paynow") this.showPaynowQR();
-      else this.showModal = true;
-    },
-
-    async showPaynowQR() {
-      const { default: PaynowQR } = await import("paynowqr");
-
-      // The QR Code should only be valid for 1 hour
-      // 60 minutes * 60 seconds * 1000 milliseconds = 3600000 milliseconds
-      const d = new Date(new Date().getTime() + 3600000);
-      const month = d.getMonth() + 1; // +1 as getMonth is 0 indexed where 0 is Jan
-      const pmonth = month > 9 ? month : `0${month}`; // Month with 0 padding
-      const date = d.getDate();
-      const pdate = date > 9 ? date : `0${date}`; // Date with 0 padding
-      const expiryDate = `${d.getFullYear()}${pmonth}${pdate}`;
-
-      //Create a PaynowQR object
-      const paynowQRCode = new PaynowQR({
-        // Required: UEN of company, hard coded in as it will not be changed
-        uen: "T17LL2360H",
-
-        // @todo Disallow if price is 0
-        amount: this.calculateTotalPrice(),
-
-        // Set an expiry date that is only valid for 1 day
-        expiry: expiryDate,
-
-        // @todo Call and API to generate a invoice reference number to track later (possibly have the paynow bank app on the ipad)
-        // Reference number for Paynow Transaction. Useful if you need to track payments for recouncilation.
-        refNumber: this.receiptNumber,
-      });
-
-      const QRCode = await import("qrcode");
-
-      // Generate the QR code image data URL and set onto component data value
-      this.imageDataURI = await QRCode.toDataURL(
-        // Generate UTF-8 string from the qrcode to generate the QR code data URL for the image tag
-        paynowQRCode.output(),
-
-        // Use high error resistance rate of ~ 30%
-        { errorCorrectionLevel: "H" }
-      );
-
-      // Open up modal to show the QR Code image
-      this.showModal = true;
+      // Let payment component handle the rest of payment flow
+      this.paymentAmount = this.calculateTotalPrice();
+      this.showPaymentModal = true;
     },
 
     // @todo Validate all required input is entered
@@ -588,8 +446,8 @@ export default {
       // Give admin a confirmation dialog box to ensure it is not accidentally clicked on
       if (!confirm("Payment Completed?")) return;
 
-      // Close the payment modal in case it is not closed
-      this.showModal = false;
+      // Close payment modal before processing
+      this.showPaymentModal = false;
 
       // Process the items to ensure that all the price are in cents
       // Create a new item instead of modifying the original object to prevent changing things in the form
@@ -630,7 +488,7 @@ export default {
 
       alert("Sale processed!");
 
-      // Might want to insert the sale data into store for a transactions view
+      // Might want to insert the sale data into store for a transactions view so it does not have to load from API again
 
       this.reset();
     },
