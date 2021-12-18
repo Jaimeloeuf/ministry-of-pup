@@ -424,6 +424,8 @@ import generateReceiptNumber from "../utils/generateReceiptNumber.js";
 
 /**
  * Simple validation function for an item object
+ * Does not type check the properties because price and quantity are going to be strings over here after reading from HTML inputs
+ * They will only be converted to Number after creating a new items list for sending to the API
  * @returns {boolean} Returns a boolean indicating if the item object is invalid
  */
 const isItemInvalid = (item) =>
@@ -431,9 +433,7 @@ const isItemInvalid = (item) =>
     item.name &&
     typeof item.name === "string" &&
     item.price &&
-    typeof item.price === "number" &&
     item.quantity &&
-    typeof item.quantity === "number" &&
     // Description is an optional string, only check type if it is there
     // Else defaults to true, to let the previous boolean expression pass through in the && conditional
     (item.description ? typeof item.description === "string" : true)
