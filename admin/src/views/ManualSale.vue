@@ -237,6 +237,7 @@
                 v-model="item.price"
                 pattern="[\s0-9]+"
                 min="0"
+                step="0.01"
                 placeholder="E.g. 100 for $100 where unit is dollars"
                 class="input"
               />
@@ -416,14 +417,18 @@ export default {
       this.loggedIn = true;
     },
 
-    /** Sums up the price of all items and return price to pay in Dollars */
-    // @todo use this
+    /**
+     * Sums up the price of all items and return price to pay in Dollars
+     * Parses price and quantity into float and int as the HTML input will be stored as string
+     */
     calculateTotalPrice() {
-      return this.items.reduce((acc, cur) => acc + cur.price * cur.quantity, 0);
+      return this.items.reduce(
+        (acc, cur) => acc + parseFloat(cur.price) * parseInt(cur.quantity),
+        0
+      );
     },
 
     pay() {
-      /* @todo Validate the form */
       if (this.items.length === 0) return alert("Error: No items specified");
 
       // If manual sale for a specific customer is selected but user did not login,
@@ -436,7 +441,7 @@ export default {
           `Error: Invalid 'item' in items, all fields are required except description`
         );
 
-      // Let payment component handle the rest of payment flow
+      // Set the payment amount and let payment component handle the rest of payment flow
       this.paymentAmount = this.calculateTotalPrice();
       this.showPaymentModal = true;
     },
@@ -457,8 +462,9 @@ export default {
         // Ensure that quantity is Number instead of String as it came from the HTML input tag
         quantity: parseInt(item.quantity),
 
-        // Save the item price in cents instead of dollars
-        price: item.price * 100,
+        // Ensure that price is Number instead of String as it came from the HTML input tag
+        // Convert price from string to float then convert it from dollars to cents
+        price: parseFloat(item.price) * 100,
       }));
 
       const res = await oof
@@ -470,7 +476,8 @@ export default {
             this.showUserLogin && this.loggedIn ? this.customer.id : undefined,
 
           // Get total price and convert to cents as API requires it in cents
-          totalPrice: this.calculateTotalPrice() * 100,
+          // Remove fractional decimal places if any, as API expects Ints only
+          totalPrice: Math.trunc(this.calculateTotalPrice() * 100),
 
           receiptNumber: this.receiptNumber,
           paymentMethod: this.paymentMethod,
