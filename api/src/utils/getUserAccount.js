@@ -5,14 +5,14 @@ const fs = require("./fs");
 /**
  * Get user document data directly because if userID exists, then the document must exists too
  * @param {DocumentID} userID User's Document ID
- * @returns {Promise<FirebaseFirestore.DocumentData>} Account data
+ * @returns {Promise<FirebaseFirestore.DocumentData | False>} Returns Account data if exists, else false
  */
 const getUserAccount = async (userID) =>
   fs
     .collection("users")
     .doc(userID)
     .get()
-    .then((doc) => ({ id: doc.id, ...doc.data() }));
+    .then((doc) => doc.exists && { id: doc.id, ...doc.data() });
 
 /**
  * Checks if user already have an account, if true, return account data, else undefined

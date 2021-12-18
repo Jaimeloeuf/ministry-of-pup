@@ -22,7 +22,7 @@ router.get(
   asyncWrap(async (req, res) =>
     require("../utils/getUserAccount.js")
       .getUserAccount(req.params.userID)
-      .then((user) => res.status(200).json({ user }))
+      .then((user) => res.status(user ? 200 : 404).json(user ? { user } : {}))
   )
 );
 
