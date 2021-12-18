@@ -4,127 +4,6 @@
       <p class="title">Manual Sale</p>
     </div>
 
-    <div class="column pb-0 mb-0">
-      <p class="subtitle">Items</p>
-    </div>
-
-    <div class="column is-full pt-0 mt-0">
-      <div v-for="(item, i) in items" :key="i">
-        <div class="columns is-multiline is-vcentered mt-2">
-          <div class="column">
-            <!-- Showing item as 1 indexed to make it more human readable -->
-            <p class="subtitle">Item {{ i + 1 }}</p>
-          </div>
-
-          <div class="column is-narrow">
-            <button class="button is-light is-danger" @click="deleteItem(i)">
-              Delete
-            </button>
-          </div>
-
-          <div class="column is-narrow">
-            <!-- Need to use vm.$set method as setting array elements directly is not reactive -->
-            <button
-              class="button is-light is-success"
-              @click="$set(showItems, i, !showItems[i])"
-            >
-              {{ showItems[i] ? "Hide" : "Show" }}
-            </button>
-          </div>
-
-          <div class="column is-full">
-            <hr class="my-0" />
-          </div>
-        </div>
-
-        <div v-if="showItems[i]" class="columns is-multiline is-centered">
-          <div class="column is-full">
-            <label>
-              <b>Item name</b>
-              <br />
-              *Use scanner
-
-              <input
-                type="text"
-                v-model="item.name"
-                placeholder="E.g. Dog collar"
-                class="input"
-              />
-            </label>
-          </div>
-
-          <div class="column is-full">
-            <label>
-              <b>Item description</b>
-
-              <input
-                type="text"
-                v-model="item.description"
-                placeholder="Descibe this item, E.g. 15cm collar"
-                class="input"
-              />
-            </label>
-          </div>
-
-          <div class="column is-full">
-            <label>
-              <b>Quantity</b>
-
-              <input
-                type="number"
-                v-model="item.quantity"
-                pattern="[\s0-9]+"
-                min="0"
-                placeholder="E.g. 3"
-                class="input"
-              />
-            </label>
-          </div>
-
-          <div class="column is-full">
-            <label>
-              <b>Unit Price</b>
-              <br />
-              *Price for 1 unit (Total cost per item is "Quantity x Unit Price")
-
-              <input
-                type="number"
-                v-model="item.price"
-                pattern="[\s0-9]+"
-                min="0"
-                placeholder="E.g. 100 for $100 where unit is dollars"
-                class="input"
-              />
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Only show the line break before the add item button if the last item is opened -->
-    <div class="column is-full" v-if="showItems[showItems.length - 1]">
-      <hr class="my-0" />
-    </div>
-
-    <div class="column is-half">
-      <button
-        @click="resetItems"
-        class="button is-light is-fullwidth is-danger"
-      >
-        Reset Items
-      </button>
-    </div>
-
-    <div class="column is-half">
-      <button @click="addItem" class="button is-light is-fullwidth is-success">
-        Add Item
-      </button>
-    </div>
-
-    <div class="column is-full">
-      <hr class="my-0" />
-    </div>
-
     <div class="column is-full pb-0">
       <b>Customer Type</b>
     </div>
@@ -264,6 +143,127 @@
 
       *Note that no data will be collected, only used for simple item sales, not
       for dog sales / subscriptions.
+    </div>
+
+    <div class="column is-full">
+      <hr class="my-0" />
+    </div>
+
+    <div class="column pb-0 mb-0">
+      <p class="subtitle is-4">items</p>
+    </div>
+
+    <div class="column is-full pt-0 mt-0">
+      <div v-for="(item, i) in items" :key="i">
+        <div class="columns is-multiline is-vcentered mt-2">
+          <div class="column">
+            <!-- Showing item as 1 indexed to make it more human readable -->
+            <b>Item {{ i + 1 }}</b>
+          </div>
+
+          <div class="column is-narrow">
+            <button class="button is-light is-danger" @click="deleteItem(i)">
+              Delete
+            </button>
+          </div>
+
+          <div class="column is-narrow">
+            <!-- Need to use vm.$set method as setting array elements directly is not reactive -->
+            <button
+              class="button is-light is-success"
+              @click="$set(showItems, i, !showItems[i])"
+            >
+              {{ showItems[i] ? "Hide" : "Show" }}
+            </button>
+          </div>
+
+          <div class="column is-full">
+            <hr class="my-0" />
+          </div>
+        </div>
+
+        <div v-if="showItems[i]" class="columns is-multiline is-centered">
+          <div class="column is-full">
+            <label>
+              <b>Item name</b>
+              <br />
+              *Use scanner
+
+              <input
+                type="text"
+                v-model="item.name"
+                placeholder="E.g. Dog collar"
+                class="input"
+              />
+            </label>
+          </div>
+
+          <div class="column is-full">
+            <label>
+              <b>Item description</b>
+
+              <input
+                type="text"
+                v-model="item.description"
+                placeholder="Descibe this item, E.g. 15cm collar"
+                class="input"
+              />
+            </label>
+          </div>
+
+          <div class="column is-full">
+            <label>
+              <b>Quantity</b>
+
+              <input
+                type="number"
+                v-model="item.quantity"
+                pattern="[\s0-9]+"
+                min="0"
+                placeholder="E.g. 3"
+                class="input"
+              />
+            </label>
+          </div>
+
+          <div class="column is-full">
+            <label>
+              <b>Unit Price</b>
+              <br />
+              *Price for 1 unit (Total cost per item is "Quantity x Unit Price")
+
+              <input
+                type="number"
+                v-model="item.price"
+                pattern="[\s0-9]+"
+                min="0"
+                placeholder="E.g. 100 for $100 where unit is dollars"
+                class="input"
+              />
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Only show the line break before the add item button if the last item is opened -->
+    <div class="column is-full" v-if="showItems[showItems.length - 1]">
+      <hr class="my-0" />
+    </div>
+
+    <div class="column is-half">
+      <button
+        @click="resetItems"
+        class="button is-light is-fullwidth is-danger"
+      >
+        Reset Items
+      </button>
+    </div>
+
+    <div class="column is-half">
+      <button @click="addItem" class="button is-light is-fullwidth is-success">
+        Add Item
+      </button>
     </div>
 
     <div class="column is-full">
