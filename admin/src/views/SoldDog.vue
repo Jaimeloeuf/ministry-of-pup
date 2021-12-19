@@ -213,48 +213,201 @@
       <hr class="my-0" style="background-color: #dedede" />
     </div>
 
-    <!-- @todo Change the buttons to, sell (show purchase agreement then sign), payment (click to generate and show QR code), sold (click to finalise everything once payment received and sends invoice to customer) -->
     <div class="column is-full">
-      <button @click="sold" class="button is-light is-fullwidth is-success">
-        Sold
+      <button
+        @click="showSalesAgreementSection"
+        class="button is-light is-fullwidth is-success"
+      >
+        Continue
       </button>
     </div>
 
-    <!-- @todo Tmp added a click to close for the entire modal -->
-    <!-- Might want to better think about the UX and what if they accidentally click somewhere, it shouldnt close, and how to reopen? -->
-    <!-- Maybe only click to close via X, and click to close via complete method call through a button -->
-    <div
-      class="modal"
-      :class="{ 'is-active': showModal }"
-      @click="showModal = false"
-    >
-      <!-- Modal can be closed by clicking any part of the modal background -->
-      <div class="modal-background" @click="showModal = false"></div>
+    <div class="column is-full" v-if="showSalesAgreement">
+      <div class="columns is-multiline is-vcentered box">
+        <p class="title">Sales Contract</p>
 
-      <!-- The whole modal content can be clicked to close the modal -->
-      <div class="modal-content" @click="showModal = false">
-        <span class="image is-square">
-          <img :src="imageDataURI" />
-        </span>
+        <div class="column is-full">
+          <b>Contract Parties</b>
+          <br />
 
-        <!-- Might have a complete button or something depending on the UX flow -->
-        <!--
+          The Contract is entered into between Ministry of Pup LLP and the Buyer
+          <b>{{ buyer_name }}</b>
+          , NRIC <b>{{ buyer_ic }}</b> in respect of the purchase of the
+          following pet as indicated below, on the terms and conditions stated
+          in this Contract. Details of the livestock sold is stated below:
+        </div>
+
+        <div class="column is-full">
+          <b>Livestock Details</b>
+          <table class="table is-bordered is-striped is-narrow is-fullwidth">
+            <tbody>
+              <tr>
+                <td>Dog Name</td>
+                <td>{{ dog.name }}</td>
+              </tr>
+              <tr>
+                <td>Breed</td>
+                <td>{{ dog.breed }}</td>
+              </tr>
+              <tr>
+                <td>Sex</td>
+                <td>{{ dog.sex }}</td>
+              </tr>
+              <tr>
+                <td>Microchip number</td>
+                <td>{{ dog.mcnumber }}</td>
+              </tr>
+              <tr>
+                <td>Date of Birth</td>
+                <td>{{ dog.dob }}</td>
+              </tr>
+              <tr>
+                <td>Purchase Price</td>
+                <td>${{ salePrice }}</td>
+              </tr>
+              <!-- @todo Should we still add deposit here?? -->
+              <tr>
+                <td>Deposit</td>
+                <td>${{ salePrice }}</td>
+              </tr>
+              <tr>
+                <td>Pedigree</td>
+                <td>{{ dog.pedigree }}</td>
+              </tr>
+              <tr>
+                <td>HDB Approved</td>
+                <td>{{ dog.hdb }}</td>
+              </tr>
+              <tr>
+                <td>Country of Import</td>
+                <td>{{ dog.country }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="column is-full content">
+          <p class="subtitle">Conditions of Sale</p>
+          <ol class="ml-5">
+            <li>
+              Deposits for booking/ purchase of any Dog shall be non-refundable
+              in the case when buyer changes his mind on the purchase.
+            </li>
+            <li>
+              The Dog shall remain in the care and ownership of the Seller until
+              the Buyer makes full payment of the purchase price on the
+              collection date.
+            </li>
+            <li>
+              The Seller guarantees that the purchased Dog will not have any
+              life-threatening defects(congenital) for a duration of 7 days
+              starting on the date of this contract. The seller makes no
+              warranty, representation, guarantee, or promise that the Dog is
+              healthy, free of disease or illness or otherwise fit for purpose.
+            </li>
+            <li>
+              To substantiate and submit claim for guarantee under point 3, a
+              complete Vet Report must be produced in 72 hours of receipt from
+              the Buyer's veterinarian. The vet has to state the diagnosis and
+              the likely cause (whether congenital or genetic) relating to the
+              life-threatening defect(s). The Buyers shall bear the cost of
+              obtaining the Vet Report.
+            </li>
+            <li>
+              Upon receipt of Vet Report and assessed by the Seller that the
+              life-threatening defect is congenital, the seller has the rights
+              to either (I) refund only the purchased price upon the return of
+              the Dog; (ii)exchange for another dog of same different breed or
+              top up price difference for other breeds. In such event, the Buyer
+              shall bear all reasonable shipping expenses for the replacement
+              puppy.
+            </li>
+            <li>
+              This guarantee of Life-threatening defects shall not be
+              enforceable if there is a change of ownership or when the Dog is
+              sold to another person.
+            </li>
+            <li>
+              The Seller does not guarantee the color coat of the Dog as the
+              assessment is based on Seller's best ability using the Dog
+              parents' genetic attributes and their color coat at the point of
+              purchase. The sale of pet shall not be invalidated by reason of
+              any misdescription of the Dog and no compensation shall be payable
+              by the seller.
+            </li>
+            <li>
+              The Seller is only responsible for life-threatening defects within
+              the guarantee period as stated above, the Seller shall not
+              responsible for any other defects in relation to the Dog.
+            </li>
+            <li>
+              The Buyer shall in the event of any dispute ("Dispute") arising
+              out of this agreement, or any information in relation to the
+              Dispute shall not be disclosed to any third party.
+            </li>
+            <li>
+              In the event the Buyer dispose of or sell the above-described Dog
+              for any reason, Buyer must notify Seller who will have first
+              option of refusal.
+            </li>
+            <li>
+              The Buyer represents that he shall not use the Dog for breeding
+              purposes.
+            </li>
+            <li>
+              No other warranties or guarantees, expressed or implied, are made
+              under this contract except as stated above.
+            </li>
+          </ol>
+        </div>
+
+        <div class="column is-full"><hr class="my-0" /></div>
+
+        <div class="column is-half is-size-6">
+          <p class="is-size-7">
+            Your signature will be used to generate the
+            <i>Sales Agreement</i> which will be sent to your email. A copy of
+            the document will be stored by Ministry Of Pup, however your
+            standalone Signature <b><i>will not be stored</i></b> anywhere or be
+            used for any other purposes outside of the Sales Agreement.
+            <br />
+            <br />
+
+            Learn more about Ministry Of Pup's
+            <a href="https://ministryofpup.com/dpn.pdf" target="_blank">
+              Privacy & Data Policy
+            </a>
+          </p>
+        </div>
+
+        <div class="column is-half">
+          <canvas
+            id="canvas"
+            width="320"
+            height="130"
+            style="border: 1px solid #000000"
+          />
+        </div>
+
+        <div class="column is-narrow">
+          <!-- Need to add the gaurd clause as signaturePad will be undefined until it is created -->
           <button
-            class="button is-fullwidth is-success is-inverted"
-            aria-label="share"
-            style="border-radius: 0px"
+            @click="signaturePad && signaturePad.clear()"
+            class="button is-light is-danger"
           >
-            Complete
+            Reset Signature
           </button>
-        -->
-      </div>
+        </div>
 
-      <!-- Modal can be closed by clicking the top right X -->
-      <button
-        class="modal-close is-large"
-        aria-label="close"
-        @click="showModal = false"
-      />
+        <div class="column">
+          <button
+            @click="getSig"
+            class="button is-light is-success is-fullwidth"
+          >
+            Continue
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -322,17 +475,63 @@ export default {
       /* Paynow QR code values */
       showModal: false,
       imageDataURI: undefined,
+
+      // showSalesAgreement: false,
+      showSalesAgreement: true,
+      signaturePad: undefined,
+
+      // @todo Temporary values to test out the UI
+      buyer_name: "test",
+      buyer_ic: "T0000000Z",
+      dog: {
+        name: "pedro",
+        mcnumber: 900234681375910,
+        breed: "French Bulldog",
+        sex: "Male",
+        dob: "1st Dec 2021",
+        pedigree: true,
+        hdb: false,
+        country: "UK",
+      },
     };
   },
 
   created() {
     this.userID = this.users[0]?.id;
 
-    // Call action to ensure that all the dogs are loaded
+    // @todo Call action to ensure that all the dogs are loaded
+
+    // Show the sales agreement section and initialize the sales agreement signature pad
+    this.showSalesAgreementSection();
   },
 
   methods: {
     formatCurrency,
+
+    async showSalesAgreementSection() {
+      this.showSalesAgreement = true;
+
+      // Create Signature Pad on created, as this cannot be done in data component since canvas is not yet created there
+      const { default: SignaturePad } = await import("signature_pad");
+      this.signaturePad = new SignaturePad(document.querySelector("canvas"));
+    },
+
+    async getSig() {
+      if (this.signaturePad.isEmpty()) return alert("Missing Signature");
+
+      if (
+        !confirm(
+          "I have read through and agree to the terms and condition of the Sales Agreement"
+        )
+      )
+        return;
+
+      // Convert signature drawing to dataURI to send to API
+      const signatureString = this.signaturePad.toDataURL();
+      console.log("signatureString ", signatureString);
+
+      this.showSalesAgreement = false;
+    },
 
     async login(userID) {
       // TMP setting this to only allow login using phone number
