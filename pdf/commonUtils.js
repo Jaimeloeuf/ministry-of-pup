@@ -19,11 +19,17 @@ const generateHeader = (doc) =>
       40,
       { height: 50 }
     )
-    .fillColor("#444444")
-    .fontSize(10)
-    .text("Ministry Of Pup LLP", 200, 50, { align: "right" })
-    .text("43 Kampong Bahru Rd", 200, 65, { align: "right" })
-    .text("Singapore, 169359", 200, 80, { align: "right" })
+
+    // Set alignment, font size and font color
+    .text("", 200, doc.y)
+    .fontSize(7)
+    .fillColor("#333333")
+
+    .text("Ministry Of Pup LLP", { align: "right" })
+    .text("43 Kampong Bahru Rd S(169359)", { align: "right" })
+    .text("UEN: T17LL2360H", { align: "right" })
+    .text("AVS: AS21J00044", { align: "right" })
+    .text("www.ministryofpup.com", { align: "right" })
     .moveDown();
 
 /**

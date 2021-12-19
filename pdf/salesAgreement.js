@@ -21,7 +21,7 @@ function create(PDFDocument, data) {
 }
 
 function generateReceiptAndCustomerTable(doc, data) {
-  doc.fillColor("#444444").fontSize(22).text("Sales Agreement", 50, 140);
+  doc.fontSize(22).text("Sales Agreement", 50, 140);
   generateHr(doc);
 
   const customerInformationTop = 180;
