@@ -103,19 +103,18 @@ router.post(
     if (customer) transaction.buyer_name = receiptData.customer.name;
     await require("../DL/createTransaction.js")(transaction);
 
-    // @todo Generate a reference link so that user can look up this
-    // `receipt.ministryofpup.com/#/view/${receiptID}`;
+    // Return link for user to access receipt anytime again
     // `https://api.ministryofpup.com/receipt/number/${receiptNumber}`;
 
-    // Generate the receipt
-    const receipt = await generateReceiptString(receiptData);
-
-    // Generate and Email receipt
-    await emailReceipt({
-      email: customer.email,
-      userFname: customer.fname,
-      receipt,
-    });
+    // Only generate and email customer the receipt if they have an account with a valid email
+    if (customer?.email)
+      await generateReceiptString(receiptData).then((receipt) =>
+        emailReceipt({
+          email: customer.email,
+          userFname: customer.fname,
+          receipt,
+        })
+      );
 
     res.status(200).json({});
   })
