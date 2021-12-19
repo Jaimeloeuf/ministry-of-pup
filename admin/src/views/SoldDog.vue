@@ -230,11 +230,12 @@
           <b>Contract Parties</b>
           <br />
 
-          The Contract is entered into between Ministry of Pup LLP and the Buyer
-          <b>{{ buyer_name }}</b>
-          , NRIC <b>{{ buyer_ic }}</b> in respect of the purchase of the
-          following pet as indicated below, on the terms and conditions stated
-          in this Contract. Details of the livestock sold is stated below:
+          The Contract is entered into between the Seller, Ministry of Pup LLP
+          and the Buyer,
+          <b>{{ buyer_name }} </b>, NRIC, <b>{{ buyer_ic }}</b
+          >, in respect of the purchase of the following pet as indicated below,
+          on the terms and conditions stated in this Contract. Details of the
+          livestock sold is stated below:
         </div>
 
         <div class="column is-full">
@@ -316,8 +317,8 @@
             <li>
               Upon receipt of Vet Report and assessed by the Seller that the
               life-threatening defect is congenital, the seller has the rights
-              to either (I) refund only the purchased price upon the return of
-              the Dog; (ii)exchange for another dog of same different breed or
+              to either (i) refund only the purchased price upon the return of
+              the Dog; (ii) exchange for another dog of same different breed or
               top up price difference for other breeds. In such event, the Buyer
               shall bear all reasonable shipping expenses for the replacement
               puppy.
@@ -527,8 +528,8 @@ export default {
         return;
 
       // Convert signature drawing to dataURI to send to API
-      const signatureString = this.signaturePad.toDataURL();
-      console.log("signatureString ", signatureString);
+      const signatureDataURI = this.signaturePad.toDataURL();
+      console.log("signatureDataURI ", signatureDataURI);
 
       this.showSalesAgreement = false;
     },

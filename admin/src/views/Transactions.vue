@@ -103,7 +103,7 @@
             <hr class="my-2" />
 
             <div class="mx-2" v-for="(item, j) in transaction.items" :key="j">
-              <b>{{ item.item }}</b>
+              <b>{{ item.name }}</b>
               <br />
 
               <span v-if="item.description">
