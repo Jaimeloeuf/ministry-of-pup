@@ -1,9 +1,169 @@
 <template>
-  <div class="columns is-multiline is-centered" style="max-width: 30em">
-    <!-- @todo
-          Let user choose which dog was sold 
-          Maybe they can see all dogs, then they select one?
-      -->
+  <div class="columns is-multiline is-centered" style="max-width: 50em">
+    <div class="column is-full">
+      <p class="title">Sold Dog</p>
+    </div>
+
+    <div class="column is-full pb-0">
+      <b>Customer from</b>
+    </div>
+
+    <div class="column is-full">
+      <div class="tabs is-toggle is-centered is-fullwidth">
+        <ul>
+          <li :class="{ 'is-active': show === 'a' }">
+            <a @click="show = 'a'">Appointment</a>
+          </li>
+          <li :class="{ 'is-active': show === 'w' }">
+            <a @click="show = 'w'">Walk In</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="column is-full" v-if="show === 'a'">
+      <b>Sold to</b>
+
+      <!-- Dropdown showing list of names of all users who have a appointment today -->
+      <div class="select is-fullwidth">
+        <select v-on:change="(event) => (userID = event.target.value)">
+          <option hidden disabled selected value>Please select a user</option>
+
+          <!-- Value must be id so that when parsing value in @change handler it can get id instead of the text -->
+          <!-- v-for="user in users" -->
+          <option
+            v-for="user in [{ id: 1, text: 'test' }]"
+            :value="user.id"
+            :key="user.id"
+            :selected="user.id === userID"
+          >
+            {{ user.text }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="column is-full" v-if="show === 'w'">
+      <div class="columns" v-if="!loggedIn">
+        <div class="column is-half">
+          <label>
+            <b>Create Account</b>
+            <br />
+            *User MUST HAVE an account first
+
+            <!-- If user clicks to create account using this link, it will redirect back here once account created -->
+            <router-link
+              :to="{
+                name: 'user-create',
+                query: { redirect: { name: 'sold-dog' } },
+              }"
+              class="button is-light is-success is-fullwidth"
+            >
+              Create Account
+            </router-link>
+          </label>
+        </div>
+
+        <div class="column is-half">
+          <label>
+            <b>Phone Number</b>
+            <br />
+            *Enter number <b>without</b> the +65 prefix
+
+            <div class="field has-addons">
+              <div class="control is-expanded">
+                <input
+                  v-autofocus
+                  type="number"
+                  pattern="[\s0-9]+"
+                  min="0"
+                  v-model="user.number"
+                  placeholder="E.g. 92345678"
+                  class="input"
+                  @keypress.enter="login"
+                />
+              </div>
+              <div class="control">
+                <button class="button is-success" @click="login">Login</button>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Show user details once logged in for user to review, and to go edit details if needed -->
+      <div v-else class="column is-full box">
+        <div class="columns is-multiline is-vcentered">
+          <div class="column is-half">
+            <b>First Name</b>
+            <br />
+
+            {{ user.fname }}
+          </div>
+
+          <div class="column is-half">
+            <b>Last Name</b>
+            <br />
+
+            {{ user.lname }}
+          </div>
+
+          <div class="column is-half">
+            <b>Phone Number</b>
+            *Without the +65 prefix
+            <br />
+
+            {{ user.number }}
+          </div>
+
+          <div class="column is-half">
+            <b>Email</b>
+            *Sales receipt will be sent here
+            <br />
+
+            {{ user.email }}
+          </div>
+
+          <div class="column is-full">
+            <b>Address</b>
+            *Full Address including any unit number
+            <br />
+
+            <span v-if="user.address">{{ user.address }}</span>
+            <i v-else>nil</i>
+          </div>
+
+          <div class="column">
+            <b>Postal Code</b>
+            *Format is 6 digits only
+            <br />
+
+            <span v-if="user.postalCode">{{ user.postalCode }}</span>
+            <i v-else>nil</i>
+          </div>
+
+          <div class="column is-narrow">
+            <button class="button is-light is-danger" @click="loggedIn = false">
+              logout
+            </button>
+          </div>
+
+          <div class="column is-narrow">
+            <router-link
+              :to="{ name: 'user-details', query: { userID: user.id } }"
+              class="button is-light is-warning"
+            >
+              Update Details
+            </router-link>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column">
+      <hr class="my-0" style="background-color: #dedede" />
+    </div>
+
     <div class="column is-full">
       <label>
         <b>Which dog?</b>
@@ -22,13 +182,14 @@
       </label>
     </div>
 
-    <!-- 
-      Show MSRP without auto fill to force admin to type it out again
-      Then if differs from MSRP, warn user before allowing them to proceed
-      This is to prevent user from just clicking sold without updating the price if it has change after negotiation
-    -->
-    <div class="column is-full">
+    <!-- Only show sale price input after dog object has been loaded/selected  -->
+    <div class="column is-full" v-if="dog && dog.msrp">
       <label>
+        <!-- 
+          Show MSRP without auto fill to force admin to type it out again
+          Then if differs from MSRP, warn user before allowing them to proceed
+          This is to prevent user from just clicking sold without updating the price if it has change after negotiation
+        -->
         <b>Final sale price</b> (MSRP is {{ formatCurrency(dog.msrp) }})
         <br />
         <p v-if="salePrice * 100 < dog.msrp">*Less than MSRP</p>
@@ -45,52 +206,6 @@
             'is-warning': salePrice * 100 > dog.msrp,
           }"
         />
-      </label>
-    </div>
-
-    <div class="column is-full pb-0">
-      <b>Customer from</b>
-    </div>
-
-    <div class="column is-full">
-      <div class="tabs is-toggle is-centered is-fullwidth">
-        <ul>
-          <li>
-            <a @click="show = 'a'">Appointment</a>
-          </li>
-          <li>
-            <a @click="show = 'w'">Walk In</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="column is-full" v-if="show === 'a'">
-      <!-- Embed the component here -->
-    </div>
-
-    <div class="column is-full" v-if="show === 'w'">
-      <!-- Embed the component here -->
-    </div>
-
-    <div class="column is-full">
-      <label>
-        <b>Sold to</b>
-        <br />
-
-        <div class="select is-fullwidth">
-          <select v-on:change="updateUserID($event)">
-            <!-- Value must be id so that when parsing value in @change handler it can get id instead of the text -->
-            <option
-              v-for="user in users"
-              :value="user.id"
-              :key="user.id"
-              :selected="user.id === userID"
-            >
-              {{ user.text }}
-            </option>
-          </select>
-        </div>
       </label>
     </div>
 
@@ -145,7 +260,10 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
+
+import { oof } from "simpler-fetch";
+import { getAuthHeader } from "../firebase.js";
 
 import formatCurrency from "../utils/formatCurrency.js";
 
@@ -158,21 +276,46 @@ export default {
     // If a dogID is passed in as a URL query
     // @todo Load the dog using this.dogID after admin choose from the dropdown
     dog() {
-      return this.dogID ? this.$store.state.dog.dogs[this.dogID] : undefined;
+      return this.dogID ? this.$store.state.dog?.dogs[this.dogID] : undefined;
+      // return this.dogID
+      //   ? this.$store.state.dog.dogs[this.dogID]
+      //   : { msrp: 1000000 };
     },
 
+    // Need to trigger action to load dogs from API first
     ...mapState("dog", ["dogs"]),
+    ...mapGetters("appointment", ["appointments"]),
+
+    users() {
+      // By default the 'appointments' getters is already sorted by appointment time in ascending order
+      // Thus the first one, which will be the default user selected in select element will be the 'current' appointment
+      // Map all appointments into an object to use with the select element
+      return this.appointments.map((appt) => ({
+        id: appt.user,
+        text: `${appt.lname} ${appt.fname}`,
+      }));
+    },
   },
 
   data() {
     return {
-      userID: 1,
+      show: undefined,
+      loggedIn: false,
 
-      // @todo Load from DB
-      users: [
-        { id: 1, text: "Zhang Rui" },
-        { id: 2, text: "Cloris" },
-      ],
+      // Will be initialized in the created() hook as this value is initialized with the computed 'users' value
+      userID: undefined,
+
+      user: {
+        fname: undefined,
+        lname: undefined,
+        number: undefined,
+        email: undefined,
+        address: undefined,
+        postalCode: undefined,
+
+        // Exists but not exposed to user to edit
+        id: undefined,
+      },
 
       salePrice: undefined,
 
@@ -182,11 +325,39 @@ export default {
     };
   },
 
+  created() {
+    this.userID = this.users[0]?.id;
+
+    // Call action to ensure that all the dogs are loaded
+  },
+
   methods: {
     formatCurrency,
 
-    updateUserID(event) {
-      this.userID = event.target.value;
+    async login(userID) {
+      // TMP setting this to only allow login using phone number
+      userID = undefined;
+
+      if (!this.user.number) return alert("Missing phone number");
+
+      this.loading = true;
+
+      // Call different API depending on whether a userID is passed in
+      const res = await oof
+        .GET(userID ? `/user/${userID}` : `/user/number/${this.user.number}`)
+        .header(await getAuthHeader())
+        .runJSON();
+
+      this.loading = false;
+
+      // If the API call failed, recursively call itself again if user wants to retry,
+      // And always make sure that this method call ends right here by putting it in a return expression
+      if (!res.ok)
+        return confirm(`Failed to login\nTry again?`) && this.login();
+
+      this.user = res.user;
+      this.userID = res.user.id;
+      this.loggedIn = true;
     },
 
     async showPaynowQR() {
@@ -237,7 +408,17 @@ export default {
 
     async sold() {
       //
-      await this.showPaynowQR();
+      // await this.showPaynowQR();
+
+      this.$router.push({
+        name: "payment",
+        params: {
+          redirect: { name: "sold-dog" },
+        },
+      });
+
+      // Convert to cents before sending back to API
+      this.salePrice * 100;
     },
   },
 };
