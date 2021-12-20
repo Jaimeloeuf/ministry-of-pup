@@ -25,6 +25,14 @@
         </div>
       </div>
 
+      <div class="column is-4">
+        <router-link class="box" :to="{ name: 'guides-new-pawrent' }">
+          <p class="subtitle has-text-weight-bold">
+            How to get started as a Pawrent?
+          </p>
+        </router-link>
+      </div>
+
       <div class="column is-full" />
 
       <div class="column is-one-third">

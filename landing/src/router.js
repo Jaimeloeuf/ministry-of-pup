@@ -24,6 +24,12 @@ const routes = [
   },
 
   {
+    path: "/guides/new-pawrent",
+    name: "guides-new-pawrent",
+    component: () => import("./components/Guides/NewPawrent.vue"),
+  },
+
+  {
     path: "/unsubscribe/:newsletterDocID",
 
     // Call API to unsubscribe and redirect
