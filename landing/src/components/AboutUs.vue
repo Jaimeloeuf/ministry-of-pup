@@ -13,7 +13,7 @@
 
     <div class="column">
       <p>
-        Ministry of Pup is created by Angelynn and Cloris when they took a leap
+        Ministry of Pup is founded by Angelynn and Cloris when they took a leap
         of faith to leave their full time jobs in retail and education in early
         2021, to set up a home for <i>Pawrents</i> to find their <i>Furkids</i>.
         It was not an easy decision to venture into this new journey, but being

@@ -8,7 +8,7 @@
             We are a team of dedicated professionals on a Mission to help you
             find the dog you love!
             <br />
-            We are based in Singapore with a international team and presence.
+            We are based in Singapore with an international team and presence.
           </p>
           <br />
 
