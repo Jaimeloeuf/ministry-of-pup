@@ -24,7 +24,7 @@
           circumstance, flea and tick treatment must be given periodically.
         </li>
         <li>
-          Feed your puppy three times a day. After 12 months and older, you can
+          Feed your puppy three times a day. After 8 months and older, you can
           reduce it to one to two times daily.
         </li>
         <li>
@@ -38,8 +38,8 @@
           timing will be in the evening time or early morning.
         </li>
         <li>
-          Not all dogs are good swimmer. Frenchie bulldog is not a swimmer and
-          require close monitoring and life vest when swimming.
+          Not all dogs are good swimmer. French bulldog cannot swim naturally
+          and require close monitoring and life vest when swimming.
         </li>
         <li>
           Do not share human food with your furkid. The best practice is to give
@@ -47,8 +47,8 @@
         </li>
         <li>
           Different breed of dogs will need different exercise duration and
-          intensity. Esp French bulldog, it need minimal exercise. A stroll in
-          the park will be sufficient for them . Compared to a large breed dog.
+          intensity. Esp French bulldog, it needs minimal exercise. A stroll in
+          the park will be sufficient for them. Compared to a large breed dog.
         </li>
       </ul>
     </div>
