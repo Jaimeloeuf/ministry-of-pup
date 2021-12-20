@@ -24,6 +24,12 @@ const routes = [
   },
 
   {
+    path: "/guides/all",
+    name: "guides-all",
+    component: () => import("./components/Guides/Guides.vue"),
+  },
+
+  {
     path: "/guides/new-pawrent",
     name: "guides-new-pawrent",
     component: () => import("./components/Guides/NewPawrent.vue"),
