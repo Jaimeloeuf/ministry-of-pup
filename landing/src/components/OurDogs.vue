@@ -92,29 +92,29 @@ export default {
     return {
       dogss: [
         {
+          name: "Frank",
+          title: "French Bulldog",
+          imageSrc: "8",
+        },
+        {
           name: "Mochi",
           title: "French Bulldog",
-          imageSrc: "dog",
+          imageSrc: "0",
         },
         {
-          name: "Skyy",
-          title: "French Bulldog",
-          imageSrc: "dog",
+          name: "Ice",
+          title: "Pug",
+          imageSrc: "9",
         },
         {
-          name: "Mochirooooo",
-          title: "Shiba Inu",
-          imageSrc: "dog1",
+          name: "Gus",
+          title: "Pug",
+          imageSrc: "10",
         },
         {
-          name: "Jinny",
-          title: "Shiba Inu",
-          imageSrc: "dog2",
-        },
-        {
-          name: "Oliy",
-          title: "Shiba Inu",
-          imageSrc: "dog2",
+          name: "Kellog",
+          title: "Black Cockapoo",
+          imageSrc: "11",
         },
       ],
     };
