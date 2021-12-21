@@ -91,13 +91,10 @@ function generateItemTable(doc, data) {
     generateHr(doc);
     doc.moveDown(2);
   }
-  doc.moveDown();
 
   generateTableRow(doc, "", "", "Subtotal", "", formatCurrency(data.subtotal));
-  doc.moveDown();
 
   generateTableRow(doc, "", "", "Paid To Date", "", formatCurrency(data.paid));
-  doc.moveDown();
 
   doc.font("Helvetica-Bold");
   generateTableRow(

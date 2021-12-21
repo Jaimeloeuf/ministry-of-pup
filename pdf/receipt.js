@@ -95,7 +95,6 @@ function generateItemTable(doc, data) {
     generateHr(doc);
     doc.moveDown(2);
   }
-  doc.moveDown();
 
   generateTableRow(
     doc,
@@ -105,10 +104,8 @@ function generateItemTable(doc, data) {
     "",
     formatCurrency(data.totalPrice)
   );
-  doc.moveDown();
 
   generateTableRow(doc, "", "", "Paid", "", formatCurrency(data.totalPrice));
-  doc.moveDown();
 
   generateTableRow(doc, "", "", "Payment Method", "", data.paymentMethod);
 }
