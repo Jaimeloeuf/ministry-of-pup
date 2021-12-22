@@ -456,16 +456,33 @@ export default {
 
       // Process the items to ensure that all the price are in cents
       // Create a new item instead of modifying the original object to prevent changing things in the form
-      const items = this.items.map((item) => ({
-        ...item,
+      const items = this.items.map((item) => {
+        // Split up the item price string to the integer and decimal components
+        const itemPrice = item.price.split(".");
 
-        // Ensure that quantity is Number instead of String as it came from the HTML input tag
-        quantity: parseInt(item.quantity),
+        return {
+          ...item,
 
-        // Ensure that price is Number instead of String as it came from the HTML input tag
-        // Convert price from string to float then convert it from dollars to cents
-        price: parseFloat(item.price) * 100,
-      }));
+          // Ensure that quantity is Number instead of String as it came from the HTML input tag
+          quantity: parseInt(item.quantity),
+
+          // How the price is calculated previously. However because of how numbers are represented in JS,
+          // doing this can result in numbers like 202.9999999999997 instead of 2.3
+          // price: parseFloat(item.price) * 100,
+          //
+          // Alternative way is to handle everything in String before parsing string to Int and no floating points
+          // Ensure that price is Number instead of String as it came from the HTML input tag
+          // Convert price from string to float then convert it from dollars to cents
+          price: parseInt(
+            item.price.split(".")[0] +
+              (itemPrice[1]
+                ? itemPrice[1].length === 1
+                  ? itemPrice[1] + "0"
+                  : itemPrice[1]
+                : "00")
+          ),
+        };
+      });
 
       const res = await oof
         .POST("/admin/sale/manual")
