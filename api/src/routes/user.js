@@ -35,7 +35,7 @@ router.get(
   "/number/:number",
   asyncWrap(async (req, res) =>
     require("../utils/getUserAccount.js")
-      .getUserAccountIfExists(req.params.number)
+      .getUserAccountIfExists(parseInt(req.params.number))
       .then((user) => res.status(user ? 200 : 404).json(user ? { user } : {}))
   )
 );
