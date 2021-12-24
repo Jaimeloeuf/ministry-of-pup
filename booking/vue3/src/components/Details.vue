@@ -101,6 +101,26 @@ E.g. Cream coloured / French bulldogs / Female dog"
             </label>
           </div>
 
+          <!-- Friend referral option requires the friend's number too as referral code -->
+          <!-- @todo Allow this to be auto filled through a custom link from friend -->
+          <div class="column is-full" v-if="src === 'FR'">
+            <label>
+              <b>Friend's Phone number (+65)</b>
+              <br />
+              *Enter their number as referral code to get a discount!
+
+              <input
+                class="input"
+                type="tel"
+                pattern="[\s0-9]+"
+                min="10000000"
+                max="99999999"
+                v-model="referralCode"
+                placeholder="E.g. 92345678"
+              />
+            </label>
+          </div>
+
           <div class="column is-half">
             <button class="button is-fullwidth py-5" @click="$router.back">
               Back
@@ -149,6 +169,8 @@ export default {
       number: undefined,
       email: undefined,
       preference: undefined,
+
+      referralCode: undefined,
 
       appointmentSource,
 
@@ -221,6 +243,10 @@ export default {
       // End book method if email is invalid
       if (!this.validateEmail()) return alert("Invalid email");
 
+      // If user choose "Friend Referral" as how they found us, then they must enter their friend's number
+      if (this.src === "FR" && !this.referralCode)
+        return alert("Missing number for Friend Referral");
+
       this.$store.commit("loading", true);
 
       // Only update src in state if user changed it to be something else other than undefined
@@ -234,6 +260,7 @@ export default {
           number,
           email: this.email,
           preference: this.preference || "",
+          referralCode: this.referralCode,
         },
       ]);
 

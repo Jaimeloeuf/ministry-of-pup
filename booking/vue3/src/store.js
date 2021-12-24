@@ -44,6 +44,7 @@ export default createStore({
         number: undefined,
         email: undefined,
         preference: undefined,
+        referralCode: undefined,
       },
 
       // Set after appointment is booked, where this is returned from booking API
@@ -100,7 +101,7 @@ export default createStore({
             src: state.src,
 
             // Add in these fields to submit
-            // fname / lname / number / email / preference
+            // fname / lname / number / email / preference / referralCode
             ...state.details,
           })
           .runJSON();
