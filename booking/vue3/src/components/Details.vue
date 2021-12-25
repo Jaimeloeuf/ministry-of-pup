@@ -121,6 +121,18 @@ E.g. Cream coloured / French bulldogs / Female dog"
             </label>
           </div>
 
+          <!-- @todo For now it shares the referralCode variable, but most likely will be changed -->
+          <div class="column is-full" v-else-if="src === 'OT'">
+            <label>
+              <input
+                class="input"
+                type="text"
+                v-model="referralCode"
+                placeholder="E.g. From the News"
+              />
+            </label>
+          </div>
+
           <div class="column is-half">
             <button class="button is-fullwidth py-5" @click="$router.back">
               Back
