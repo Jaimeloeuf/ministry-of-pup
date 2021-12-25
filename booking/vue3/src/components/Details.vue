@@ -163,6 +163,15 @@ export default {
   name: "Details",
 
   data() {
+    // Defaults to value in store, but let user modify it if needed
+    // If the value is UN for undefined, then convert it to undefined so HTML select tag will show the prompt option
+    // Else use the value as the default one so users do not need to do anything if it is already the same
+    const src =
+      this.$store.state.src === "UN" ? undefined : this.$store.state.src;
+
+    // Checks if the src is a friend referral link
+    const isFriendReferral = src.includes("FR");
+
     return {
       fname: undefined,
       lname: undefined,
@@ -170,14 +179,12 @@ export default {
       email: undefined,
       preference: undefined,
 
-      referralCode: undefined,
+      // If the src is a friend referral link, use FR instead of the full string to work with the dropdown
+      src: isFriendReferral ? "FR" : src,
+      // Split out the referral code if there is, else leave as undefined
+      referralCode: isFriendReferral ? src.split("-")[1] : undefined,
 
       appointmentSource,
-
-      // Defaults to value in store, but let user modify it if needed
-      // If the value is UN for undefined, then convert it to undefined so HTML select tag will show the prompt option
-      // Else use the value as the default one so users do not need to do anything if it is already the same
-      src: this.$store.state.src === "UN" ? undefined : this.$store.state.src,
     };
   },
 
