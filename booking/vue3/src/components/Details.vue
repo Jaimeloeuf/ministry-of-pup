@@ -182,7 +182,8 @@ export default {
       this.$store.state.src === "UN" ? undefined : this.$store.state.src;
 
     // Checks if the src is a friend referral link
-    const isFriendReferral = src.includes("FR");
+    // Use optional chaining operator as src might be undefined
+    const isFriendReferral = src?.includes("FR");
 
     return {
       fname: undefined,
