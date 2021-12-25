@@ -229,8 +229,9 @@ export default {
 
     async book() {
       // Remove starting and trailing whitespaces from string inputs only as name may contain seperating spaces
-      this.fname = this.fname.trim();
-      this.lname = this.lname.trim();
+      // Use optional chaining as fname and lname maybe be undefined, therefore prevents reading trim prop on undefined bug
+      this.fname = this.fname?.trim();
+      this.lname = this.lname?.trim();
 
       // @todo Fix this for iOS
       if (!(this.fname && this.lname && this.number && this.email))
