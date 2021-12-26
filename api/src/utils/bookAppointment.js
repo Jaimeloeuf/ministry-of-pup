@@ -59,6 +59,11 @@ module.exports = async function bookAppointment({
   src = "UN", // Default src where they discovered MOP is UN for undefined if nothing is passed in
   preference = null, // Defaults to no pref, since Firestore throws on undefined
 }) {
+  // Phone number MUST EXISTS to create an user account
+  if (!number) throw new Error("Missing Phone Number, number must be provided");
+  if (typeof number !== "number")
+    throw new Error("Phone Number must be Number type");
+
   // Get the user ID either from an existing account, or from a newly created account
   const userID =
     (await getUserAccountIdIfExists(number)) ||
