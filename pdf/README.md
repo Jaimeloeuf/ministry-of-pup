@@ -1,12 +1,12 @@
-# MOP-Invoice
-Library to generate invoices for MOP services
+# MOP-PDF
+Library to generate PDFs for MOP services, such as receipts, invoices and sales agreements.
 
 
 ## Peer dependencies
 These are the libraries/deps needed to be passed in when using this lib
 
 ### Always needed
-pdfkit: ^0.12.3
+pdfkit: ^13.0.0
 
 ### When using node to convert PDF stream to base64 string
 base64-stream: ^1.0.0
