@@ -57,6 +57,8 @@
 </template>
 
 <script>
+import appointmentSource from "mop-appointment-src";
+
 export default {
   name: "BookingLinks",
 
@@ -89,6 +91,9 @@ export default {
   },
 
   data() {
+    // Remove UNdefined option from appointment source links first
+    delete appointmentSource.UN;
+
     return {
       showCopied: false,
 
@@ -96,30 +101,14 @@ export default {
       showModal: false,
       imageDataURI: undefined,
 
-      // Might load this from DB...?
       links: [
-        {
-          text: "Whatsapp",
-          link: "https://booking.ministryofpup.com/#/?ref=WA",
-        },
-        {
-          text: "Facebook",
-          link: "https://booking.ministryofpup.com/#/?ref=FB",
-        },
-        {
-          text: "Instagram",
-          link: "https://booking.ministryofpup.com/#/?ref=IG",
-        },
-        { text: "WeChat", link: "https://booking.ministryofpup.com/#/?ref=WC" },
-        { text: "Google", link: "https://booking.ministryofpup.com/#/?ref=GG" },
-        {
-          text: "Friend Referral",
-          link: "https://booking.ministryofpup.com/#/?ref=RF",
-        },
-        {
-          text: "Others / Unknown",
-          link: "https://booking.ministryofpup.com/#/?ref=OT",
-        },
+        // Map the appointment source key, values to objects of text and booking link
+        ...Object.entries(appointmentSource).map(([key, text]) => ({
+          text,
+          link: `https://booking.ministryofpup.com/#/?src=${key}`,
+        })),
+
+        // Extra link for the booking site without any tracking / location param
         {
           text: "No Tracker",
           link: "https://booking.ministryofpup.com/",
