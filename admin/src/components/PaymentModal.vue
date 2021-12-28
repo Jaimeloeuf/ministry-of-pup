@@ -40,6 +40,9 @@
             <br />
             <br />
 
+            Amount: {{ formatCurrency(amount) }}
+            <br />
+
             Receipt Number: {{ receiptNumber }}
           </p>
         </div>
@@ -56,7 +59,13 @@
         <div class="box">
           <p class="title">Payment Method: Cash</p>
 
-          <p class="subtitle">Ensure cash payment is received and counted</p>
+          <p class="subtitle">
+            Ensure cash payment is received and counted
+            <br />
+            <br />
+
+            Amount: {{ formatCurrency(amount) }}
+          </p>
         </div>
 
         <button
@@ -80,6 +89,9 @@
             For example, ask customer to write receipt number as transaction
             message in a bank direct transfer transaction.
             <br />
+            <br />
+
+            Amount: {{ formatCurrency(amount) }}
             <br />
 
             Receipt Number: {{ receiptNumber }}
@@ -120,6 +132,8 @@
 </template>
 
 <script>
+import formatCurrency from "../utils/formatCurrency.js";
+
 export default {
   name: "PaymentModal",
 
@@ -135,6 +149,11 @@ export default {
   },
 
   methods: {
+    formatCurrency(amount) {
+      // Convert all from dollars to cents before passing to the formatCurrency utils function
+      return formatCurrency(amount * 100);
+    },
+
     close() {
       this.$emit("close-modal");
     },
