@@ -27,4 +27,11 @@ router.get("/", (req, res) =>
  */
 router.get("/health", (req, res) => res.status(200).send("Ok!"));
 
+/**
+ * Get API version, basically the latest git commit's hash injected by the docker build process
+ * @name GET /version
+ * @returns {Status} 200 and the API's build version, aka the current commit hash
+ */
+router.get("/version", (req, res) => res.status(200).send(process.env.version));
+
 module.exports = router;
