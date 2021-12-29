@@ -310,9 +310,17 @@ export default {
       msrp: undefined,
 
       // @todo Take from DB? Or manually add and embed here?
-      // Breed has to default to the first element of breeds array
+      // Breed defaults to the first element of breeds array, MOP also primarily sell French Bulldogs
       breed: "French Bulldog",
-      breeds: ["French Bulldog", "Shiba Inu"],
+      breeds: [
+        "French Bulldog",
+        "Shiba Inu",
+        "Mame Shiba Inu",
+        "Pug",
+        "Cockapoo",
+        "Pomeranian",
+        "Poodle",
+      ],
 
       // To manually update/add as new dogs of different country of origins are sourced
       originCountry: "UK",
@@ -440,6 +448,9 @@ export default {
 
       // Only use this if `this` is used in the data method
       // Object.assign(this.$data, this.$options.data.apply(this));
+
+      // Reset scroll position to top too to allow admin to quickly enter a new manual sale
+      window.scrollTo(0, 0);
     },
   },
 };
