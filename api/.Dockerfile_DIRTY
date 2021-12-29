@@ -1,3 +1,6 @@
+# Dirty dockerfile build, uses code from local system instead of pulling from github
+# Not usually used unless code needs to be included in build before it is pushed to github
+
 # To build and run the image from this Dockerfile, where x is the name of the worker node's JS file name
 # docker build -t mop-api -f ./.Dockerfile .
 # docker run -d --rm -p 3000:3000 --name mop-api mop-api
@@ -19,18 +22,17 @@ RUN apk --no-cache add git
 # Set the working directory of . from here on to be /app
 WORKDIR /app
 
-# Clone source code from Github for a clean build
-RUN git clone https://github.com/Enkel-Digital/mop-api .
+# Copy both package.json and package-lock.json in for installing dependencies with "npm ci"
+COPY package*.json ./
 
-# Get latest commit hash and export as 'version' environment variable for API to use
-RUN export version=$(git rev-parse HEAD)
+# Copy the service account key over for now as it is needed for GoogleCalendar utils module
+COPY serviceAccountKey.json ./
 
-# @todo Install dependencies with "npm ci" instead?
+# Copy source files into current WORKDIR's src/
+COPY ./src/ ./src/
+
 # Install Node JS dependencies
 RUN npm install
-
-# @todo Copy the service account key over for now as it is needed for GoogleCalendar utils module
-COPY serviceAccountKey.json ./
 
 # Define exposed ports, acting only as documentation. You STILL need to map the ports with -p option with docker run
 EXPOSE 3000
