@@ -90,7 +90,7 @@
     <!-- Sold button will link to SoldDog view with the dog name prefilled -->
     <div class="column is-full">
       <router-link
-        :to="{ name: 'sold-dog', query: { dogID } }"
+        :to="{ name: 'sold-dog', query: { _dogID: dogID } }"
         class="button is-light is-success is-fullwidth"
       >
         Sold

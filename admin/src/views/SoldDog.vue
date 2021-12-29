@@ -175,8 +175,17 @@
         </div>
 
         <div v-else class="select is-fullwidth">
-          <select>
-            <option v-for="(dog, i) in dogs" :key="i">{{ dog.name }}</option>
+          <select v-on:change="(event) => (dogID = event.target.value)">
+            <option hidden disabled selected value>Please select a dog</option>
+
+            <option
+              v-for="dog in dogs"
+              :value="dog.id"
+              :key="dog.id"
+              :selected="dog.id === dogID"
+            >
+              {{ dog.name }}
+            </option>
           </select>
         </div>
       </label>
@@ -222,7 +231,7 @@
       </button>
     </div>
 
-    <div class="column is-full" v-if="showSalesAgreement">
+    <div class="column is-full" v-if="showSalesAgreement && dog">
       <div class="columns is-multiline is-vcentered box">
         <p class="title">Sales Contract</p>
 
@@ -424,21 +433,21 @@ import formatCurrency from "../utils/formatCurrency.js";
 export default {
   name: "SoldDog",
 
-  props: ["dogID"],
+  // A dogID can be passed in as a URL query so that the dog can be pre selected,
+  // however this prop name has an underscore to prevent clashing from the actual dogID data variable
+  props: ["_dogID"],
 
   computed: {
-    // If a dogID is passed in as a URL query
+    // Need to trigger action to load dogs from API first
+    ...mapGetters("dog", ["dogs"]),
+    ...mapGetters("appointment", ["appointments"]),
+
     // @todo Load the dog using this.dogID after admin choose from the dropdown
     dog() {
-      return this.dogID ? this.$store.state.dog?.dogs[this.dogID] : undefined;
-      // return this.dogID
-      //   ? this.$store.state.dog.dogs[this.dogID]
-      //   : { msrp: 1000000 };
+      // Defaults to false so template logic can use the dog value with a v-if gaurd,
+      // to only render UI that relies on properties of a dog object after dog object is loaded.
+      return this.dogID ? this.dogs[this.dogID] : false;
     },
-
-    // Need to trigger action to load dogs from API first
-    ...mapState("dog", ["dogs"]),
-    ...mapGetters("appointment", ["appointments"]),
 
     users() {
       // By default the 'appointments' getters is already sorted by appointment time in ascending order
@@ -453,6 +462,9 @@ export default {
 
   data() {
     return {
+      // dogID defaults to the _dogID prop from router, _dogID is either a valid ID passed to router or undefined if none passed
+      dogID: this._dogID,
+
       show: undefined,
       loggedIn: false,
 
@@ -484,16 +496,6 @@ export default {
       // @todo Temporary values to test out the UI
       buyer_name: "test",
       buyer_ic: "T0000000Z",
-      dog: {
-        name: "pedro",
-        mcnumber: 900234681375910,
-        breed: "French Bulldog",
-        sex: "Male",
-        dob: "1st Dec 2021",
-        pedigree: true,
-        hdb: false,
-        country: "UK",
-      },
     };
   },
 
@@ -501,6 +503,7 @@ export default {
     this.userID = this.users[0]?.id;
 
     // @todo Call action to ensure that all the dogs are loaded
+    this.$store.dispatch("dog/getUnsoldDogs");
 
     // Show the sales agreement section and initialize the sales agreement signature pad
     this.showSalesAgreementSection();
