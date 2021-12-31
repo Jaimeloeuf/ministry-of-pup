@@ -127,6 +127,16 @@
       </button>
     </div>
 
+    <!-- If a redirect prop is passed in, give admin a back button to go back -->
+    <div class="column is-narrow" v-if="redirect">
+      <button
+        @click="$router.back()"
+        class="button is-light is-fullwidth is-warning"
+      >
+        Back
+      </button>
+    </div>
+
     <div class="column">
       <button @click="create" class="button is-light is-fullwidth is-success">
         Create
