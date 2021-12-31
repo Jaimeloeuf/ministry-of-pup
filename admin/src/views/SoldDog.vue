@@ -192,17 +192,17 @@
     </div>
 
     <!-- Only show sale price input after dog object has been loaded/selected  -->
-    <div class="column is-full" v-if="dog && dog.msrp">
+    <div class="column is-full" v-if="dog && dog.srp">
       <label>
         <!-- 
-          Show MSRP without auto fill to force admin to type it out again
-          Then if differs from MSRP, warn user before allowing them to proceed
+          Show SRP without auto fill to force admin to type it out again
+          Then if differs from SRP, warn user before allowing them to proceed
           This is to prevent user from just clicking sold without updating the price if it has change after negotiation
         -->
-        <b>Final sale price</b> (MSRP is {{ formatCurrency(dog.msrp) }})
+        <b>Final sale price</b> (SRP is {{ formatCurrency(dog.srp) }})
         <br />
-        <p v-if="salePrice * 100 < dog.msrp">*Less than MSRP</p>
-        <p v-if="salePrice * 100 > dog.msrp">*More than MSRP</p>
+        <p v-if="salePrice * 100 < dog.srp">*Less than SRP</p>
+        <p v-if="salePrice * 100 > dog.srp">*More than SRP</p>
 
         <input
           type="number"
@@ -211,8 +211,8 @@
           placeholder="E.g. 10000 for $10,000 where unit is dollars"
           class="input"
           :class="{
-            'is-danger': salePrice * 100 < dog.msrp,
-            'is-warning': salePrice * 100 > dog.msrp,
+            'is-danger': salePrice * 100 < dog.srp,
+            'is-warning': salePrice * 100 > dog.srp,
           }"
         />
       </label>

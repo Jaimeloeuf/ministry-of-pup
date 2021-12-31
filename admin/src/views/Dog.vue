@@ -52,7 +52,7 @@
               Cost: {{ formatCurrency(dog.cost) }}
               <br />
 
-              MSRP: {{ formatCurrency(dog.msrp) }}
+              SRP: {{ formatCurrency(dog.srp) }}
               <br />
 
               Sold: {{ dog.sold }}

@@ -182,14 +182,14 @@
 
     <div class="column is-full">
       <label>
-        <b>MSRP</b>
+        <b>SRP</b> Suggested Retail Price
         <br />
         *How much do you plan to sell this dog for?
 
         <!-- Needs to be more than the cost of dog -->
         <input
           type="number"
-          v-model="msrp"
+          v-model="srp"
           pattern="[\s0-9]+"
           :min="cost"
           placeholder="E.g. 10000 for $10,000 where unit is dollars"
@@ -307,7 +307,7 @@ export default {
       hdbApproved: false,
       color: undefined,
       cost: undefined,
-      msrp: undefined,
+      srp: undefined,
 
       // @todo Take from DB? Or manually add and embed here?
       // Breed defaults to the first element of breeds array, MOP also primarily sell French Bulldogs
@@ -420,9 +420,9 @@ export default {
           color: this.color,
 
           // HTML input type="number" returns a String, thus parseInt to Number and * 100 to convert to cents
-          // Cost and MSRP of dog will not be floats as everything is stored in cents in the backend
+          // Cost and SRP of dog will not be floats as everything is stored in cents in the backend
           cost: parseInt(this.cost) * 100,
-          msrp: parseInt(this.msrp) * 100,
+          srp: parseInt(this.srp) * 100,
         })
         .runJSON();
 
