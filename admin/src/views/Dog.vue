@@ -4,65 +4,11 @@
       <p class="subtitle">Dog ID: {{ dogID }}</p>
     </div>
 
-    <div class="column is-full">
-      <div class="card is-horizontal">
-        <div class="card-image" style="width: 50%">
-          <figure class="image">
-            <img :src="dog.imgSrc[0]" />
-          </figure>
-        </div>
-
-        <div class="card-stacked">
-          <div class="card-content">
-            <div>
-              <p class="title is-4">{{ dog.name }}</p>
-              <p class="subtitle is-6">
-                {{ dog.breed }}
-              </p>
-            </div>
-
-            <br />
-
-            <div>
-              Sex: {{ dog.sex === "m" ? "Male" : "Female" }}
-              <br />
-
-              D.O.B: {{ new Date(dog.dob).toLocaleDateString() }}
-              <br />
-
-              Available from:
-              {{ new Date(dog.availablityDate).toLocaleDateString() }}
-              <br />
-
-              Microchip: {{ dog.mc }}
-              <br />
-
-              Pedigree: {{ dog.pedigree }}
-              <br />
-
-              HDB Approved: {{ dog.hdbApproved }}
-              <br />
-
-              Color: {{ dog.color }}
-              <br />
-
-              Country of Origin: {{ dog.originCountry }}
-              <br />
-
-              Cost: {{ formatCurrency(dog.cost) }}
-              <br />
-
-              SRP: {{ formatCurrency(dog.srp) }}
-              <br />
-
-              Sold: {{ dog.sold }}
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="column is-full" v-if="dog">
+      <DogCard :dog="dog" />
     </div>
 
-    <div class="column is-full">
+    <div class="column is-full" v-if="dog">
       <p class="subtitle">Copy Writing</p>
       {{ dog.description }}
     </div>
@@ -108,12 +54,14 @@
 import { oof } from "simpler-fetch";
 import { getAuthHeader } from "../firebase.js";
 
-import formatCurrency from "../utils/formatCurrency.js";
+import DogCard from "../components/DogCard.vue";
 
 export default {
   name: "Dog",
 
   props: ["dogID"],
+
+  components: { DogCard },
 
   created() {
     // Trigger the action to load this specific dogs from API if it does not already exists in store
@@ -127,8 +75,6 @@ export default {
   },
 
   methods: {
-    formatCurrency,
-
     // Load all appointments for this specific dog
     async loadAppointments() {
       return alert("Not implemented yet, scheduled for v2");
@@ -149,22 +95,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.card.is-horizontal {
-  display: flex;
-}
-.card.is-horizontal .card-image {
-  width: 100%;
-  height: 100%;
-}
-.card.is-horizontal .card-stacked {
-  flex-direction: column;
-  flex: 1 1 auto;
-  display: flex;
-  position: relative;
-}
-.card.is-horizontal .card-stacked .card-content {
-  flex-grow: 1;
-}
-</style>
