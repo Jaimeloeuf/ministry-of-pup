@@ -89,10 +89,11 @@
             <br />
             *Full Address including unit number if any
 
-            <textarea
+            <input
+              type="text"
               v-model="user.address"
-              class="textarea"
               placeholder="E.g. BLK 123 Tampines Street 7, #06-23"
+              class="input"
             />
           </label>
         </div>
