@@ -12,27 +12,103 @@
       <div class="tabs is-toggle is-centered is-fullwidth">
         <ul>
           <li :class="{ 'is-active': show === 'a' }">
-            <a @click="show = 'a'">Appointment</a>
+            <a @click="switchUserView('a')">Appointment</a>
           </li>
           <li :class="{ 'is-active': show === 'w' }">
-            <a @click="show = 'w'">Walk In</a>
+            <a @click="switchUserView('w')">Walk In</a>
           </li>
         </ul>
       </div>
     </div>
 
-    <div class="column is-full" v-if="show === 'a'">
+    <!-- Show user details once logged in for user to review, and to go edit details if needed -->
+    <div class="column is-full box" v-if="loggedIn">
+      <div class="columns is-multiline is-vcentered">
+        <div class="column is-half">
+          <b>First Name</b>
+          <br />
+
+          {{ user.fname }}
+        </div>
+
+        <div class="column is-half">
+          <b>Last Name</b>
+          <br />
+
+          {{ user.lname }}
+        </div>
+
+        <div class="column is-half">
+          <b>Phone Number</b>
+          *Without the +65 prefix
+          <br />
+
+          {{ user.number }}
+        </div>
+
+        <div class="column is-half">
+          <b>Email</b>
+          *Sales receipt will be sent here
+          <br />
+
+          {{ user.email }}
+        </div>
+
+        <div class="column is-full">
+          <b>Address</b>
+          *Full Address including any unit number
+          <br />
+
+          <span v-if="user.address">{{ user.address }}</span>
+          <i v-else>nil</i>
+        </div>
+
+        <div class="column">
+          <b>Postal Code</b>
+          *Format is 6 digits only
+          <br />
+
+          <span v-if="user.postalCode">{{ user.postalCode }}</span>
+          <i v-else>nil</i>
+        </div>
+
+        <div class="column is-narrow">
+          <button class="button is-light is-danger" @click="logout">
+            logout
+          </button>
+        </div>
+
+        <div class="column is-narrow">
+          <router-link
+            :to="{ name: 'user-details', query: { userID: user.id } }"
+            class="button is-light is-warning"
+          >
+            Update Details
+          </router-link>
+        </div>
+      </div>
+    </div>
+
+    <div class="column is-full" v-else-if="show === 'a'">
       <b>Sold to</b>
 
       <!-- Dropdown showing list of names of all users who have a appointment today -->
       <div class="select is-fullwidth">
-        <select v-on:change="(event) => (userID = event.target.value)">
-          <option hidden disabled selected value>Please select a user</option>
+        <select
+          ref="appointmentUserDropdown"
+          v-on:change="
+            (event) =>
+              (userID = event.target.value) && login(event.target.value)
+          "
+        >
+          <option hidden disabled selected value="defaultPrompt">
+            Please select a user
+          </option>
 
           <!-- Value must be id so that when parsing value in @change handler it can get id instead of the text -->
-          <!-- v-for="user in users" -->
+          <!-- @todo v-for="user in users" -->
           <option
-            v-for="user in [{ id: 1, text: 'test' }]"
+            v-for="user in [{ id: 'VdDl8IEvkw1CQnGi3PlL', text: 'JJ' }]"
             :value="user.id"
             :key="user.id"
             :selected="user.id === userID"
@@ -43,8 +119,8 @@
       </div>
     </div>
 
-    <div class="column is-full" v-if="show === 'w'">
-      <div class="columns" v-if="!loggedIn">
+    <div class="column is-full" v-else-if="show === 'w'">
+      <div class="columns">
         <div class="column is-half">
           <label>
             <b>Create Account</b>
@@ -80,82 +156,16 @@
                   v-model="user.number"
                   placeholder="E.g. 92345678"
                   class="input"
-                  @keypress.enter="login"
+                  @keypress.enter="login()"
                 />
               </div>
               <div class="control">
-                <button class="button is-success" @click="login">Login</button>
+                <button class="button is-success" @click="login()">
+                  Login
+                </button>
               </div>
             </div>
           </label>
-        </div>
-      </div>
-
-      <!-- Show user details once logged in for user to review, and to go edit details if needed -->
-      <div v-else class="column is-full box">
-        <div class="columns is-multiline is-vcentered">
-          <div class="column is-half">
-            <b>First Name</b>
-            <br />
-
-            {{ user.fname }}
-          </div>
-
-          <div class="column is-half">
-            <b>Last Name</b>
-            <br />
-
-            {{ user.lname }}
-          </div>
-
-          <div class="column is-half">
-            <b>Phone Number</b>
-            *Without the +65 prefix
-            <br />
-
-            {{ user.number }}
-          </div>
-
-          <div class="column is-half">
-            <b>Email</b>
-            *Sales receipt will be sent here
-            <br />
-
-            {{ user.email }}
-          </div>
-
-          <div class="column is-full">
-            <b>Address</b>
-            *Full Address including any unit number
-            <br />
-
-            <span v-if="user.address">{{ user.address }}</span>
-            <i v-else>nil</i>
-          </div>
-
-          <div class="column">
-            <b>Postal Code</b>
-            *Format is 6 digits only
-            <br />
-
-            <span v-if="user.postalCode">{{ user.postalCode }}</span>
-            <i v-else>nil</i>
-          </div>
-
-          <div class="column is-narrow">
-            <button class="button is-light is-danger" @click="loggedIn = false">
-              logout
-            </button>
-          </div>
-
-          <div class="column is-narrow">
-            <router-link
-              :to="{ name: 'user-details', query: { userID: user.id } }"
-              class="button is-light is-warning"
-            >
-              Update Details
-            </router-link>
-          </div>
         </div>
       </div>
     </div>
@@ -512,9 +522,8 @@ export default {
   },
 
   created() {
-    this.userID = this.users[0]?.id;
-
-    // @todo Call action to ensure that all the dogs are loaded
+    // Call action to ensure that all the dogs are loaded
+    // @todo Not very efficient to reload all data again
     this.$store.dispatch("dog/getUnsoldDogs");
 
     // Show the sales agreement section and initialize the sales agreement signature pad
@@ -523,6 +532,14 @@ export default {
 
   methods: {
     formatCurrency,
+
+    switchUserView(view) {
+      // Before switching the view, user should be logged out first,
+      // so the user details wont continue to show even after switching to other user mode
+      this.logout();
+
+      this.show = view;
+    },
 
     async showSalesAgreementSection() {
       this.showSalesAgreement = true;
@@ -550,10 +567,8 @@ export default {
     },
 
     async login(userID) {
-      // TMP setting this to only allow login using phone number
-      userID = undefined;
-
-      if (!this.user.number) return alert("Missing phone number");
+      // If no userID passed in, assume it is login by number, so check if phone number is valid
+      if (!userID && !this.user.number) return alert("Missing phone number");
 
       this.loading = true;
 
@@ -573,6 +588,22 @@ export default {
       this.user = res.user;
       this.userID = res.user.id;
       this.loggedIn = true;
+    },
+
+    logout() {
+      // Hides the logged in user details card UI
+      this.loggedIn = false;
+
+      // Reset the userID so that the UI wont show the user after logging out
+      this.userID = undefined;
+
+      // Set number to undefined just in case the number is set already during login
+      this.user.number = undefined;
+
+      // This resets the dropdown, only if the dropdown is rendered
+      // Sets the value back to the default prompt option
+      if (this.$refs.appointmentUserDropdown)
+        this.$refs.appointmentUserDropdown.value = "defaultPrompt";
     },
 
     async showPaynowQR() {
