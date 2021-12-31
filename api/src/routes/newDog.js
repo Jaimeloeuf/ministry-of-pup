@@ -33,7 +33,7 @@ router.post(
       originCountry,
       color,
       cost,
-      msrp,
+      srp,
     } = req.body;
 
     // Lazily load this module, will be cached after first load
@@ -58,7 +58,7 @@ router.post(
       originCountry,
       color,
       cost,
-      msrp,
+      srp,
 
       // The dog is not sold by default
       // Needs to have a sold: false field because cannot filter for != if the field does not exists
