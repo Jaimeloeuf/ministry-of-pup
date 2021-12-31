@@ -439,7 +439,7 @@ export default {
 
   computed: {
     // Need to trigger action to load dogs from API first
-    ...mapGetters("dog", ["dogs"]),
+    ...mapState("dog", ["dogs"]),
     ...mapGetters("appointment", ["appointments"]),
 
     // @todo Load the dog using this.dogID after admin choose from the dropdown
