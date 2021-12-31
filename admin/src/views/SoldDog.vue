@@ -165,16 +165,51 @@
     </div>
 
     <div class="column is-full">
-      <label>
+      <!-- Show dog details once dog object is loaded -->
+      <div v-if="dog">
+        <DogCard :dog="dog" />
+        <br />
+
+        <!-- Simply resets the selected dogID to show the dropdown list again for admin to select again -->
+        <button
+          class="button is-light is-warning is-fullwidth"
+          @click="dogID = undefined"
+        >
+          Change Dog
+        </button>
+        <br />
+
+        <label>
+          <!-- 
+          Show SRP without auto fill to force admin to type it out again
+          Then if differs from SRP, warn user before allowing them to proceed
+          This is to prevent user from just clicking sold without updating the price if it has change after negotiation
+        -->
+          <b>Final sale price</b> (SRP is {{ formatCurrency(dog.srp) }})
+          <br />
+          <p v-if="salePrice * 100 < dog.srp">*Less than SRP</p>
+          <p v-if="salePrice * 100 > dog.srp">*More than SRP</p>
+
+          <input
+            type="number"
+            v-model="salePrice"
+            pattern="[\s0-9]+"
+            placeholder="E.g. 10000 for $10,000 where unit is dollars"
+            class="input"
+            :class="{
+              'is-danger': salePrice * 100 < dog.srp,
+              'is-warning': salePrice * 100 > dog.srp,
+            }"
+          />
+        </label>
+      </div>
+
+      <!-- Show dropdown list of available dog names if no dog is selected yet -->
+      <label v-else>
         <b>Which dog?</b>
         <br />
 
-        <!-- @todo Show the card like in Dog.vue -->
-        <div v-if="dog">
-          <p class="subtitle is-3">{{ dog.name }}</p>
-        </div>
-
-        <div v-else class="select is-fullwidth">
+        <div class="select is-fullwidth">
           <select v-on:change="(event) => (dogID = event.target.value)">
             <option hidden disabled selected value>Please select a dog</option>
 
@@ -188,33 +223,6 @@
             </option>
           </select>
         </div>
-      </label>
-    </div>
-
-    <!-- Only show sale price input after dog object has been loaded/selected  -->
-    <div class="column is-full" v-if="dog && dog.srp">
-      <label>
-        <!-- 
-          Show SRP without auto fill to force admin to type it out again
-          Then if differs from SRP, warn user before allowing them to proceed
-          This is to prevent user from just clicking sold without updating the price if it has change after negotiation
-        -->
-        <b>Final sale price</b> (SRP is {{ formatCurrency(dog.srp) }})
-        <br />
-        <p v-if="salePrice * 100 < dog.srp">*Less than SRP</p>
-        <p v-if="salePrice * 100 > dog.srp">*More than SRP</p>
-
-        <input
-          type="number"
-          v-model="salePrice"
-          pattern="[\s0-9]+"
-          placeholder="E.g. 10000 for $10,000 where unit is dollars"
-          class="input"
-          :class="{
-            'is-danger': salePrice * 100 < dog.srp,
-            'is-warning': salePrice * 100 > dog.srp,
-          }"
-        />
       </label>
     </div>
 
@@ -430,12 +438,16 @@ import { getAuthHeader } from "../firebase.js";
 
 import formatCurrency from "../utils/formatCurrency.js";
 
+import DogCard from "../components/DogCard.vue";
+
 export default {
   name: "SoldDog",
 
   // A dogID can be passed in as a URL query so that the dog can be pre selected,
   // however this prop name has an underscore to prevent clashing from the actual dogID data variable
   props: ["_dogID"],
+
+  components: { DogCard },
 
   computed: {
     // Need to trigger action to load dogs from API first
