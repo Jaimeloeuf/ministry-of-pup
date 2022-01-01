@@ -55,9 +55,19 @@ module.exports = async function bookAppointment({
   fname,
   lname,
   number,
-  email,
-  src = "UN", // Default src where they discovered MOP is UN for undefined if nothing is passed in
-  preference = null, // Defaults to no pref, since Firestore throws on undefined
+
+  // Email can be null although it is not ideal
+  // This should only be null if customer books an appointment through messaging directly
+  email = null,
+
+  // Default src where they discovered MOP is UN for undefined if nothing is passed in
+  src = "UN",
+
+  // Referral Code
+  referralCode,
+
+  // Defaults to no pref, since Firestore throws on undefined
+  preference = null,
 }) {
   // Phone number MUST EXISTS to create an user account
   if (!number) throw new Error("Missing Phone Number, number must be provided");
@@ -112,13 +122,14 @@ module.exports = async function bookAppointment({
 
   const timeString = getTimeString(time);
 
-  // Send user a email to confirm with them that their appointment has been scheduled successfully
-  await sendMail.send({
-    to: email,
-    from: process.env.notificationEmailSender,
-    subject: `Ministry Of Pup: Appointment booked for ${timeString}!`,
-    text: emailString(fname, time, timeString, appointmentID),
-  });
+  // If a email is provided, send user a email to notify them that their appointment has been scheduled successfully
+  if (email)
+    await sendMail.send({
+      to: email,
+      from: process.env.notificationEmailSender,
+      subject: `Ministry Of Pup: Appointment for ${fname} on ${timeString}!`,
+      text: emailString(fname, time, timeString, appointmentID),
+    });
 
   // @todo Use sendgrid's dynamic template
   // await sendMail.send({
