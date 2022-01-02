@@ -86,6 +86,22 @@
             Update Details
           </router-link>
         </div>
+
+        <div class="column is-full mt-6">
+          <label>
+            Your IC is needed for a dog purchase, your IC
+            <b>will only be used and stored in the sales agreement</b> and no
+            where else. Feel free to request to see our data protection and
+            privacy policy to review it first.
+
+            <input
+              type="text"
+              v-model="buyer_ic"
+              placeholder="E.g. S1234567A"
+              class="input"
+            />
+          </label>
+        </div>
       </div>
     </div>
 
@@ -245,11 +261,11 @@
         @click="showSalesAgreementSection"
         class="button is-light is-fullwidth is-success"
       >
-        Continue
+        Confirm details & Show purchase agreement
       </button>
     </div>
 
-    <div class="column is-full" v-if="showSalesAgreement && dog">
+    <div class="column is-full" v-if="showSalesAgreement">
       <div class="columns is-multiline is-vcentered box">
         <p class="title">Sales Contract</p>
 
@@ -259,7 +275,8 @@
 
           The Contract is entered into between the Seller, Ministry of Pup LLP
           and the Buyer,
-          <b>{{ buyer_name }} </b>, NRIC, <b>{{ buyer_ic }}</b
+          <b>{{ `${user.lname} ${user.fname}` }} </b>, NRIC,
+          <b>{{ buyer_ic }}</b
           >, in respect of the purchase of the following pet as indicated below,
           on the terms and conditions stated in this Contract. Details of the
           livestock sold is stated below:
@@ -504,6 +521,7 @@ export default {
         // Exists but not exposed to user to edit
         id: undefined,
       },
+      buyer_ic: undefined,
 
       salePrice: undefined,
 
@@ -511,13 +529,9 @@ export default {
       showModal: false,
       imageDataURI: undefined,
 
-      // showSalesAgreement: false,
-      showSalesAgreement: true,
+      // showSalesAgreement: true,
+      showSalesAgreement: false,
       signaturePad: undefined,
-
-      // @todo Temporary values to test out the UI
-      buyer_name: "test",
-      buyer_ic: "T0000000Z",
     };
   },
 
@@ -525,9 +539,6 @@ export default {
     // Call action to ensure that all the dogs are loaded
     // @todo Not very efficient to reload all data again
     this.$store.dispatch("dog/getUnsoldDogs");
-
-    // Show the sales agreement section and initialize the sales agreement signature pad
-    this.showSalesAgreementSection();
   },
 
   methods: {
@@ -541,6 +552,7 @@ export default {
       this.show = view;
     },
 
+    // Show sales agreement section and initialize the sales agreement signature pad
     async showSalesAgreementSection() {
       this.showSalesAgreement = true;
 
@@ -599,6 +611,9 @@ export default {
 
       // Set number to undefined just in case the number is set already during login
       this.user.number = undefined;
+
+      // Reset buyer_ic in case something is entered after login
+      this.buyer_ic = undefined;
 
       // This resets the dropdown, only if the dropdown is rendered
       // Sets the value back to the default prompt option
