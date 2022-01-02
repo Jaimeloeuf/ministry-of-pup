@@ -300,7 +300,7 @@
               </tr>
               <tr>
                 <td>Microchip number</td>
-                <td>{{ dog.mcnumber }}</td>
+                <td>{{ dog.mc }}</td>
               </tr>
               <tr>
                 <td>Date of Birth</td>
@@ -321,18 +321,18 @@
               </tr>
               <tr>
                 <td>HDB Approved</td>
-                <td>{{ dog.hdb }}</td>
+                <td>{{ dog.hdbApproved }}</td>
               </tr>
               <tr>
                 <td>Country of Import</td>
-                <td>{{ dog.country }}</td>
+                <td>{{ dog.originCountry }}</td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <div class="column is-full content">
-          <p class="subtitle">Conditions of Sale</p>
+          <b>Conditions of Sale</b>
           <ol class="ml-5">
             <li>
               Deposits for booking/ purchase of any Dog shall be non-refundable

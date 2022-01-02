@@ -324,7 +324,7 @@ export default {
 
       // To manually update/add as new dogs of different country of origins are sourced
       originCountry: "UK",
-      countries: ["UK"],
+      countries: ["UK", "Japan", "Australia"],
 
       // Files array and firebase cloud storage values
       files: [],
