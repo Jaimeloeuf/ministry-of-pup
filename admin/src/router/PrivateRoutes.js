@@ -131,6 +131,11 @@ const routes = [
     meta: { Auth_requirements: AuthType.private },
   },
   {
+    path: "/privacy-policy",
+    name: "privacy-policy",
+    component: () => import("@/views/PrivacyPolicy.vue"),
+  },
+  {
     path: "/analytics/appointment-source",
     name: "analytics-appointment-source",
     component: () => import("@/views/AppointmentSource.vue"),

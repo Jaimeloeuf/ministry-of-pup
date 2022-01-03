@@ -223,6 +223,14 @@
           </router-link>
         </li>
         <li>
+          <router-link
+            :to="{ name: 'privacy-policy' }"
+            :class="{ 'is-active': $route.name === 'privacy-policy' }"
+          >
+            Privacy Policy
+          </router-link>
+        </li>
+        <li>
           <a>Manage Team</a>
           <ul>
             <li><a>Members</a></li>
