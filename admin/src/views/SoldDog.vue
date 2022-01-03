@@ -91,8 +91,10 @@
           <label>
             Your IC is needed for a dog purchase, your IC
             <b>will only be used and stored in the sales agreement</b> and no
-            where else. Feel free to request to see our data protection and
-            privacy policy to review it first.
+            where else. Learn more about Ministry Of Pup's
+            <router-link :to="{ name: 'privacy-policy' }">
+              Privacy & Data Policy
+            </router-link>
 
             <input
               type="text"
@@ -419,9 +421,9 @@
             <br />
 
             Learn more about Ministry Of Pup's
-            <a href="https://ministryofpup.com/dpn.pdf" target="_blank">
+            <router-link :to="{ name: 'privacy-policy' }">
               Privacy & Data Policy
-            </a>
+            </router-link>
           </p>
         </div>
 
