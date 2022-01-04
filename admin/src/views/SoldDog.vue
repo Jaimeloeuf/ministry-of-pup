@@ -451,10 +451,30 @@
             @click="getSig"
             class="button is-light is-success is-fullwidth"
           >
-            Continue
+            I Agree to the Sales Agreement
           </button>
         </div>
       </div>
+    </div>
+
+    <div class="column is-full">
+      <Payment
+        v-model="paymentMethod"
+        v-on:payment-complete="paymentComplete"
+        v-on:close-modal="showPaymentModal = false"
+        :showPaymentModal="showPaymentModal"
+        :amount="salePrice"
+        :receiptNumber="receiptNumber"
+      />
+    </div>
+
+    <div class="column">
+      <button
+        @click="showPaymentModal = true"
+        class="button is-light is-success is-fullwidth"
+      >
+        Pay
+      </button>
     </div>
   </div>
 </template>
@@ -466,8 +486,10 @@ import { oof } from "simpler-fetch";
 import { getAuthHeader } from "../firebase.js";
 
 import formatCurrency from "../utils/formatCurrency.js";
+import generateReceiptNumber from "../utils/generateReceiptNumber.js";
 
 import DogCard from "../components/DogCard.vue";
+import Payment from "../components/Payment.vue";
 
 export default {
   name: "SoldDog",
@@ -476,7 +498,7 @@ export default {
   // however this prop name has an underscore to prevent clashing from the actual dogID data variable
   props: ["_dogID"],
 
-  components: { DogCard },
+  components: { DogCard, Payment },
 
   computed: {
     // Need to trigger action to load dogs from API first
@@ -527,13 +549,17 @@ export default {
 
       salePrice: undefined,
 
-      /* Paynow QR code values */
-      showModal: false,
-      imageDataURI: undefined,
-
       // showSalesAgreement: true,
       showSalesAgreement: false,
       signaturePad: undefined,
+
+      /* payment stuff */
+      // Pre-generate the receipt number so that the same one can be accessed by both paylah QR and payment complete method
+      receiptNumber: generateReceiptNumber(),
+
+      showPaymentModal: false,
+      paymentAmount: undefined,
+      paymentMethod: undefined,
     };
   },
 
@@ -623,52 +649,6 @@ export default {
         this.$refs.appointmentUserDropdown.value = "defaultPrompt";
     },
 
-    async showPaynowQR() {
-      const { default: PaynowQR } = await import("paynowqr");
-
-      // The QR Code should only be valid until tmr
-      // 24 hours * 60 minutes * 60 seconds * 1000 milliseconds = 86400000 milliseconds
-      const d = new Date(new Date().getTime() + 86400000);
-      const month = d.getMonth() + 1;
-      const pmonth = month > 9 ? month : `0${month}`; // Month with 0 padding
-      const date = d.getDate();
-      const pdate = date > 9 ? date : `0${date}`; // Date with 0 padding
-      const expiryDate = `${d.getFullYear()}${pmonth}${pdate}`;
-
-      //Create a PaynowQR object
-      const paynowQRCode = new PaynowQR({
-        // Required: UEN of company, hard coded in as it will not be changed
-        uen: "T17LL2360H",
-
-        // Specify amount of to pay, this is just the amount keyed in
-        amount: this.salePrice,
-
-        // Set an expiry date for the Paynow QR code (YYYYMMDD, e.g. "20211231")
-        // If omitted, defaults to 5 years from current time.
-        expiry: expiryDate,
-
-        // @todo Call and API to generate a invoice reference number to track later (possibly have the paynow bank app on the ipad)
-        // Reference number for Paynow Transaction. Useful if you need to track payments for recouncilation.
-        refNumber: "MOP-INV-1001",
-
-        // company: "ACME Pte Ltd.", // Company name to embed in the QR code. Optional.
-      });
-
-      const QRCode = await import("qrcode");
-
-      // Generate the QR code image data URL and set onto component data value
-      this.imageDataURI = await QRCode.toDataURL(
-        // Generate UTF-8 string from the qrcode to generate the QR code data URL for the image tag
-        paynowQRCode.output(),
-
-        // Use high error resistance rate of ~ 30%
-        { errorCorrectionLevel: "H" }
-      );
-
-      // Open up modal to show the QR Code image
-      this.showModal = true;
-    },
-
     async sold() {
       //
       // await this.showPaynowQR();
@@ -683,6 +663,12 @@ export default {
       // Convert to cents before sending back to API
       this.salePrice * 100;
     },
+
+    async paymentComplete() {
+      
+    },
+
+    // @todo Add reset method
   },
 };
 </script>
