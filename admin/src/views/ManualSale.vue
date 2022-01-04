@@ -272,23 +272,7 @@
     </div>
 
     <div class="column is-full">
-      <label>
-        <b>Payment Method</b>
-        <br />
-
-        <div class="select is-fullwidth">
-          <select v-on:change="(event) => (paymentMethod = event.target.value)">
-            <option
-              v-for="method in availablePaymentMethods"
-              :value="method"
-              :key="method"
-              :selected="method === paymentMethod"
-            >
-              {{ method }}
-            </option>
-          </select>
-        </div>
-      </label>
+      <PaymentMethodSelect v-model="paymentMethod" />
     </div>
 
     <div class="column is-full">
@@ -321,6 +305,7 @@ import { oof } from "simpler-fetch";
 import { getAuthHeader } from "../firebase.js";
 
 import generateReceiptNumber from "../utils/generateReceiptNumber.js";
+import PaymentMethodSelect from "../components/PaymentMethodSelect.vue";
 import PaymentModal from "../components/PaymentModal.vue";
 
 /**
@@ -343,7 +328,7 @@ const isItemInvalid = (item) =>
 export default {
   name: "ManualSale",
 
-  components: { PaymentModal },
+  components: { PaymentModal, PaymentMethodSelect },
 
   data() {
     return {
@@ -363,10 +348,7 @@ export default {
         postalCode: undefined,
       },
 
-      // Defaults to paynow payment method
-      paymentMethod: "Paynow",
-      availablePaymentMethods: ["Paynow", "Credit Card", "Cash", "Others"],
-
+      paymentMethod: undefined,
       showPaymentModal: false,
       paymentAmount: undefined,
 
