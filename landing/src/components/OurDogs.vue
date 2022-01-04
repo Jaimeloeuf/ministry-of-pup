@@ -13,21 +13,21 @@
 
     <div class="columns is-multiline">
       <!-- At most 4 per row, as 12/3==4 -->
-      <div v-for="(dogs, i) in dogss" :key="i" class="column is-3">
+      <div v-for="(dog, i) in dogs" :key="i" class="column is-3">
         <div class="card">
           <div class="card-image">
             <figure class="image">
               <!-- Use native lazy loading, on none supported devices, fallback to eager loading. -->
               <img
                 loading="lazy"
-                :src="require(`../assets/dog_pics/${dogs.imageSrc}.jpg`)"
-                :alt="dogs.name"
+                :src="require(`../assets/dog_pics/${dog.imageSrc}.jpg`)"
+                :alt="dog.name"
               />
 
               <!-- <div>
                 <ul>
                   <li
-                    v-for="(social, i) in dogs.social"
+                    v-for="(social, i) in dog.social"
                     :key="i"
                     v-html="social.icon"
                   >
@@ -38,8 +38,8 @@
             </figure>
           </div>
           <div class="card-content">
-            <p class="title">{{ dogs.name }}</p>
-            <p class="subtitle">{{ dogs.title }}</p>
+            <p class="title">{{ dog.name }}</p>
+            <p class="subtitle">{{ dog.title }}</p>
           </div>
         </div>
       </div>
@@ -90,7 +90,7 @@ export default {
 
   data() {
     return {
-      dogss: [
+      dogs: [
         {
           name: "Frank",
           title: "French Bulldog",
@@ -100,11 +100,6 @@ export default {
           name: "Mochi",
           title: "French Bulldog",
           imageSrc: "0",
-        },
-        {
-          name: "Ice",
-          title: "Pug",
-          imageSrc: "9",
         },
         {
           name: "Gus",
