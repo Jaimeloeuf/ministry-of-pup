@@ -272,7 +272,14 @@
     </div>
 
     <div class="column is-full">
-      <PaymentMethodSelect v-model="paymentMethod" />
+      <Payment
+        v-model="paymentMethod"
+        v-on:payment-complete="paymentComplete"
+        v-on:close-modal="showPaymentModal = false"
+        :showPaymentModal="showPaymentModal"
+        :amount="paymentAmount"
+        :receiptNumber="receiptNumber"
+      />
     </div>
 
     <div class="column is-full">
@@ -288,15 +295,6 @@
         Pay
       </button>
     </div>
-
-    <PaymentModal
-      v-if="showPaymentModal"
-      v-on:close-modal="showPaymentModal = false"
-      v-on:payment-complete="paymentComplete"
-      :amount="paymentAmount"
-      :paymentMethod="paymentMethod"
-      :receiptNumber="receiptNumber"
-    />
   </div>
 </template>
 
@@ -305,8 +303,7 @@ import { oof } from "simpler-fetch";
 import { getAuthHeader } from "../firebase.js";
 
 import generateReceiptNumber from "../utils/generateReceiptNumber.js";
-import PaymentMethodSelect from "../components/PaymentMethodSelect.vue";
-import PaymentModal from "../components/PaymentModal.vue";
+import Payment from "../components/Payment.vue";
 
 /**
  * Simple validation function for an item object
@@ -328,7 +325,7 @@ const isItemInvalid = (item) =>
 export default {
   name: "ManualSale",
 
-  components: { PaymentModal, PaymentMethodSelect },
+  components: { Payment },
 
   data() {
     return {
