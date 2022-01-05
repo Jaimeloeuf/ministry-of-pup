@@ -5,6 +5,7 @@
       <HeroBody />
     </section>
 
+    <Testimonials id="Testimonials" />
     <OurDogs id="OurDogs" />
     <FAQ id="FAQ" />
     <ContactUs id="ContactUs" />
@@ -14,6 +15,7 @@
 
 <script>
 import HeroBody from "@/components/HeroBody";
+import Testimonials from "@/components/Testimonials";
 import OurDogs from "@/components/OurDogs";
 import ContactUs from "@/components/ContactUs";
 import AboutUs from "@/components/AboutUs";
@@ -23,6 +25,7 @@ export default {
   name: "Home",
   components: {
     HeroBody,
+    Testimonials,
     OurDogs,
     ContactUs,
     AboutUs,
