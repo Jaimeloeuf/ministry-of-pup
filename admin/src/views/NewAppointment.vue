@@ -1,5 +1,5 @@
 <template>
-  <div class="columns is-multiline is-centered" style="max-width: 30em">
+  <div class="columns is-multiline is-centered" style="max-width: 40em">
     <div class="column is-full">
       <label>
         <b>Appointment time</b>
@@ -80,6 +80,11 @@
     <div class="column is-full">
       <label>
         <b>Email</b>
+        *Leave blank if customer not willing to provide their email
+        <br />
+        Try, "I need your email too to send you the appointment confirmation
+        email, with direction details and links in case you need to reschedule
+        or cancel your appointment"
 
         <input
           class="input"
@@ -206,33 +211,38 @@ export default {
       this.fname = this.fname.trim();
       this.lname = this.lname.trim();
 
-      if (!(this.fname && this.lname && this.number && this.email))
-        return alert("All fields are required except 'preference'");
+      if (!(this.fname && this.lname && this.number))
+        return alert("All fields are required except email and preference");
 
       // End book method if number is invalid
       const number = this.validNumber();
       if (!number) return;
 
-      // End book method if email is invalid
-      if (!this.validateEmail()) return alert("Invalid email");
+      // End book method if an email is provided and it is invalid
+      if (this.email && !this.validateEmail()) return alert("Invalid email");
+
+      const postData = {
+        // Time needs to be in Milliseconds
+        time: new Date(this.time).getTime(),
+
+        number,
+        fname: this.fname,
+        lname: this.lname,
+        preference: this.preference,
+
+        // If admin manually keys in an appointment, it means that the platform where user talked to admin,
+        // is considered both where the user found out about MOP and also where the user booked from
+        src: this.src,
+      };
+
+      // Only attach email property if email is provided
+      // If send with undefined, API will error out as cannot call firestore with undefined
+      if (this.email) postData.email = this.email;
 
       const res = await oof
         .POST("/admin/appointment/book")
         .header(await getAuthHeader())
-        .data({
-          // Time needs to be in Milliseconds
-          time: new Date(this.time).getTime(),
-
-          fname: this.fname,
-          lname: this.lname,
-          number,
-          email: this.email,
-          preference: this.preference,
-
-          // If admin manually keys in an appointment, it means that the platform where user talked to admin,
-          // is considered both where the user found out about MOP and also where the user booked from
-          src: this.src,
-        })
+        .data(postData)
         .runJSON();
 
       // If the API call failed, recursively call itself again if user wants to retry,
