@@ -427,12 +427,6 @@ export default {
 
     // @todo Validate all required input is entered
     async paymentComplete() {
-      // Give admin a confirmation dialog box to ensure it is not accidentally clicked on
-      if (!confirm("Payment Completed?")) return;
-
-      // Close payment modal before processing
-      this.showPaymentModal = false;
-
       // Process the items to ensure that all the price are in cents
       // Create a new item instead of modifying the original object to prevent changing things in the form
       const items = this.items.map((item) => {

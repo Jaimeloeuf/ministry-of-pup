@@ -207,7 +207,15 @@ export default {
     },
 
     paymentComplete() {
-      this.$emit("payment-complete");
+      // Give admin a confirmation dialog box to ensure it is not accidentally clicked on
+      // Only emit payment complete event for Parent view if admin confirms, else do nothing
+      if (confirm("Payment Completed?")) {
+        // Emit close-modal event to rely on Parent view's event handler to close modal,
+        // So that Parent view's payment complete event handler do not need to manually close modal again
+        this.$emit("close-modal");
+
+        this.$emit("payment-complete");
+      }
     },
 
     async showPaynowQR() {
