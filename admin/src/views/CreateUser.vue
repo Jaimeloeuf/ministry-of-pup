@@ -87,7 +87,7 @@
           <label>
             <b>Address</b>
             <br />
-            *Full Address including unit number if any
+            *Full Address including unit number if any but without 'Singapore'
 
             <input
               type="text"

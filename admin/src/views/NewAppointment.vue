@@ -12,6 +12,7 @@
     </div>
 
     <div class="column is-full">
+      <!-- If user books an appointment by messaging the admins, it will be the platform (WA/FB/IG/WC) where they sent the message -->
       <label>
         <b>Appointment Source</b>
         <br />
