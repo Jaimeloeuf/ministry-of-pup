@@ -8,7 +8,7 @@ Location
 https://goo.gl/maps/Jw9MpEPx9cuuGVGDA
 
 Carpark slots are available! Here is a map of the carpark slot and how to get to us from there.
-https://goo.gl/maps/UAcHeKbps4EyH4by7
+https://goo.gl/maps/tC2LnVXhAQ1dYSWE8
 
 Nearest MRT is Outram Park (EW16 / NE3)
 
