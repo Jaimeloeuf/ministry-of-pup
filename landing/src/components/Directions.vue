@@ -24,7 +24,7 @@
       <div class="column is-one-third">
         <a
           class="button is-light is-fullwidth"
-          href="https://www.google.com/maps/dir/Spooner+Rd,+Spooner+Road+Car+Park/Kampong+Bahru+Road,+Ministry+Of+Pup,+Singapore/@1.2759977,103.8330299,18z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x31da19183da9ae63:0x13ee4ee50ca38fa4!2m2!1d103.8350133!2d1.2756761!1m5!1m1!1s0x31da193871b0cab7:0x8e0ceb011e0b9fbe!2m2!1d103.836264!2d1.276847!3e2"
+          href="https://goo.gl/maps/tC2LnVXhAQ1dYSWE8"
           target="_blank"
         >
           Driving (How to come from carpark)
