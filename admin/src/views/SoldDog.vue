@@ -649,26 +649,59 @@ export default {
         this.$refs.appointmentUserDropdown.value = "defaultPrompt";
     },
 
-    async sold() {
-      //
-      // await this.showPaynowQR();
-
-      this.$router.push({
-        name: "payment",
-        params: {
-          redirect: { name: "sold-dog" },
-        },
-      });
-
-      // Convert to cents before sending back to API
-      this.salePrice * 100;
-    },
-
     async paymentComplete() {
-      
+      // Convert to cents before sending back to API
+      // Can convert to cents by multiplying by 100 directly as salePrice will be an int
+      const price = parseInt(this.salePrice) * 100;
+
+      const res = await oof
+        .POST("/admin/pet/sold")
+        .header(await getAuthHeader())
+        .data({
+          userID: this.userID,
+          receiptNumber: this.receiptNumber,
+          paymentMethod: this.paymentMethod,
+
+          // Items is generated and there is only 1 because a Dog Sale receipt will only have 1 item of that dog
+          items: [
+            {
+              name: this.dog.breed,
+              description: `Microchip Number: ${this.dog.mc}`,
+              quantity: 1,
+
+              price,
+            },
+          ],
+
+          // Since there is only 1 item, the total price is therefore just the same price as that item
+          totalPrice: price,
+        })
+        .runJSON();
+
+      // If the API call failed, recursively call itself again if user wants to retry,
+      // And always make sure that this method call ends right here by putting it in a return expression
+      if (!res.ok)
+        return (
+          confirm(`Error: \n${res.error}\n\nTry again?`) &&
+          this.paymentComplete()
+        );
+
+      alert("Sale processed!");
+
+      // Might want to insert the sale data into store for a transactions view so it does not have to load from API again
+
+      this.reset();
     },
 
-    // @todo Add reset method
+    reset() {
+      // Reset the data values to its original state by re-running the data method
+      // https://github.com/vuejs/vue/issues/702#issuecomment-308991548
+      // https://www.carlcassar.com/articles/reset-data-in-a-vue-component
+      Object.assign(this.$data, this.$options.data());
+
+      // Reset scroll position to top too to allow admin to quickly enter a new manual sale
+      window.scrollTo(0, 0);
+    },
   },
 };
 </script>
