@@ -209,26 +209,74 @@
 
         <label>
           <!-- 
-          Show SRP without auto fill to force admin to type it out again
-          Then if differs from SRP, warn user before allowing them to proceed
-          This is to prevent user from just clicking sold without updating the price if it has change after negotiation
-        -->
+            Show SRP without auto fill to force admin to type it out again
+            Then if differs from SRP, warn user before allowing them to proceed
+            This is to prevent user from just clicking sold without updating the price if it has change after negotiation
+          -->
           <b>Final sale price</b> (SRP is {{ formatCurrency(dog.srp) }})
           <br />
+          <!-- @todo parseInt for salePrice? -->
           <p v-if="salePrice * 100 < dog.srp">*Less than SRP</p>
           <p v-if="salePrice * 100 > dog.srp">*More than SRP</p>
 
-          <input
-            type="number"
-            v-model="salePrice"
-            pattern="[\s0-9]+"
-            placeholder="E.g. 10000 for $10,000 where unit is dollars"
-            class="input"
-            :class="{
-              'is-danger': salePrice * 100 < dog.srp,
-              'is-warning': salePrice * 100 > dog.srp,
-            }"
-          />
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <!-- @todo parseInt for salePrice? -->
+              <input
+                type="number"
+                v-model="salePrice"
+                pattern="[\s0-9]+"
+                placeholder="E.g. 10000 for $10,000 where unit is dollars"
+                class="input"
+                :class="{
+                  'is-danger': salePrice * 100 < dog.srp,
+                  'is-warning': salePrice * 100 > dog.srp,
+                }"
+              />
+            </div>
+            <div class="control">
+              <button
+                class="button is-light is-danger"
+                @click="salePrice = undefined"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        </label>
+        <br />
+        <br />
+
+        <label>
+          <b>Deposit</b> (leave blank if customer paying full amount
+          immediately)
+          <br />
+          <p v-if="parseInt(deposit) >= parseInt(salePrice)">
+            *Deposit amount must be less than sale price
+          </p>
+
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <input
+                type="number"
+                v-model="deposit"
+                pattern="[\s0-9]+"
+                placeholder="E.g. 2000 for $2000 where unit is dollars"
+                class="input"
+                :class="{
+                  'is-danger': deposit > salePrice,
+                }"
+              />
+            </div>
+            <div class="control">
+              <button
+                class="button is-light is-danger"
+                @click="deposit = undefined"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
         </label>
       </div>
 
@@ -312,10 +360,9 @@
                 <td>Purchase Price</td>
                 <td>${{ salePrice }}</td>
               </tr>
-              <!-- @todo Should we still add deposit here?? -->
-              <tr>
+              <tr v-if="deposit">
                 <td>Deposit</td>
-                <td>${{ salePrice }}</td>
+                <td>${{ deposit }}</td>
               </tr>
               <tr>
                 <td>Pedigree</td>
@@ -463,7 +510,7 @@
         v-on:payment-complete="paymentComplete"
         v-on:close-modal="showPaymentModal = false"
         :showPaymentModal="showPaymentModal"
-        :amount="salePrice"
+        :amount="deposit ? deposit : salePrice"
         :receiptNumber="receiptNumber"
       />
     </div>
@@ -548,6 +595,7 @@ export default {
       buyer_ic: undefined,
 
       salePrice: undefined,
+      deposit: undefined,
 
       // showSalesAgreement: true,
       showSalesAgreement: false,
