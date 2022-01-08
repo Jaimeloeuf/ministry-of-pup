@@ -110,11 +110,12 @@ module.exports = async function bookAppointment({
     email,
     preference,
 
-    // src: Where did the user find out about MOP? Did they find out about us via IG Ads? Or through a friend?
-    // If user books an appointment by messaging the admins,
-    // This will default to the platform (WA/FB/IG/WC/OT) where they sent the message,
-    // But users can change that in the booking app where we ask them how did they find out about us
+    // Where did the user find out about MOP? Did they find out about us via IG Ads? Or through a friend?
     src,
+
+    // Referral Code is only added if it is available
+    // This can be a friend's phone number or it can also be a code that we give out for affiliate marketing
+    referralCode,
 
     // Store time appointment was created in unix seconds (this is the time of the server executing the code)
     createdAt: unixseconds(),
