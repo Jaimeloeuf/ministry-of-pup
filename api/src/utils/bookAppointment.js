@@ -94,7 +94,7 @@ module.exports = async function bookAppointment({
     // description: `AppointmentID: ${appointmentID}\nPortal's link`,
   });
 
-  const { id: appointmentID } = await fs.collection("appointments").add({
+  const appointmentData = {
     user: userID,
 
     // Although the `googleCalendarEventID` can be used as the doc ID for appointments, it is safer because,
