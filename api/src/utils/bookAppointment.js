@@ -113,13 +113,17 @@ module.exports = async function bookAppointment({
     // Where did the user find out about MOP? Did they find out about us via IG Ads? Or through a friend?
     src,
 
-    // Referral Code is only added if it is available
-    // This can be a friend's phone number or it can also be a code that we give out for affiliate marketing
-    referralCode,
-
     // Store time appointment was created in unix seconds (this is the time of the server executing the code)
     createdAt: unixseconds(),
-  });
+  };
+
+  // Referral Code is only added if it is available
+  // This can be a friend's phone number or it can also be a code that we give out for affiliate marketing
+  if (referralCode) appointmentData.referralCode = referralCode;
+
+  const { id: appointmentID } = await fs
+    .collection("appointments")
+    .add(appointmentData);
 
   const timeString = getTimeString(time);
 
