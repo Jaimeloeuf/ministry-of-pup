@@ -19,12 +19,7 @@ const currentDatetime = now.toISOString().slice(0, 16);
 export default {
   name: "DatetimePicker",
 
-  props: {
-    value: {
-      default: currentDatetime,
-    },
-    step: {},
-  },
+  props: ["value", "step"],
 
   data() {
     return { currentDatetime };
@@ -33,7 +28,7 @@ export default {
   // Emit default datetime on mounted, so if parent component uses v-model with a undefined variable by default,
   // it will get the default datetime value immediately even if user choose not to edit the date time.
   mounted() {
-    this.$emit("input", currentDatetime);
+    if (!this.value) this.$emit("input", currentDatetime);
   },
 
   methods: {

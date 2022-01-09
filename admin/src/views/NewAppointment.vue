@@ -4,10 +4,12 @@
       <label>
         <b>Appointment time</b>
         <br />
-        *Please enter date time in 30 minute intervals, e.g. 1pm / 130pm
+        *Please enter date time in 1 hour intervals, e.g. 1pm / 2pm
 
-        <!-- 30 min intervals -->
-        <DatetimePicker v-model="time" :min="today" step="1800" />
+        <!-- Defaults to today 12am, but allow admin to back fill appointments to get the data -->
+        <!-- @todo API to detect that if the date is before today, to skip sending out email and notifications, just save to DB -->
+        <!-- @todo Only allow 1 hour intervals -->
+        <DatetimePicker v-model="time" :min="today" step="3600" />
       </label>
     </div>
 
@@ -110,19 +112,15 @@ E.g. Cream coloured / French bulldogs / Female dog"
       </label>
     </div>
 
-    <div class="column">
-      <hr class="my-0" style="background-color: #dedede" />
-    </div>
-
-    <div class="column is-full">
-      <button @click="book" class="button is-light is-fullwidth is-success">
-        Book Appointment
+    <div class="column is-narrow">
+      <button @click="reset" class="button is-light is-fullwidth is-danger">
+        Reset form
       </button>
     </div>
 
-    <div class="column is-full">
-      <button @click="reset" class="button is-light is-fullwidth is-danger">
-        Reset form
+    <div class="column">
+      <button @click="book" class="button is-light is-fullwidth is-success">
+        Add Appointment
       </button>
     </div>
   </div>
@@ -148,7 +146,7 @@ export default {
     return {
       today,
 
-      time: today,
+      time: `${today}T00:00`,
 
       fname: undefined,
       lname: undefined,
