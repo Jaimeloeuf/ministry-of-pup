@@ -10,7 +10,7 @@ async function generateReceiptString(
   streamTarget = new (require("base64-stream").Base64Encode)()
 ) {
   // Lazily import dependencies to keep serverless container start up time fast as this is not always used
-  let stream = require("mop-invoice")
+  let stream = require("mop-pdf")
     .receipt(require("pdfkit"), receiptData)
     .pipe(streamTarget);
 
