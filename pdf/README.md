@@ -1,4 +1,4 @@
-# MOP-PDF
+# PDF
 Library to generate PDFs for MOP services, such as receipts, invoices and sales agreements.
 
 

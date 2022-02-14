@@ -1,4 +1,4 @@
-# mop-landing
+# landing
 MOP's landing page
 
 ## Project setup
@@ -31,9 +31,3 @@ npm run lint
     ```
 - Uncomment the prerendering build process code in vue.config.js
 - Uncomment the event dispatching code in main.js
-
-## License, Author and Contributing
-This project is developed and made available under the [AGPL v3 License](./LICENSE)  
-If you have any questions, contact us via [email](mailto:developer@enkeldigital.com)  
-Authors:
-- [JJ](https://github.com/Jaimeloeuf)

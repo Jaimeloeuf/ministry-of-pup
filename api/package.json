@@ -13,7 +13,6 @@
     "start": "node ./src/index.js"
   },
   "author": "JJ",
-  "license": "AGPL-3.0-or-later",
   "dependencies": {
     "@enkeldigital/firebase-admin": "^0.1.0",
     "@sendgrid/mail": "^7.4.7",
