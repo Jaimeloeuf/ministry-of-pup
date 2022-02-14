@@ -1,0 +1,104 @@
+# Global file variable definitions
+@hostname = http://localhost
+@port = 3000
+@host = {{hostname}}:{{port}}
+@firebaseAuthApiKey = AIzaSyDjnXdzvj9hAwMnNfb6ogHbAPuMIx-q8uM
+@authHeader = Authorization: Bearer {{getAuth.response.body.idToken}}
+
+### Although users can only use phone auth from the frontend, email/password auth method is enabled for testing locally.
+### Create api_tester account if none
+# @name signUp
+POST https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={{firebaseAuthApiKey}}
+content-type: application/json
+
+{
+    "email": "api_tester@ministryofpup.com",
+    "password": "securePassword",
+    "returnSecureToken": true,
+}
+
+
+### Get auth credentials
+# @name getAuth
+POST https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{firebaseAuthApiKey}}
+content-type: application/json
+
+{
+    "email": "api_tester@ministryofpup.com",
+    "password": "securePassword",
+    "returnSecureToken": true,
+}
+
+### ping
+GET {{host}}/
+
+### Health probe
+GET {{host}}/health
+
+### Get up to the first 5 available dates through the booking app
+### An available date is defined as a date from the earliest available booking date that includes at least 1 free time slot
+### Returns an array of 5 timeslots object with a time stamp denoting start of a date (00:00) and available timeslots of that date
+# @name availableTimeslots
+GET {{host}}/appointment/available/date
+
+### Get up to 5 available dates after the specified timestamp through the booking app
+### An available date is defined as a date from the earliest available booking date that includes at least 1 free time slot
+### Returns an array of 5 timeslots object with a time stamp denoting start of a date (00:00) and available timeslots of that date
+GET {{host}}/appointment/available/date?after=1633881600000
+
+### Book a new appointment through the booking app
+### This action will also create a new account for the user in the "user doubling DB"
+# @name bookAppointment
+POST {{host}}/appointment/book
+content-type: application/json
+
+{
+    "dogID": 1,
+    "time": {{availableTimeslots.response.body.timeslots[2].timeslots[0]}},
+    "fname": "John",
+    "lname": "Smith",
+    "number": "+6599999999",
+    "email": "JJ@enkeldigital.com"
+}
+
+### Reschedule an appointment with a link sent to user either via confirmation or reminder emails/SMS
+### POST Request instead of PUT to not have to deal with CORS preflight request for PUT
+# POST {{host}}/appointment/reschedule/:appointmentID/:time
+POST {{host}}/appointment/reschedule/{{bookAppointment.response.body.appointmentID}}/{{availableTimeslots.response.body.timeslots[2].timeslots[0]}}
+content-type: application/json
+
+### Cancel an appointment with a link sent to user either via confirmation or reminder emails/SMS
+### POST Request instead of DELETE to not have to deal with CORS preflight request for DELETE
+# POST {{host}}/appointment/cancel/:appointmentID
+POST {{host}}/appointment/cancel/{{bookAppointment.response.body.appointmentID}}
+content-type: application/json
+
+### Get all appointments that have yet to start
+GET {{host}}/admin/appointment/scheduled
+{{authHeader}}
+
+### Get all appointments
+POST {{host}}/admin/appointment/all
+{{authHeader}}
+
+### Get user details
+# GET /user/:userID
+GET {{host}}/user/rtx6weOBe6x9OtNsylij
+{{authHeader}}
+
+### Get user details
+# GET /user/:userID
+GET {{host}}/user/number/88888888
+{{authHeader}}
+
+### Update available time slots for booking
+POST {{host}}/admin/available/update
+{{authHeader}}
+content-type: application/json
+
+{
+    "available": {
+        "1": [{ "start": 1, "end": 2 }]
+    },
+    "blockedDates": "1"
+}

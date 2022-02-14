@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Ministry Of Pup</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="title" content="Ministry Of Pup">
+  <meta name="description" content="Premium Quality Puppies Boutique in Singapore">
+  <meta name="keywords" content="puppies, dogs, singapore, french bulldog, shiba inu">
+  <meta name="author" content="Enkel Digital">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+
+  <!-- Load font awesome kit -->
+  <!-- Get your own kit code from https://fontawesome.com/ to use the kit code version rather then loading all icons -->
+  <!-- <script src="https://kit.fontawesome.com/KIT_CODE_HERE.js" crossorigin="anonymous"></script> -->
+  <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" crossorigin="anonymous"></script>
+
+  <!--
+    Load the recaptcha library asynchronously to not block the main JS app from loading
+    <script src="https://www.google.com/recaptcha/api.js?render=6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z" async defer>
+
+    However that causes an issue where the library might be loaded after the main app runs
+    And if running the cancel appointment app, and the cancel appointment effect runs, it will fail as grecaptcha is not defined yet
+    Thus this is loaded synchronously asap
+
+    Here is a solution to use if the library should be loaded asynchronously inside the JS module
+    https://github.com/AurityLab/recaptcha-v3
+  -->
+  <script src="https://www.google.com/recaptcha/api.js?render=6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z"></script>
+
+  <!-- Global top level styles -->
+  <style>
+    html {
+      /* @todo Test this out as this is not supported on all platforms */
+      scroll-behavior: smooth;
+    }
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    ::-webkit-scrollbar {
+      display: none;
+      /* remove scrollbar space */
+      width: 0px;
+      /* optional: just make scrollbar invisible */
+      background: transparent;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    body {
+      /* IE and Edge */
+      -ms-overflow-style: none;
+      /* Firefox */
+      scrollbar-width: none;
+    }
+
+    /* Moves recaptcha badge/icon to the left to prevent being blocked by the book appointment FAB */
+    .grecaptcha-badge {
+      width: 70px !important;
+      overflow: hidden !important;
+      transition: all 0.3s ease !important;
+      left: 4px !important;
+    }
+
+    .grecaptcha-badge:hover {
+      width: 256px !important;
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but Ministry Of Pup doesn't work properly without JavaScript enabled.
+      Please enable it to continue.</strong>
+  </noscript>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
+</html>

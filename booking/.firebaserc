@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "ministryofpup-ekd"
+  },
+  "targets": {
+    "ministryofpup-ekd": {
+      "hosting": {
+        "ministryofpup-booking": [
+          "ministryofpup-booking"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "build": "(cd vue3 && npm run build);",
+    "deploy-firebase-hosting": "firebase deploy --only hosting:ministryofpup-booking",
+    "deploy": "npm run build && npm run deploy-firebase-hosting"
+  }
+}

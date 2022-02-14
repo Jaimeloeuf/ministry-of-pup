@@ -1,0 +1,16 @@
+{
+  "name": "mop-appointment-src",
+  "version": "0.0.3",
+  "description": "Mapping of appointment src abbrevation to full name",
+  "main": "index.json",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Enkel-Digital/mop-appointment-src.git"
+  },
+  "author": "JJ",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Enkel-Digital/mop-appointment-src/issues"
+  },
+  "homepage": "https://github.com/Enkel-Digital/mop-appointment-src#readme"
+}
