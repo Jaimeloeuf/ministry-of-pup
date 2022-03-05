@@ -166,7 +166,7 @@ export default {
       // And always make sure that this method call ends right here by putting it in a return expression
       if (!res.ok)
         return (
-          confirm(`Error: \n${res.error}\n\nTry again?`) && this.getSchedule
+          confirm(`Error: \n${res.error}\n\nTry again?`) && this.getSchedule()
         );
 
       this.openingTime = res.openingTime;
