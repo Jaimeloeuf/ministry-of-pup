@@ -39,8 +39,6 @@ router.get(
 );
 
 /**
- * @todo Test API
- *
  * Set opening time
  * @name POST /admin/schedule/opening
  * @returns Sucess indicator
@@ -49,7 +47,8 @@ router.post(
   "/opening",
   express.json(),
   asyncWrap(async (req, res) => {
-    // @todo NEED TO SET THE FULL ARRAY back if not will get overwritten
+    // NEED TO SET THE FULL ARRAY back if not will get overwritten
+    // Because firebase update will replace an entire existing array
     await fs.collection("openingHours").doc("openingHours").update(req.body);
 
     res.status(200).json({});

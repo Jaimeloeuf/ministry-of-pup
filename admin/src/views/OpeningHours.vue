@@ -1,5 +1,9 @@
 <template>
-  <div class="columns is-multiline is-centered" style="max-width: 50em">
+  <div v-if="loading" class="column is-full">
+    <p class="title">... Loading ...</p>
+  </div>
+
+  <div v-else class="columns is-multiline is-centered" style="max-width: 50em">
     <div class="column is-full content mb-0">
       <p class="subtitle mb-1">See & Set Opening Hours</p>
 
@@ -16,10 +20,12 @@
       </ul>
     </div>
 
-    <div class="column is-full" v-for="(day, dayInt) in days" :key="dayInt">
+    <!-- Loop 7 times with dayInt value being 1 to 7 inclusive -->
+    <div class="column is-full" v-for="dayInt in 7" :key="dayInt">
       <div class="columns is-multiline">
         <div class="column is-full">
-          <p class="subtitle">{{ day }}</p>
+          <!-- -1 because dayInt goes from 1 to 7 inclusive -->
+          <p class="subtitle">{{ days[dayInt - 1] }}</p>
         </div>
 
         <div class="column is-full">
@@ -107,37 +113,106 @@
 </template>
 
 <script>
-function getWeekDayString(weekdayInt) {
-  const now = new Date();
-
-  const currentDay = now.getDay();
-  const distance = weekdayInt - currentDay;
-  now.setDate(now.getDate() + distance);
-
-  return now.toLocaleString("default", {
-    weekday: "long",
-  });
-}
+import { oof } from "simpler-fetch";
+import { getAuthHeader } from "../firebase.js";
 
 export default {
   name: "SetOpeningHours",
+
+  created() {
+    // Load current opening hours on created
+    this.getSchedule();
+  },
 
   data() {
     const defaultTimeSlot = { start: "10:00", end: "20:00" };
 
     return {
-      days: [...Array(7).keys()].map((index) => getWeekDayString(index + 1)),
+      loading: false,
+
+      days: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
 
       defaultTimeSlot,
 
-      // @todo Load from DB
-      timeSlots: [...Array(7).keys()].map((_) => [{ ...defaultTimeSlot }]),
+      // Timeslots loaded from DB
+      timeSlots: undefined,
     };
   },
 
   methods: {
+    // Load current opening hours onto current view
+    async getSchedule() {
+      this.loading = true;
+
+      const res = await oof
+        .GET("/admin/schedule")
+        .header(await getAuthHeader())
+        .runJSON();
+
+      // If the API call failed, recursively call itself again if user wants to retry,
+      // And always make sure that this method call ends right here by putting it in a return expression
+      if (!res.ok)
+        return (
+          confirm(`Error: \n${res.error}\n\nTry again?`) && this.getSchedule()
+        );
+
+      // Transform timeslots into hour selection, from start of day unix time offsets in milliseconds
+      this.timeSlots = Object.keys(res.openingTime).reduce((obj, dayInt) => {
+        obj[dayInt] = res.openingTime[dayInt].map((timeslot) => ({
+          // 3600000 is equivalent to to `* 60 * 60 * 1000`
+          // This is basically a conversion between hour integers to unix time in milliseconds
+          start: `${timeslot.start / 3600000}:00`,
+          end: `${timeslot.end / 3600000}:00`,
+        }));
+
+        return obj;
+      }, {});
+
+      this.loading = false;
+    },
+
+    // Update opening hours using the API
     async update() {
-      // Validate the timeslots like BlockSchedule view
+      this.loading = true;
+
+      // Reset scroll position to top so that the loading UI can be seen
+      window.scrollTo(0, 0);
+
+      // @todo Validate timeslots like BlockSchedule view
+
+      // Transform selected time into unix time milliseconds offset from start of day
+      const timeSlots = Object.keys(this.timeSlots).reduce((obj, dayInt) => {
+        obj[dayInt] = this.timeSlots[dayInt].map((timeslot) => ({
+          // 3600000 is equivalent to to `* 60 * 60 * 1000`
+          // This is basically a conversion between hour integers to unix time in milliseconds
+          start: parseInt(timeslot.start.replace(":00", "")) * 3600000,
+          end: parseInt(timeslot.end.replace(":00", "")) * 3600000,
+        }));
+
+        return obj;
+      }, {});
+
+      const res = await oof
+        .POST("/admin/schedule/opening")
+        .header(await getAuthHeader())
+        .data(timeSlots)
+        .runJSON();
+
+      // If the API call failed, recursively call itself again if user wants to retry,
+      // And always make sure that this method call ends right here by putting it in a return expression
+      if (!res.ok)
+        return confirm(`Error: \n${res.error}\n\nTry again?`) && this.update();
+
+      alert("Updated!");
+      this.$router.push({ name: "schedule" });
     },
   },
 };
