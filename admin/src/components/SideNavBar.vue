@@ -96,6 +96,14 @@
         </li>
         <li>
           <router-link
+            :to="{ name: 'show-dogs' }"
+            :class="{ 'is-active': $route.name === 'show-dogs' }"
+          >
+            Landing Page
+          </router-link>
+        </li>
+        <li>
+          <router-link
             :to="{ name: 'sold-dog' }"
             :class="{ 'is-active': $route.name === 'sold-dog' }"
           >

@@ -1,7 +1,7 @@
 <template>
   <div class="columns is-multiline is-vcentered" style="max-width: 50em">
     <div class="column">
-      <p class="subtitle">See and manage all current unsold dogs</p>
+      <p class="subtitle">See and manage dogs shown on the landing page</p>
     </div>
 
     <div class="column is-narrow">
@@ -29,11 +29,7 @@
       <br /> -->
 
       <div class="column is-full" v-for="(dog, i) in dogs" :key="i">
-        <!-- Display the card content in a router-link element to make the card's content section clickable -->
-        <router-link
-          :to="{ name: 'dog', params: { dogID: dog.id } }"
-          class="card is-horizontal"
-        >
+        <div class="card is-horizontal">
           <div class="card-image" style="width: 50%">
             <figure class="image">
               <img :src="dog.imgSrc[0]" />
@@ -48,7 +44,6 @@
                   {{ dog.breed }}
                 </p>
               </div>
-
               <br />
 
               <div>
@@ -64,9 +59,22 @@
 
                 Microchip: {{ dog.mc }}
               </div>
+              <br />
+
+              <div @click="toggle(dog.id)">
+                <button
+                  class="button is-light is-danger is-fullwidth"
+                  v-if="dog.show"
+                >
+                  Click to Hide
+                </button>
+                <button class="button is-light is-success is-fullwidth" v-else>
+                  Click to Show
+                </button>
+              </div>
             </div>
           </div>
-        </router-link>
+        </div>
       </div>
     </div>
   </div>
@@ -80,11 +88,14 @@
 
 import { mapGetters } from "vuex";
 
+import { oof } from "simpler-fetch";
+import { getAuthHeader } from "../firebase.js";
+
 export default {
-  name: "AllDogs",
+  name: "LandingPageDogs",
 
   created() {
-    // Trigger the action to load all available dogs from API as user enters this view
+    // Trigger action to load all available dogs and method to get dogs shown on landing page
     this.getDogs();
   },
 
@@ -100,10 +111,23 @@ export default {
       this.loading = true;
 
       // Trigger the action to load all available dogs from API as user enters this view
-      await this.$store.dispatch("dog/getUnsoldDogs");
+      this.$store.dispatch("dog/getUnsoldDogs");
 
       // Stop showing loader
       this.loading = false;
+    },
+
+    async toggle(dogID) {
+      // Update the local view first optimistically
+      this.$store.commit("dog/toggleShowDog", dogID);
+
+      const res = await oof
+        .POST("/admin/pet/landingpage/update")
+        .header(await getAuthHeader())
+        .data({ dogID, show: this.$store.state.dog.dogs[dogID].show })
+        .runJSON();
+
+      if (!res.ok) return alert("Failed to update landing page dog status");
     },
   },
 };

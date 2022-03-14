@@ -27,6 +27,10 @@ export default {
     setDog(state, dog) {
       Vue.set(state.dogs, dog.id, dog);
     },
+
+    toggleShowDog(state, dogID) {
+      state.dogs[dogID].show = !state.dogs[dogID].show;
+    },
   },
   actions: {
     /**

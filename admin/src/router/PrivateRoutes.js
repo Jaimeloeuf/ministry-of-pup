@@ -48,6 +48,12 @@ const routes = [
     meta: { Auth_requirements: AuthType.private },
   },
   {
+    path: "/dog/landing",
+    name: "show-dogs",
+    component: () => import("@/views/LandingPageDogs.vue"),
+    meta: { Auth_requirements: AuthType.private },
+  },
+  {
     path: "/dog/sold",
     name: "sold-dog",
     component: () => import("@/views/SoldDog.vue"),
