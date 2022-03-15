@@ -17,7 +17,7 @@ const { asyncWrap } = require("express-error-middlewares");
 /**
  * Get all available pets from the system
  * @name GET /admin/pet/available
- * @returns Sucess indicator and an array of pets
+ * @returns An array of pets
  */
 router.get(
   "/available",
@@ -50,7 +50,7 @@ router.get(
 /**
  * Get a pet from the system
  * @name GET /admin/pet/:dogID
- * @returns Sucess indicator and an array of pets
+ * @returns An array of pets
  */
 router.get(
   "/:dogID",
@@ -62,6 +62,21 @@ router.get(
       .then((doc) =>
         res.status(200).json({ dog: { id: doc.id, ...doc.data() } })
       )
+  )
+);
+
+/**
+ * @name POST /admin/pet/landingpage/update
+ */
+router.post(
+  "/landingpage/update",
+  express.json(),
+  asyncWrap(async (req, res) =>
+    fs
+      .collection("dogs")
+      .doc(req.body.dogID)
+      .update({ show: req.body.show })
+      .then(() => res.status(200).json({}))
   )
 );
 
