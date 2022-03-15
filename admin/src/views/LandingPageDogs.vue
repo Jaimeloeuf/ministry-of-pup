@@ -122,9 +122,9 @@ export default {
       this.$store.commit("dog/toggleShowDog", dogID);
 
       const res = await oof
-        .POST("/admin/pet/landingpage/update")
+        .POST(`/admin/pet/update/${dogID}`)
         .header(await getAuthHeader())
-        .data({ dogID, show: this.$store.state.dog.dogs[dogID].show })
+        .data({ show: this.$store.state.dog.dogs[dogID].show })
         .runJSON();
 
       if (!res.ok) return alert("Failed to update landing page dog status");

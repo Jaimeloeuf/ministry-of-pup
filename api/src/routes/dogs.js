@@ -66,16 +66,17 @@ router.get(
 );
 
 /**
- * @name POST /admin/pet/landingpage/update
+ * Update a pet's details
+ * @name POST /admin/pet/update/:dogID
  */
 router.post(
-  "/landingpage/update",
+  "/update/:dogID",
   express.json(),
   asyncWrap(async (req, res) =>
     fs
       .collection("dogs")
-      .doc(req.body.dogID)
-      .update({ show: req.body.show })
+      .doc(req.params.dogID)
+      .update(req.body)
       .then(() => res.status(200).json({}))
   )
 );
