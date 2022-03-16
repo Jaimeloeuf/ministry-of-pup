@@ -15,6 +15,8 @@ Code base for all the software written for [Ministry Of Pup](https://ministryofp
     - Landing page of [Ministry Of Pup](https://ministryofpup.com/)
 - [pdf](./pdf)
     - Utility library for handling PDF generations for the API
+- [functions](./functions)
+    - Firebase cloud functions
 
 
 ## License, Author and Contributing
