@@ -4,7 +4,7 @@
     <br />
 
     <!-- Section heading -->
-    <div class="column is-one-quarter">
+    <div class="column">
       <h1 class="title mb-6" style="color: #e81050">Our Lovely Dogs</h1>
       <p class="subtitle mb-6" style="font-size: 1em; color: grey">
         Fall in love with these pups at first sight
@@ -18,11 +18,7 @@
           <div class="card-image">
             <figure class="image">
               <!-- Use native lazy loading, on none supported devices, fallback to eager loading. -->
-              <img
-                loading="lazy"
-                :src="require(`../assets/dog_pics/${dog.imageSrc}.jpg`)"
-                :alt="dog.name"
-              />
+              <img loading="lazy" :src="dog.imgSrc[0]" :alt="dog.name" />
 
               <!-- <div>
                 <ul>
@@ -39,7 +35,7 @@
           </div>
           <div class="card-content">
             <p class="title">{{ dog.name }}</p>
-            <p class="subtitle">{{ dog.title }}</p>
+            <p class="subtitle">{{ dog.breed }}</p>
           </div>
         </div>
       </div>
@@ -62,8 +58,6 @@
         </div>
       </div>
 
-      <!-- @todo Google form first? -->
-      <!-- Or a form built in landing page, that submits to API and save in DB + notify in tele -->
       <div class="column is-3">
         <div class="card">
           <div class="card-content">
@@ -89,30 +83,44 @@ export default {
   name: "OurDogs",
 
   data() {
-    return {
-      dogs: [
-        {
-          name: "Frank",
-          title: "French Bulldog",
-          imageSrc: "8",
-        },
-        {
-          name: "Mochi",
-          title: "French Bulldog",
-          imageSrc: "0",
-        },
-        {
-          name: "Gus",
-          title: "Pug",
-          imageSrc: "10",
-        },
-        {
-          name: "Kellog",
-          title: "Black Cockapoo",
-          imageSrc: "11",
-        },
-      ],
-    };
+    return { dogs: [] };
+  },
+
+  created() {
+    this.loadDogs();
+  },
+
+  methods: {
+    // Function to load the dogs' data from firestore using a cloud function
+    async loadDogs() {
+      try {
+        const token = await new Promise((resolve, reject) =>
+          window.grecaptcha.ready(() =>
+            window.grecaptcha
+              .execute("6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z", {
+                action: "loadDogs",
+              })
+              .then(resolve)
+              .catch(reject)
+          )
+        );
+
+        const res = await import("simpler-fetch").then(({ oof }) =>
+          oof
+            .GET(
+              process.env.NODE_ENV === "production"
+                ? "https://asia-southeast1-ministryofpup-ekd.cloudfunctions.net/getDogs"
+                : "http://localhost:5001/ministryofpup-ekd/asia-southeast1/getDogs"
+            )
+            .header({ "x-recaptcha-token": token })
+            .runJSON()
+        );
+        if (!res.ok) throw new Error(res.error);
+        this.dogs = res.dogs;
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 };
 </script>
