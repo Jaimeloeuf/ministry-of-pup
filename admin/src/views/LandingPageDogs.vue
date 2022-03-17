@@ -72,6 +72,19 @@
                   Click to Show
                 </button>
               </div>
+              <br />
+
+              <div @click="toggleReserve(dog.id)">
+                <button
+                  class="button is-light is-danger is-fullwidth"
+                  v-if="dog.reserved"
+                >
+                  Click to Unreserve
+                </button>
+                <button class="button is-light is-success is-fullwidth" v-else>
+                  Click to Reserve
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -124,7 +137,22 @@ export default {
       const res = await oof
         .POST(`/admin/pet/update/${dogID}`)
         .header(await getAuthHeader())
+        // @todo fix this
         .data({ show: this.$store.state.dog.dogs[dogID].show })
+        .runJSON();
+
+      if (!res.ok) return alert("Failed to update landing page dog status");
+    },
+
+    async toggleReserve(dogID) {
+      // Update the local view first optimistically
+      this.$store.commit("dog/toggleReserveDog", dogID);
+
+      const res = await oof
+        .POST(`/admin/pet/update/${dogID}`)
+        .header(await getAuthHeader())
+        // @todo fix this
+        .data({ reserved: this.$store.state.dog.dogs[dogID].reserved })
         .runJSON();
 
       if (!res.ok) return alert("Failed to update landing page dog status");

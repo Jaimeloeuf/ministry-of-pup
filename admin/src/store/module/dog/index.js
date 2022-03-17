@@ -31,6 +31,10 @@ export default {
     toggleShowDog(state, dogID) {
       state.dogs[dogID].show = !state.dogs[dogID].show;
     },
+
+    toggleReserveDog(state, dogID) {
+      state.dogs[dogID].reserved = !state.dogs[dogID].reserved;
+    },
   },
   actions: {
     /**

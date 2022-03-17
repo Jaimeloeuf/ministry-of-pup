@@ -35,7 +35,8 @@
           </div>
           <div class="card-content">
             <p class="title">{{ dog.name }}</p>
-            <p class="subtitle">{{ dog.breed }}</p>
+            <p class="subtitle mb-0 pb-0">{{ dog.breed }}</p>
+            <p v-if="dog.reserved" style="opacity: 0.7">Reserved</p>
           </div>
         </div>
       </div>
