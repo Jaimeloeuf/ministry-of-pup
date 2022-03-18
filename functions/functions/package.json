@@ -6,8 +6,10 @@
     "node": "16"
   },
   "scripts": {
-    "build": "tsc",
-    "serve": "npm run build && firebase emulators:start --only functions",
+    "build": "npx tsc",
+    "build:watch": "npx tsc -w",
+    "emulator": "firebase emulators:start --only functions",
+    "serve": "npx concurrently 'npm:build:watch' 'npm:emulator'",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
@@ -18,6 +20,7 @@
     "firebase-functions": "^3.19.0"
   },
   "devDependencies": {
+    "concurrently": "^7.0.0",
     "typescript": "^4.6.2"
   }
 }
