@@ -65,6 +65,12 @@ router.post(
       // Thus need to have a sold: false field to indicate that it is not sold yet when filtering for available dogs
       sold: false,
 
+      // The dog is not reserved by default
+      reserved: false,
+
+      // Show the unsold and unreserved dog on the landing page by default
+      show: true,
+
       // Store time dog is added into the system in unix seconds (this is the time of the server executing the code)
       createdAt: unixseconds(),
     });
