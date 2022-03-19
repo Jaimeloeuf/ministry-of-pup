@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
+    "removeComments": true,
+    "noFallthroughCasesInSwitch": true,
     "outDir": "lib",
     "strict": true,
     "target": "es2017"
