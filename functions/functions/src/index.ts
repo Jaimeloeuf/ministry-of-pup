@@ -28,7 +28,7 @@ const verifyRecaptcha = async ({ headers, socket }: https.Request) =>
         method: "POST",
 
         path: `/recaptcha/api/siteverify?secret=${
-          process.env.recaptchaSecret
+          process.env.RECAPTCHA_SECRET
         }&response=${token}&remoteip=${
           headers["x-forwarded-for"] || socket.remoteAddress
         }`,
