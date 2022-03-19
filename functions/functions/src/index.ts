@@ -71,16 +71,39 @@ export const getDogs = functions
     // However this becomes vulnerable to DDoS, but at least DB wont get hit with recaptcha protection
     maxInstances: 20,
   })
-  .https.onRequest((_, r) => {
-    r.set({
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET",
-    });
-    getFirestore()
-      .collection("dogs")
-      .where("show", "==", true)
-      .get()
-      .then(({ docs }) => docs.map((doc) => doc.data()))
-      .then((dogs) => r.status(200).json({ dogs }))
-      .catch((_: Error) => r.status(500).json({ error: "Failed" }));
+  .https.onRequest(async (req, r): Promise<any> => {
+    // Set header for all types of requests
+    r.set("Access-Control-Allow-Origin", "*");
+
+    switch (req.method) {
+      case "OPTIONS":
+        // Set headers for CORS preflight request
+        r.set({
+          // Cache the response of this preflight request for 2 hours (Chromium max only 2 hours)
+          "Access-Control-Max-Age": "7200",
+          "Access-Control-Allow-Methods": "GET",
+          "Access-Control-Allow-Headers": "x-recaptcha-token",
+        });
+        return r.status(204).end();
+
+      case "GET":
+        // Verify recaptcha before returning users the data
+        return verifyRecaptcha(req)
+          .then(() =>
+            getFirestore()
+              .collection("dogs")
+              .where("show", "==", true)
+              .get()
+              .then(({ docs }) => docs.map((doc) => doc.data()))
+              .then((dogs) => r.status(200).json({ dogs }))
+              .catch((_) => r.status(500).json({ error: "DB Failed" }))
+          )
+          .catch((e) => {
+            console.error(e);
+            r.status(403).json({ error: "Bad captcha" });
+          });
+
+      default:
+        r.status(400).json({ error: "Invalid HTTP method" });
+    }
   });
