@@ -6,8 +6,56 @@
 import * as functions from "firebase-functions";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
+import { request } from "https";
+import type { https } from "firebase-functions";
 
 initializeApp();
+
+/**
+ * verifyRecaptcha function resolves if recaptcha token is valid,
+ * else it rejects with an Error
+ */
+const verifyRecaptcha = async ({ headers, socket }: https.Request) =>
+  new Promise((resolve, reject) => {
+    // Get the recaptcha token passed in as a header, note that headers are all lowercased by express
+    const token = headers["x-recaptcha-token"];
+    if (!token) return reject(new Error("Missing recaptcha token"));
+
+    const req = request(
+      {
+        protocol: "https:",
+        host: "www.google.com",
+        method: "POST",
+
+        path: `/recaptcha/api/siteverify?secret=${
+          process.env.recaptchaSecret
+        }&response=${token}&remoteip=${
+          headers["x-forwarded-for"] || socket.remoteAddress
+        }`,
+      },
+      (res) => {
+        if (res.statusCode !== 200) {
+          res.resume();
+          return reject(new Error(`Recaptcha API failed: ${res.statusCode}`));
+        }
+
+        let data = "";
+        res.on("data", (chunk) => (data += chunk));
+        res.on("close", () => {
+          const resp = JSON.parse(data);
+
+          if (!resp.success) return reject(new Error(resp["error-codes"]));
+          if (resp.score < 0.7)
+            return reject(new Error(`Recaptcha score too low: ${resp.score}`));
+
+          return resolve(resp);
+        });
+      }
+    );
+
+    req.on("error", reject);
+    req.end();
+  });
 
 export const getDogs = functions
   /* Run function in Singapore only */
