@@ -15,6 +15,10 @@ import App from "./App.vue";
 
 import router from "./router.js";
 
+// @todo Move this directive registration into the Testimonial.vue only
+import Vue2TouchEvents from "vue2-touch-events";
+Vue.use(Vue2TouchEvents);
+
 Vue.config.productionTip = false;
 
 new Vue({

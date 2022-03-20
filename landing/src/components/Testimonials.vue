@@ -11,7 +11,8 @@
       </p>
     </div>
 
-    <div class="column" @touchstart="swipeHandler">
+    <div class="column" v-touch:swipe.left="next" v-touch:swipe.right="prev">
+      <!-- Add translucent arrows -->
       {{ testimonials[currentTestimonial] }}
     </div>
 
@@ -41,34 +42,41 @@ export default {
       Math.random() * this.testimonials.length
     );
 
-    this.createTimeout();
+    // this.createTimeout();
   },
 
   methods: {
-    createTimeout() {
-      this.timeout = setTimeout(() => {
-        if (this.currentTestimonial < this.testimonials.length - 1)
-          this.currentTestimonial += 1;
-        else this.currentTestimonial = 0;
+    // createTimeout() {
+    //   this.timeout = setTimeout(() => {
+    //     if (this.currentTestimonial < this.testimonials.length - 1)
+    //       this.currentTestimonial += 1;
+    //     else this.currentTestimonial = 0;
 
-        // Once the new testimonial is set, create a new timeout again
-        this.createTimeout();
-      }, 7000);
+    //     // Once the new testimonial is set, create a new timeout again
+    //     this.createTimeout();
+    //   }, 7000);
+    // },
+
+    next() {
+      if (this.currentTestimonial < this.testimonials.length - 1)
+        this.currentTestimonial += 1;
+      else this.currentTestimonial = 0;
+    },
+
+    prev() {
+      if (this.currentTestimonial > 0) this.currentTestimonial -= 1;
+      else this.currentTestimonial = this.testimonials.length - 1;
     },
 
     clickHandler(index) {
       // Clear the current timeout first
-      clearTimeout(this.timeout);
+      // clearTimeout(this.timeout);
 
       // Set the new current testimonial
       this.currentTestimonial = index;
 
       // Create a new timeout
-      this.createTimeout();
-    },
-
-    swipeHandler() {
-      // https://www.npmjs.com/package/vue2-touch-events
+      // this.createTimeout();
     },
   },
 
