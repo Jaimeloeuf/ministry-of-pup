@@ -72,8 +72,11 @@ export const getDogs = functions
     maxInstances: 20,
   })
   .https.onRequest(async (req, r): Promise<any> => {
-    // Set header for all types of requests
-    r.set("Access-Control-Allow-Origin", "*");
+    // Set CORS header for all types of requests so that only requests from ministryofpup.com is allowed
+    r.set("Access-Control-Allow-Origin", "https://ministryofpup.com");
+
+    // For development use when on different localhost ports
+    // r.set("Access-Control-Allow-Origin", "*");
 
     switch (req.method) {
       case "OPTIONS":
