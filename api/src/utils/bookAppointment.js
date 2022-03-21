@@ -55,9 +55,8 @@ module.exports = async function bookAppointment({
   fname,
   lname,
   number,
+  preference,
 
-  // Email can be null although it is not ideal
-  // This should only be null if customer books an appointment through messaging directly
   email = null,
 
   // Default src where they discovered MOP is UN for undefined if nothing is passed in
@@ -65,9 +64,6 @@ module.exports = async function bookAppointment({
 
   // Referral Code
   referralCode,
-
-  // Defaults to no pref, since Firestore throws on undefined
-  preference = null,
 }) {
   // Phone number MUST EXISTS to create an user account
   if (!number) throw new Error("Missing Phone Number, number must be provided");
@@ -107,8 +103,6 @@ module.exports = async function bookAppointment({
     fname,
     lname,
     number,
-    email,
-    preference,
 
     // Where did the user find out about MOP? Did they find out about us via IG Ads? Or through a friend?
     src,
@@ -117,9 +111,17 @@ module.exports = async function bookAppointment({
     createdAt: unixseconds(),
   };
 
+  // Email is only added if it is available
+  // Email can be null although it is not ideal, and should only be null if customer books appointment through messages directly
+  // Appointment confirmation email is only sent later on if a email is provided.
+  if (email) appointmentData.email = email;
+
   // Referral Code is only added if it is available
   // This can be a friend's phone number or it can also be a code that we give out for affiliate marketing
   if (referralCode) appointmentData.referralCode = referralCode;
+
+  // Preference is only added if it is available
+  if (preference) appointmentData.preference = preference;
 
   const { id: appointmentID } = await fs
     .collection("appointments")
