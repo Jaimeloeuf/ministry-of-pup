@@ -14,12 +14,12 @@
     "chart.js": "^3.5.1",
     "core-js": "^3.21.1",
     "dog-names": "^2.0.0",
-    "firebase": "^9.6.8",
+    "firebase": "^9.6.10",
     "fuse.js": "^6.5.3",
     "mop-appointment-src": "file:../appointment-src",
     "paynowqr": "^1.1.2",
     "qrcode": "^1.5.0",
-    "signature_pad": "^4.0.2",
+    "signature_pad": "^4.0.4",
     "simpler-fetch": "^6.1.1",
     "vue": "^2.6.14",
     "vue-router": "^3.5.2",
@@ -38,7 +38,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "husky": "^5.1.3",
     "lint-staged": "^10.5.4",
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.2",
     "vue-template-compiler": "^2.6.14"
   },
   "husky": {

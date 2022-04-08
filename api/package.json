@@ -15,7 +15,7 @@
   "author": "JJ",
   "dependencies": {
     "@enkeldigital/firebase-admin": "^0.1.0",
-    "@sendgrid/mail": "^7.6.1",
+    "@sendgrid/mail": "^7.6.2",
     "base64-stream": "^1.0.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
