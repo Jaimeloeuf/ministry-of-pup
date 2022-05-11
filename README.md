@@ -17,6 +17,8 @@ Code base for all the software written for [Ministry Of Pup](https://ministryofp
     - Utility library for handling PDF generations for the API
 - [functions](./functions)
     - Firebase cloud functions
+- [rapi](./rapi)
+    - Rust API server with super low cold start time for the landing page get dogs API.
 
 
 ## License, Author and Contributing
