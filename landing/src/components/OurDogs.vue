@@ -91,6 +91,8 @@
 </template>
 
 <script>
+import { oof } from "simpler-fetch";
+
 export default {
   name: "OurDogs",
 
@@ -117,16 +119,15 @@ export default {
           )
         );
 
-        const res = await import("simpler-fetch").then(({ oof }) =>
-          oof
-            .GET(
-              process.env.NODE_ENV === "production"
-                ? "https://asia-southeast1-ministryofpup-ekd.cloudfunctions.net/getDogs"
-                : "http://localhost:5001/ministryofpup-ekd/asia-southeast1/getDogs"
-            )
-            .header({ "x-recaptcha-token": token })
-            .runJSON()
-        );
+        const res = await oof
+          .GET(
+            process.env.NODE_ENV === "production"
+              ? "https://asia-southeast1-ministryofpup-ekd.cloudfunctions.net/getDogs"
+              : "http://localhost:5001/ministryofpup-ekd/asia-southeast1/getDogs"
+          )
+          .header({ "x-recaptcha-token": token })
+          .runJSON();
+
         if (!res.ok) throw new Error(res.error);
         this.dogs = res.dogs;
       } catch (error) {
