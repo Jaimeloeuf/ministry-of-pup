@@ -36,6 +36,29 @@ func main() {
 	// ================== Initialize the gin HTTP server ==================
 
 	r := gin.Default()
+
+	// Add a global middleware to handle CORS
+	r.Use(func(c *gin.Context) {
+		// Set CORS header for all types of requests so that only requests from ministryofpup.com is allowed
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "https://ministryofpup.com")
+
+		// For development use when on different localhost ports
+		// c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+
+		// Set headers for CORS preflight request
+		if c.Request.Method == "OPTIONS" {
+			// Cache the response of this preflight request for 2 hours (Chromium max only 2 hours)
+			c.Writer.Header().Set("Access-Control-Max-Age", "7200")
+			c.Writer.Header().Set("Access-Control-Allow-Methods", "GET")
+			c.Writer.Header().Set("Access-Control-Allow-Headers", "x-recaptcha-token")
+
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	})
+
 	r.GET("/", func(c *gin.Context) {
 		// todo verify recaptcha
 
