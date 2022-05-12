@@ -2,9 +2,13 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
+
+	"github.com/joho/godotenv"
 
 	"github.com/gin-gonic/gin"
 
@@ -15,8 +19,22 @@ import (
 
 func main() {
 
-	// ============ Create HTTP client for verifying recaptcha ============
+	// ===================== Setup recaptcha stuff =====================
 
+	err := godotenv.Load()
+	if err != nil {
+		// Not a fatal error as env values might be set manually instead of using .env file
+		fmt.Printf("Error loading .env file\n")
+	}
+
+	// Get recaptcha secret from env var to setup base API URL
+	recaptchaSecret := os.Getenv("recaptchaSecret")
+	recaptchaURL := fmt.Sprintf(
+		"https://www.google.com/recaptcha/api/siteverify?secret=%s",
+		recaptchaSecret,
+	)
+
+	// Create a single reusable HTTP client for calling the verification API
 	httpClient := createHttpClient()
 
 	// ================== Initialize the firebase stuff ==================
