@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"log"
+	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -12,6 +14,11 @@ import (
 )
 
 func main() {
+
+	// ============ Create HTTP client for verifying recaptcha ============
+
+	httpClient := createHttpClient()
+
 	// ================== Initialize the firebase stuff ==================
 
 	// Create firebase app
@@ -37,6 +44,11 @@ func main() {
 
 	// listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 	r.Run()
+}
+
+// Creates a reusable HTTP client with a 10 second timeout for making API calls to verify recaptcha token
+func createHttpClient() *http.Client {
+	return &http.Client{Timeout: 10 * time.Second}
 }
 
 // Empty map type for dog document data
