@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -79,9 +80,19 @@ func main() {
 	})
 
 	r.GET("/", func(c *gin.Context) {
-		// todo verify recaptcha
 
-		c.JSON(200, gin.H{"dogs": getDogs(client)})
+		// Verify recaptcha before loading dogs from DB to respond to user
+		if verifyRecaptcha(
+			httpClient,
+			recaptchaURL,
+			c.Request.Header["X-Recaptcha-Token"][0],
+			c.ClientIP(),
+		) {
+			c.JSON(200, gin.H{"dogs": getDogs(client)})
+		} else {
+			c.JSON(403, gin.H{"error": "Bad captcha"})
+		}
+
 	})
 
 	// listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
@@ -112,6 +123,68 @@ type RecaptchaResponse struct {
 
 	// Optional errors
 	ErrorCodes []string `json:"error-codes,omitempty"`
+}
+
+// Function to verify a recaptcha token
+func verifyRecaptcha(client *http.Client, recaptchaURL string, token string, remoteip string) bool {
+
+	// Combine base URL for recaptcha with token and client ip to create final string
+	var urlString = fmt.Sprintf(
+		"%s&response=%s&remoteip=%s",
+		recaptchaURL,
+		token,
+		remoteip,
+	)
+
+	req, err := http.NewRequest(http.MethodPost, urlString, nil)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Error sending request to recaptcha server")
+		return false
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		fmt.Printf("Bad StatusCode: %d", resp.StatusCode)
+		return false
+	}
+
+	defer resp.Body.Close()
+	responseBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("err: %s", err)
+		return false
+	}
+
+	var rbody RecaptchaResponse
+	json.Unmarshal(responseBody, &rbody)
+
+	fmt.Printf("Values: %+v", rbody)
+	fmt.Println(string(responseBody))
+
+	if !rbody.Success {
+		fmt.Printf("Error: %s", rbody.ErrorCodes)
+		return false
+	}
+
+	// only this action
+	if rbody.Action != "loadDogs" {
+		fmt.Printf("Invalid action: %s", rbody.Action)
+		return false
+	}
+
+	// check the score over here
+	if rbody.Score < 0.7 {
+		fmt.Printf("Score too low: %f", rbody.Score)
+		return false
+	}
+
+	// Return true if all the tests passed
+	return true
 }
 
 // Empty map type for dog document data
