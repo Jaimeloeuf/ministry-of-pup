@@ -80,6 +80,11 @@ func main() {
 	})
 
 	r.GET("/", func(c *gin.Context) {
+		// Reject requests if there isn't exactly 1 recaptcha token in the header
+		if len(c.Request.Header["X-Recaptcha-Token"]) != 1 {
+			c.JSON(403, gin.H{"error": "Invalid num of captcha token in header"})
+			return
+		}
 
 		// Verify recaptcha before loading dogs from DB to respond to user
 		if verifyRecaptcha(
