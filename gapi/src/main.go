@@ -4,9 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
-	"time"
 
 	"github.com/joho/godotenv"
 
@@ -91,16 +89,11 @@ func main() {
 		); success && err == nil {
 			c.JSON(200, gin.H{"dogs": getDogs(client)})
 		} else {
-			c.JSON(403, gin.H{"error": "Bad captcha"})
+			c.JSON(403, gin.H{"error": "Bad captcha", "errorMsg": err})
 		}
 
 	})
 
 	// listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 	r.Run()
-}
-
-// Creates a reusable HTTP client with a 10 second timeout for making API calls to verify recaptcha token
-func createHttpClient() *http.Client {
-	return &http.Client{Timeout: 10 * time.Second}
 }
