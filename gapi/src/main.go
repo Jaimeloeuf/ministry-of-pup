@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -90,6 +91,27 @@ func main() {
 // Creates a reusable HTTP client with a 10 second timeout for making API calls to verify recaptcha token
 func createHttpClient() *http.Client {
 	return &http.Client{Timeout: 10 * time.Second}
+}
+
+// Type of the JSON response from the recaptcha server
+// https://developers.google.com/recaptcha/docs/v3#site_verify_response
+type RecaptchaResponse struct {
+	Success bool `json:"success,omitempty"`
+
+	// Timestamp of the challenge load (ISO format yyyy-MM-dd'T'HH:mm:ssZZ)
+	Challenge_ts string `json:"challenge_ts,omitempty"`
+
+	// Hostname of the site where the reCAPTCHA was solved
+	Hostname string `json:"hostname,omitempty"`
+
+	// Score for this request (0.0 - 1.0)
+	Score float32 `json:"score,omitempty"`
+
+	// Action name for this request (important to verify)
+	Action string `json:"action,omitempty"`
+
+	// Optional errors
+	ErrorCodes []string `json:"error-codes,omitempty"`
 }
 
 // Empty map type for dog document data
