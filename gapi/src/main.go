@@ -49,6 +49,12 @@ func main() {
 
 	// ================== Initialize the gin HTTP server ==================
 
+	// Set to release mode explicitly
+	// gin.SetMode(gin.ReleaseMode)
+	// Else set using an environment variable
+	// GIN_MODE=release
+
+	// Change to remove logger?
 	r := gin.Default()
 
 	// Add a global middleware to handle CORS
