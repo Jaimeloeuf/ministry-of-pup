@@ -7,7 +7,7 @@
         <span class="title-bg title-color">Ministry Of Pup</span>
       </h2>
       <h2 class="subtitle">
-        <span class="title-bg title-color">Find your dream dog</span>
+        <span class="title-bg title-color">Premium Pet Boutique</span>
       </h2>
 
       <router-link :to="{ name: 'home', hash: '#OurDogs' }">
