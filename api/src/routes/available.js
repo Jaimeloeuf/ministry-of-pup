@@ -56,7 +56,7 @@ async function getBlockedDates() {
  */
 function nextAvailableDateWithoutBlockedDates(afterThisDate, blockedDates) {
   // Start with the first available date
-  let date = nextAvailableDate(afterThisDate);
+  let date = _nextAvailableDate(afterThisDate);
 
   // Check if the date is blocked by the admin,
   // if the date is blocked, loop again to call nextAvailableDate with current date as cursor
@@ -65,30 +65,25 @@ function nextAvailableDateWithoutBlockedDates(afterThisDate, blockedDates) {
   // is because the dates that are blocked can be blocked in sequential order, meaning if the dates,
   // 1, 2, 3 are blocked, then it should not simply skip 1 and return 2, it should skip all the way till 4.
   while (blockedDates.includes(date.start.toMillis()))
-    date = nextAvailableDate(date.start);
+    date = _nextAvailableDate(date.start);
 
   // If execution flow leaves the while loop, it means that the date is finally available and not blocked!
   return date;
 }
 
 /**
- * @todo Since this is called next available date, this should actually check the DB to see if date is blocked and if the day is open?
- * @todo Needs to ensure that the dates are not already blocked off by admin,
- * @todo Needs to ensure that the store is even open on that day. Actually dont need because availableTimeSlots takes care of this
+ * This should not be called directly, instead, use `nextAvailableDateWithoutBlockedDates`.
+ * This function only gets the next available date that is possible without actually check if it is blocked by the admin.
  *
  * If a date cursor is given, it means that:
- *
- * 1.
- *    The client has called the API before,
+ * 1. The client has called the API before,
  *    getting back an array of date milliseconds. So if more timeslots is needed,
  *    the client will take the last date milliseconds from the array to call the API
  *    with the value as the `after` value. Which means that we have to increment the
  *    date by 1 to ensure that we only get timeslots "after" that date.
- * 2.
- *    The API logic is calling this function again with the DateTime object it got
+ * 2. The API logic is calling this function again with the DateTime object it got
  *    back previously to get the next DateTime object, thus the value passed in
  *    will be a DateTime object instead of date in Milliseconds
- *
  *
  * If none is given, the next available date is today with a next available time cursor
  *
@@ -100,7 +95,7 @@ function nextAvailableDateWithoutBlockedDates(afterThisDate, blockedDates) {
  * @param {DateTime | DateInMilliseconds} [afterThisDate]
  * @returns
  */
-function nextAvailableDate(afterThisDate) {
+function _nextAvailableDate(afterThisDate) {
   if (afterThisDate) {
     // If a DateTime object date cursor is provided, use it
     // Else if a millisecond date cursor is provided, convert it to a DateTime object
