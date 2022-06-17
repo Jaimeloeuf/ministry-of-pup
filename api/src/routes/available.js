@@ -28,6 +28,50 @@ const { DateTime } = require("luxon");
  */
 
 /**
+ * Function to return a list of dates that are blocked off by the admin.
+ * @returns {Promise<Array<DateInMilliseconds>>}
+ */
+async function getBlockedDates() {
+  // Use the current start DateInMilliseconds of the current date in SG as the filter
+  const currentDateStartInMilliseconds = DateTime.now()
+    .setZone("Asia/Singapore")
+    .startOf("day")
+    .toMillis();
+
+  // Only get the blockedDates that are after the current day
+  const snapshot = await fs
+    .collection("blockedDates")
+    .where("startOfDay", ">", currentDateStartInMilliseconds)
+    .get();
+
+  // If snapshot is empty, return an empty array to specify that there are no dates after given time that is blocked
+  if (snapshot.empty) return [];
+
+  // Map the array of doc references to an array of start time in milliseconds of the blocked dates
+  return snapshot.docs.map((doc) => doc.data().startOfDay);
+}
+
+/**
+ * Wrapper function over `nextAvailableDate` function to filter out blocked dates
+ */
+function nextAvailableDateWithoutBlockedDates(afterThisDate, blockedDates) {
+  // Start with the first available date
+  let date = nextAvailableDate(afterThisDate);
+
+  // Check if the date is blocked by the admin,
+  // if the date is blocked, loop again to call nextAvailableDate with current date as cursor
+  //
+  // The reason for using a while loop instead of just returning the next available date immediately,
+  // is because the dates that are blocked can be blocked in sequential order, meaning if the dates,
+  // 1, 2, 3 are blocked, then it should not simply skip 1 and return 2, it should skip all the way till 4.
+  while (blockedDates.includes(date.start.toMillis()))
+    date = nextAvailableDate(date.start);
+
+  // If execution flow leaves the while loop, it means that the date is finally available and not blocked!
+  return date;
+}
+
+/**
  * @todo Since this is called next available date, this should actually check the DB to see if date is blocked and if the day is open?
  * @todo Needs to ensure that the dates are not already blocked off by admin,
  * @todo Needs to ensure that the store is even open on that day. Actually dont need because availableTimeSlots takes care of this
@@ -260,12 +304,15 @@ async function nextFiveAvailableDates(after) {
     .startOf("day")
     .plus({ days: 10 });
 
+  // Get the list of blocked dates to use for filtering later
+  const blockedDates = await getBlockedDates();
+
   // Start on the first available date, and keep looping until there is 5 timeslots or till maxDateAllowed is exceeded.
   // On every loop, get the next available date using the start of current date as the date cursor
   for (
-    let date = nextAvailableDate(after);
+    let date = nextAvailableDateWithoutBlockedDates(after, blockedDates);
     timeslots.length < 5 && date.start < maxDateAllowed;
-    date = nextAvailableDate(date.start)
+    date = nextAvailableDateWithoutBlockedDates(date.start, blockedDates)
   ) {
     // Use the weekday value and start of day to get list of available timeslots of the given date
     const allTimeSlotsOfDate = allTimeSlots(
