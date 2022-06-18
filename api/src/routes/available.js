@@ -38,10 +38,12 @@ async function getBlockedDates() {
     .startOf("day")
     .toMillis();
 
-  // Only get the blockedDates that are after the current day
+  // Filter by ">=" to check for blockedDates that are after the current day,
+  // and also if today itself is a blocked date, since blockedDates are set as start of day,
+  // and if it just filters by ">", it will miss today if today is a blocked date.
   const snapshot = await fs
     .collection("blockedDates")
-    .where("startOfDay", ">", currentDateStartInMilliseconds)
+    .where("startOfDay", ">=", currentDateStartInMilliseconds)
     .get();
 
   // If snapshot is empty, return an empty array to specify that there are no dates after given time that is blocked
