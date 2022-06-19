@@ -39,8 +39,53 @@
         </div>
       </div>
 
-      <!-- Blocked out times -->
+      <!-- Blocked out dates -->
       <div class="columns is-multiline">
+        <div class="column is-full">
+          <p class="subtitle">Blocked Dates</p>
+        </div>
+
+        <div
+          class="column is-full"
+          v-if="!blockedDates || !blockedDates.length"
+        >
+          <p class="subtitle ml-4">No blocked dates</p>
+        </div>
+
+        <div
+          class="column is-half"
+          v-for="(blockedDate, i) in blockedDates"
+          :key="i"
+        >
+          <div class="card">
+            <div class="card-content">
+              <div class="columns is-vcentered">
+                <div class="column">
+                  <b>
+                    {{
+                      new Intl.DateTimeFormat("default", {
+                        dateStyle: "full",
+                      }).format(new Date(blockedDate))
+                    }}
+                  </b>
+                </div>
+
+                <div class="column is-narrow">
+                  <button
+                    class="button is-danger"
+                    @click="deleteBlockedDate(blockedDate)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Blocked out times -->
+      <!-- <div class="columns is-multiline">
         <div class="column is-full">
           <p class="subtitle">Blocked Dates</p>
         </div>
@@ -95,7 +140,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -170,11 +215,7 @@ export default {
         );
 
       this.openingTime = res.openingTime;
-
-      // Sort keys (start of day of the start time of blocked date) in ascending order
-      this.blockedDates = Object.keys(res.blockedDates)
-        .sort((a, b) => a - b)
-        .map((key) => res.blockedDates[key]);
+      this.blockedDates = res.blockedDates;
 
       this.loading = false;
     },
