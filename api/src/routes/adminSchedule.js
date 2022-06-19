@@ -28,11 +28,8 @@ router.get(
       .get()
       .then((snapshot) => snapshot.data());
 
-    const blockedDates = await fs
-      .collection("openingHours")
-      .doc("blockedDates")
-      .get()
-      .then((snapshot) => snapshot.data());
+    const getBlockedDates = require("../utils/getBlockedDates.js");
+    const blockedDates = await getBlockedDates(true);
 
     res.status(200).json({ openingTime, blockedDates });
   })
