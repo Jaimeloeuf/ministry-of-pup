@@ -1,7 +1,7 @@
 <template>
   <div class="columns is-multiline is-centered" style="max-width: 50em">
     <div class="column is-full">
-      <p class="subtitle">Block Dates & Timeslots</p>
+      <p class="subtitle">Add more <b>Blocked Dates & Timeslots</b></p>
     </div>
 
     <div class="column is-full">
@@ -123,16 +123,11 @@ export default {
     const defaultTimeSlot = { start: undefined, end: undefined };
 
     return {
-      // Both blockedDates and blockedTimes default to empty array for now
-      // Which is better than having user delete if not needed?
-
       today,
       blockedDates: [],
-      // blockedDates: [today],
 
       defaultTimeSlot,
       blockedTimes: [],
-      // blockedTimes: [defaultTimeSlot],
     };
   },
 
