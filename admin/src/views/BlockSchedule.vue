@@ -110,6 +110,9 @@
 </template>
 
 <script>
+import { oof } from "simpler-fetch";
+import { getAuthHeader } from "../firebase.js";
+
 import DatetimePicker from "../components/DatetimePicker.vue";
 import todaysDate from "../utils/todaysDate.js";
 
@@ -141,6 +144,22 @@ export default {
         if (blockedTime.end === blockedTime.start)
           return alert("Blocked time cannot have the same start and end time!");
       }
+
+      const res = await oof
+        .POST("/admin/schedule/block")
+        .header(getAuthHeader)
+        .data({ dates: this.blockedDates })
+        .runJSON();
+
+      // If the API call failed, recursively call itself again if user wants to retry,
+      // And always make sure that this method call ends right here by putting it in a return expression
+      if (!res.ok)
+        return confirm(`Error: \n${res.error}\n\nTry again?`) && this.block();
+
+      // @todo Reset the component's data if not redirecting to the SeeSchedule view
+      this.$router.push({ name: "schedule" });
+
+      // this.loading = false;
     },
   },
 };
