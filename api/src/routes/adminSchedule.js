@@ -53,8 +53,6 @@ router.post(
 );
 
 /**
- * @todo Test API
- *
  * Add blocked dates
  * @name POST /admin/schedule/block
  * @returns Sucess indicator
@@ -64,7 +62,27 @@ router.post(
   express.json(),
   asyncWrap(async (req, res) => {
     // @todo When setting blocked dates, must ensure that the date is not already booked
-    await fs.collection("openingHours").doc("blockedDates").update(req.body);
+
+    // Simple check for request body value type
+    if (!Array.isArray(req.body.dates))
+      return res
+        .status(400)
+        .json({ error: "Invalid 'dates' array field in req body" });
+
+    const colRef = fs.collection("blockedDates");
+    const { DateTime } = require("luxon");
+
+    req.body.dates.map((date) =>
+      colRef.add({
+        startOfDay:
+          // Take date in the format of "2022-06-23", ensure that it is set to SGT,
+          // and reset it to start of day and get it in milliseconds to store
+          DateTime.fromISO(date)
+            .setZone("Asia/Singapore")
+            .startOf("day")
+            .toMillis(),
+      })
+    );
 
     res.status(200).json({});
   })
