@@ -23,9 +23,6 @@ module.exports = async function getBlockedDates(sortByAscending = false) {
     ? await query.orderBy("startOfDay", "asc").get()
     : await query.get();
 
-  // If snapshot is empty, return an empty array to specify that there are no dates after given time that is blocked
-  if (snapshot.empty) return [];
-
-  // Map the array of doc references to an array of start time in milliseconds of the blocked dates
-  return snapshot.docs.map((doc) => doc.data().startOfDay);
+  // Return the list of documents, which may be an empty list
+  return snapshot.docs;
 };

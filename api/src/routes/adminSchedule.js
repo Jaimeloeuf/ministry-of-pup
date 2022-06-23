@@ -28,8 +28,11 @@ router.get(
       .get()
       .then((snapshot) => snapshot.data());
 
+    // Get the blocked dates along with the doc IDs so that the admin can use them for deletion if needed later.
     const getBlockedDates = require("../utils/getBlockedDates.js");
-    const blockedDates = await getBlockedDates(true);
+    const blockedDates = await getBlockedDates(true).then((docs) =>
+      docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+    );
 
     res.status(200).json({ openingTime, blockedDates });
   })

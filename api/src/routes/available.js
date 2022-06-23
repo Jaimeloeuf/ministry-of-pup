@@ -277,8 +277,11 @@ async function nextFiveAvailableDates(after) {
     .startOf("day")
     .plus({ days: 10 });
 
-  // Get the list of blocked dates to use for filtering later
-  const blockedDates = await getBlockedDates();
+  // Get blocked dates for filtering by mapping the array of doc references,
+  // to an array of start time in milliseconds of the blocked dates.
+  const blockedDates = await getBlockedDates().then((docs) =>
+    docs.map((doc) => doc.data().startOfDay)
+  );
 
   // Start on the first available date, and keep looping until there is 5 timeslots or till maxDateAllowed is exceeded.
   // On every loop, get the next available date using the start of current date as the date cursor

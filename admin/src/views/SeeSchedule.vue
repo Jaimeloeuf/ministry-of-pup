@@ -65,7 +65,7 @@
                     {{
                       new Intl.DateTimeFormat("default", {
                         dateStyle: "full",
-                      }).format(new Date(blockedDate))
+                      }).format(new Date(blockedDate.startOfDay))
                     }}
                   </b>
                 </div>
@@ -73,7 +73,7 @@
                 <div class="column is-narrow">
                   <button
                     class="button is-danger"
-                    @click="deleteBlockedDate(blockedDate)"
+                    @click="deleteBlockedDate(blockedDate.id)"
                   >
                     Delete
                   </button>
@@ -155,7 +155,6 @@ export default {
   data() {
     return {
       loading: true,
-      // loading: false,
 
       // Day index of 1 to 7 where 1 is monday, thus element 0 is empty string
       weekday: [
@@ -198,8 +197,6 @@ export default {
     },
 
     async getSchedule() {
-      // Just in case it is not set, set it to loading
-      // Will not be set if method triggered using the refresh button
       this.loading = true;
 
       const res = await oof
