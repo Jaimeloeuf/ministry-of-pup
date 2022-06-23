@@ -91,4 +91,22 @@ router.post(
   })
 );
 
+/**
+ * Delete a single blocked date with the given firestore docID.
+ * Using POST method to get around CORS requirements.
+ * @name POST /admin/schedule/blocked-date/delete/:docID
+ * @returns Sucess indicator
+ */
+router.post(
+  "/blocked-dates/delete/:docID",
+  asyncWrap(async (req, res) =>
+    fs
+      .collection("blockedDates")
+      .doc(req.params.docID)
+      .delete()
+      .then(() => res.status(204).json({}))
+      .catch((error) => res.status(500).json({ error }))
+  )
+);
+
 module.exports = router;

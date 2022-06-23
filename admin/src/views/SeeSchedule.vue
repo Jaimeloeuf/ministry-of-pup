@@ -217,15 +217,13 @@ export default {
       this.loading = false;
     },
 
-    async deleteBlockedDate(startOfBlockedDate) {
-      return alert("Feature only available in v2");
-
-      // eslint-disable-next-line no-unreachable
+    async deleteBlockedDate(docID) {
       this.loading = true;
 
       const res = await oof
-        .POST(`/admin/schedule/blocked-dates/delete/${startOfBlockedDate}`)
-        .header(await getAuthHeader())
+        .POST(`/admin/schedule/blocked-dates/delete/${docID}`)
+        .header(getAuthHeader)
+        .data({})
         .runJSON();
 
       // If the API call failed, recursively call itself again if user wants to retry,
@@ -233,12 +231,16 @@ export default {
       if (!res.ok)
         return (
           confirm(`Error: \n${res.error}\n\nTry again?`) &&
-          this.deleteBlockedDate(startOfBlockedDate)
+          this.deleteBlockedDate(docID)
         );
 
-      // Could be better but simple method is just call getSchedule to refresh the schedule
-      // await to make sure it complete before it sets loading to false
-      await this.getSchedule();
+      // Remove deleted date value from blockedDates
+      this.blockedDates.splice(
+        this.blockedDates.findIndex((date) => date.id === docID),
+        1
+      );
+
+      this.loading = false;
     },
   },
 };
