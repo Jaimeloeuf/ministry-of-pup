@@ -1,31 +1,30 @@
 /**
- * Script to set blocked off timing manually
+ * Script to set blocked time slots manually
  */
 
-async function addBlockedDates() {
-  const { DateTime } = require("luxon");
+const fs = require("../src/utils/fs.js");
+const { DateTime } = require("luxon");
 
+async function addBlockedDates() {
   const openingSecond = 11 * 60 * 60 * 1000; // 1100 hours
 
-  const startOfDay = DateTime.utc().startOf("day").plus({ days: 7 }).toMillis();
-  const startOfDay2 = DateTime.utc()
+  const startOfDay = DateTime.now()
+    .setZone("Asia/Singapore")
     .startOf("day")
-    .plus({ days: 10 })
+    .plus({ days: 2 })
     .toMillis();
 
-  return require("../src/utils/fs.js")
-    .collection("openingHours")
-    .doc("blockedDates")
-    .set({
-      [startOfDay]: {
-        start: startOfDay + openingSecond,
-        end: startOfDay + 15 * 60 * 60 * 1000,
-      },
-      [startOfDay2]: {
-        start: startOfDay2 + openingSecond,
-        end: startOfDay2 + (11 * 60 + 30) * 60 * 1000,
-      },
-    });
+  // When adding dates, NOTE THAT THIS ADDS TO DB it does not delete or override old data
+  // These values must be in SGT because the filtering uses SGT in available.js
+  const timeslots = [
+    {
+      start: startOfDay + openingSecond,
+      end: startOfDay + 15 * 60 * 60 * 1000,
+    },
+  ];
+
+  for (const timeslot of timeslots)
+    fs.collection("blockedTimeslots").add(timeslot);
 }
 
 addBlockedDates();
