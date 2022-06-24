@@ -19,8 +19,9 @@ Code base for all the software written for [Ministry Of Pup](https://ministryofp
     - Firebase cloud functions
 - [gapi](./gapi)
     - Go API server with super low cold start time for the landing page get dogs API.
-- [rapi](./rapi)
+- [rapi (abandoned)](./rapi)
     - Rust API server with super low cold start time for the landing page get dogs API.
+    - See [gapi](./gapi) instead
 
 
 ## License, Author and Contributing
