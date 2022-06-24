@@ -348,7 +348,7 @@ export default {
 
       const res = await oof
         .POST(`/user/update/${this.originalUser.id}`)
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .data(this.user)
         .runJSON();
 

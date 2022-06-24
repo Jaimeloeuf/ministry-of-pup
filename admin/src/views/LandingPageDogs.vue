@@ -136,7 +136,7 @@ export default {
 
       const res = await oof
         .POST(`/admin/pet/update/${dogID}`)
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         // @todo fix this
         .data({ show: this.$store.state.dog.dogs[dogID].show })
         .runJSON();
@@ -150,7 +150,7 @@ export default {
 
       const res = await oof
         .POST(`/admin/pet/update/${dogID}`)
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         // @todo fix this
         .data({ reserved: this.$store.state.dog.dogs[dogID].reserved })
         .runJSON();

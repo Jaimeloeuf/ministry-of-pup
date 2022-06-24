@@ -235,7 +235,7 @@ export default {
 
       const res = await oof
         .POST("/user/new")
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .data(this.user)
         .runJSON();
 

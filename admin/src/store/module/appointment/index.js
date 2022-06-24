@@ -72,7 +72,7 @@ export default {
     async getAppointments({ commit, dispatch }) {
       const res = await oof
         .GET("/admin/appointment/scheduled")
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .runJSON();
 
       // If the API call failed, recursively dispatch itself again if user wants to retry,
@@ -96,7 +96,7 @@ export default {
       // eslint-disable-next-line no-unreachable
       const res = await oof
         .GET(`/admin/appointment/${appointmentID}`)
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .runJSON();
 
       // If the API call failed, recursively call itself again if user wants to retry,

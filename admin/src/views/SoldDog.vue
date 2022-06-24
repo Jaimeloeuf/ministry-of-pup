@@ -663,7 +663,7 @@ export default {
       // Call different API depending on whether a userID is passed in
       const res = await oof
         .GET(userID ? `/user/${userID}` : `/user/number/${this.user.number}`)
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .runJSON();
 
       this.loading = false;
@@ -704,7 +704,7 @@ export default {
 
       const res = await oof
         .POST("/admin/pet/sold")
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .data({
           userID: this.userID,
           receiptNumber: this.receiptNumber,

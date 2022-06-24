@@ -24,7 +24,7 @@ export default {
     async loadData() {
       const res = await oof
         .GET("/analytics/appointment/source")
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .runJSON();
 
       // If the API call failed, recursively call itself again if user wants to retry,

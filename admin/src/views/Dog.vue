@@ -82,7 +82,7 @@ export default {
       // eslint-disable-next-line no-unreachable
       const res = await oof
         .GET(`/admin/appointments?dogID=${this.dogID}`)
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .runJSON();
 
       // If the API call failed, recursively call itself again if user wants to retry,

@@ -154,7 +154,7 @@ export default {
 
       const res = await oof
         .GET("/admin/schedule")
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .runJSON();
 
       // If the API call failed, recursively call itself again if user wants to retry,
@@ -202,7 +202,7 @@ export default {
 
       const res = await oof
         .POST("/admin/schedule/opening")
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .data(timeSlots)
         .runJSON();
 

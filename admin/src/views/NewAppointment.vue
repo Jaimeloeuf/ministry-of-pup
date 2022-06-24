@@ -240,7 +240,7 @@ export default {
 
       const res = await oof
         .POST("/admin/appointment/book")
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .data(postData)
         .runJSON();
 

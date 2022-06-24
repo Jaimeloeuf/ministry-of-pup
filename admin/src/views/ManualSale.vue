@@ -382,7 +382,7 @@ export default {
 
       const res = await oof
         .GET(`/user/number/${this.customer.number}`)
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .runJSON();
 
       this.loading = false;
@@ -459,7 +459,7 @@ export default {
 
       const res = await oof
         .POST("/admin/sale/manual")
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .data({
           // Include userID if user is known + loggedIn to prove identity exists
           userID:

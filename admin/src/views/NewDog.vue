@@ -402,7 +402,7 @@ export default {
 
       const res = await oof
         .POST("/admin/pet/new")
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .data({
           imgFolder: this.imgFolder,
           imgSrc: this.imgSrc,

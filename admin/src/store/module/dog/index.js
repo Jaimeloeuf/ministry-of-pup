@@ -51,7 +51,7 @@ export default {
     async getUnsoldDogs({ commit, dispatch }) {
       const res = await oof
         .GET("/admin/pet/available")
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .runJSON();
 
       // If the API call failed, recursively dispatch itself again if user wants to retry,
@@ -73,7 +73,7 @@ export default {
 
       const res = await oof
         .GET(`/admin/pet/${dogID}`)
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .runJSON();
 
       // If the API call failed, recursively dispatch itself again if user wants to retry,

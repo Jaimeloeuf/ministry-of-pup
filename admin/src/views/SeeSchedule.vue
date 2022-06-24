@@ -201,7 +201,7 @@ export default {
 
       const res = await oof
         .GET("/admin/schedule")
-        .header(await getAuthHeader())
+        .header(getAuthHeader)
         .runJSON();
 
       // If the API call failed, recursively call itself again if user wants to retry,
