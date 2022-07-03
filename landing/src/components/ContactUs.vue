@@ -95,6 +95,7 @@
           <button
             class="button is-fullwidth py-5 is-light is-success"
             @click="contact"
+            :disabled="loading"
           >
             Contact Me!
           </button>
@@ -110,6 +111,8 @@ export default {
 
   data() {
     return {
+      loading: false,
+
       fname: undefined,
       lname: undefined,
       number: undefined,
@@ -123,6 +126,9 @@ export default {
       // Stop function if any of the required inputs are missing
       if (!(this.fname && this.lname && this.number && this.email))
         return alert("All fields are required except 'message'");
+
+      // Disable the button untill API call is done to prevent multiple submissions
+      this.loading = true;
 
       try {
         const token = await new Promise((resolve, reject) =>
@@ -161,6 +167,9 @@ export default {
 
         // If the API call failed, recursively call itself again if user wants to retry,
         confirm(`Error: \n${error.message}\n\nTry again?`) && this.contact();
+      } finally {
+        // Regardless of API call status, remove loading UIs
+        this.loading = false;
       }
     },
   },
