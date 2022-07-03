@@ -31,6 +31,13 @@ html {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+
+  /* Alternative background image */
+  /* background: url("./assets/bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; */
 }
 
 #app {
