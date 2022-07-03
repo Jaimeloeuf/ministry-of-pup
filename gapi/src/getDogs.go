@@ -11,6 +11,8 @@ import (
 // Empty map type for dog document data
 type keyvalue map[string]interface{}
 
+// @todo Make this asynchronous
+// @todo Add a caching layer in front of the getDogs API call
 // Function to read all dogs document to show from firestore
 func getDogs(client *firestore.Client) []keyvalue {
 	var dogs []keyvalue

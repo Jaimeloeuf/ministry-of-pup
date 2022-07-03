@@ -54,7 +54,7 @@ func main() {
 	// Else set using an environment variable
 	// GIN_MODE=release
 
-	// Change to remove logger?
+	// @todo Change to remove logger in release mode
 	r := gin.Default()
 
 	// Add a global middleware to handle CORS

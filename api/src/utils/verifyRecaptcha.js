@@ -29,6 +29,7 @@ module.exports = async function verifyRecaptcha(req, res, next) {
       .then((resp) => resp.body);
 
     if (!res.success) throw new Error(res["error-codes"]);
+    // @todo Require a higher score? See what is the average score to decide
     if (res.score < 0.6)
       throw new Error(`Recaptcha score too low: ${res.score}`);
 

@@ -221,6 +221,7 @@ export default {
       this.loading = true;
 
       const res = await oof
+        // Using POST method instead of DEL, as DEL does not work w/o cors configuration on API service
         .POST(`/admin/schedule/blocked-dates/delete/${docID}`)
         .header(getAuthHeader)
         .data({})

@@ -9,6 +9,8 @@
           <p class="title is-4" v-else>Reschedule Appointment</p>
         </div>
 
+        <!-- @todo Copy complete.vue and show stuff for the calendar... -->
+
         <div class="column is-half">
           <label>
             <b>From</b>

@@ -171,6 +171,10 @@ import appointmentSource from "mop-appointment-src";
 // Remove the UN/undefined option as user should not be able to choose it
 delete appointmentSource.UN;
 
+// @todo
+// Handle case where they put referral code but change to another source later on, where the referral code is still sent to the server
+// Alternatively, dont use referral code for the Others thing...
+
 export default {
   name: "Details",
 
