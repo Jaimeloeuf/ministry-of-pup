@@ -35,6 +35,7 @@ const verifyRecaptcha = async ({ headers, socket }: https.Request) =>
       },
       (res) => {
         if (res.statusCode !== 200) {
+          // @todo Should this still resume, directly reject or force the stream to end?
           res.resume();
           return reject(new Error(`Recaptcha API failed: ${res.statusCode}`));
         }
@@ -44,11 +45,10 @@ const verifyRecaptcha = async ({ headers, socket }: https.Request) =>
         res.on("close", () => {
           const resp = JSON.parse(data);
 
-          if (!resp.success) return reject(new Error(resp["error-codes"]));
-          if (resp.score < 0.7)
-            return reject(new Error(`Recaptcha score too low: ${resp.score}`));
-
-          return resolve(resp);
+          if (!resp.success) reject(new Error(resp["error-codes"]));
+          else if (resp.score < 0.7)
+            reject(new Error(`Recaptcha score too low: ${resp.score}`));
+          else resolve(resp);
         });
       }
     );
@@ -66,6 +66,13 @@ export const getDogs = functions
     // However this function does not need that long since it is just a FS call
     // Thus reducing timeout to ensure that it will not accidentally run too long
     timeoutSeconds: 10,
+
+    // Can reduce cost by using less memory since FS call doesnt actually need alot of processing ram
+    // However note that reducing ram also reduces CPU speed allocated (128MB->200MHz, 256MB->400MHz, etc...)
+    // memory: "128MB",
+
+    // To reduce cold starts, but any more than 1 request per second will get a cold start
+    // minInstances: 1,
 
     // To prevent cost from exceeding
     // However this becomes vulnerable to DDoS, but at least DB wont get hit with recaptcha protection
