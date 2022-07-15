@@ -16,10 +16,12 @@ Code base for all the software written for [Ministry Of Pup](https://ministryofp
     - Landing page of [Ministry Of Pup](https://ministryofpup.com/)
 - [pdf](./pdf)
     - Utility library for handling PDF generations for the API
-- [functions](./functions)
-    - Firebase cloud functions
 - [gapi](./gapi)
     - Go API server with super low cold start time for the landing page get dogs API.
+- [functions (abandoned)](./.archive/functions)
+    - Firebase cloud functions
+    - Abandoned as the cold start time for this cloud function is just too high peaking at over 6 seconds!
+    - See [gapi](./gapi) instead where cold start time is much lower by using Go lang
 - [rapi-getdogs (abandoned)](./.archive/rapi-getdogs)
     - Rust API server with super low cold start time for the landing page get dogs API.
     - Abandoned as interfacing with Firestore DB in Rust is very difficult and does not offer much advantage over the Go API service
