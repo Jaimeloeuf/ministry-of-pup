@@ -1,0 +1,13 @@
+# Global file variable definitions
+@hostname = http://localhost
+@port = 8000
+@host = {{hostname}}:{{port}}
+
+### Ping
+GET {{host}}/
+
+### Health probe
+GET {{host}}/health
+
+### Get current running version
+GET {{host}}/version
