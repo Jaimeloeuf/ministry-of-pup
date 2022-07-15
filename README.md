@@ -7,6 +7,7 @@ Code base for all the software written for [Ministry Of Pup](https://ministryofp
     - Admin portal for use on the store's ipad
 - [api](./api)
     - Monolithic API backend for all logic
+    - Backend build on top of the Firestore database
 - [appointment-src](./appointment-src)
     - Shared JS package to map appointment abbrevations to their full names
 - [booking](./booking)
@@ -19,8 +20,9 @@ Code base for all the software written for [Ministry Of Pup](https://ministryofp
     - Firebase cloud functions
 - [gapi](./gapi)
     - Go API server with super low cold start time for the landing page get dogs API.
-- [rapi (abandoned)](./rapi)
+- [rapi-getdogs (abandoned)](./.archive/rapi-getdogs)
     - Rust API server with super low cold start time for the landing page get dogs API.
+    - Abandoned as interfacing with Firestore DB in Rust is very difficult and does not offer much advantage over the Go API service
     - See [gapi](./gapi) instead
 
 
