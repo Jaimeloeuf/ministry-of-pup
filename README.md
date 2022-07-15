@@ -11,7 +11,7 @@ Code base for all the software written for [Ministry Of Pup](https://ministryofp
 - [appointment-src](./appointment-src)
     - Shared JS package to map appointment abbrevations to their full names
 - [booking](./booking)
-    - Booking system's frontend booking app for users to book appointments
+    - Booking system's frontend for users to book appointments built with Vue3
 - [landing](./landing)
     - Landing page of [Ministry Of Pup](https://ministryofpup.com/)
 - [pdf](./pdf)
