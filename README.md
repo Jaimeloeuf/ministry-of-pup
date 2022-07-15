@@ -8,6 +8,9 @@ Code base for all the software written for [Ministry Of Pup](https://ministryofp
 - [api](./api)
     - Monolithic API backend for all logic
     - Backend build on top of the Firestore database
+- [rapi](./rapi)
+    - Rust API server to replace [api](./api)
+    - Backend build on top of a PostgreSQL database
 - [appointment-src](./appointment-src)
     - Shared JS package to map appointment abbrevations to their full names
 - [booking](./booking)
