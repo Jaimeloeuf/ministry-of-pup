@@ -18,8 +18,15 @@ fn version() -> &'static str {
     "process.env.version" // @todo
 }
 
+// Using a simple custom handler instead of the default one to prevent exposing server built with Rocket to minimize data exposure
+#[catch(404)]
+fn not_found() -> &'static str {
+    "404"
+}
+
 #[launch]
 fn rocket() -> _ {
     rocket::build()
         .mount("/", routes![index, health, version])
+        .register("/", catchers![not_found])
 }
