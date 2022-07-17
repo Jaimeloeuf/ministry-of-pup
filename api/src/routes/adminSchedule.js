@@ -104,7 +104,7 @@ router.post(
       .collection("blockedDates")
       .doc(req.params.docID)
       .delete()
-      .then(() => res.status(204).json({}))
+      .then(() => res.status(200).json({}))
       .catch((error) => res.status(500).json({ error }))
   )
 );
