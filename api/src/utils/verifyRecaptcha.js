@@ -8,6 +8,7 @@ module.exports = async function verifyRecaptcha(req, res, next) {
 
   try {
     // Lazily loading the HTTP client library to help with serverless cold start time
+    // @todo Change to use `simpler-fetch` once we migrate to node 18
     const res = await require("tiny-json-http")
       .post({
         // No freaking idea why but sending data over as a req.body JSON does not work

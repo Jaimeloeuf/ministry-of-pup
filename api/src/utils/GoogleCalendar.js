@@ -11,6 +11,9 @@ function getConfig() {
   // Get credentials from service account file
   const { client_email, private_key } = require("../../serviceAccountKey.json");
 
+  // @todo To migrate to use env var instead of having the file inside the docker container directly
+  // const { client_email, private_key } = process.env;
+
   return {
     calendarId: "ministryofpup@gmail.com",
 

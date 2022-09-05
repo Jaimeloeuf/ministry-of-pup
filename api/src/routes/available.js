@@ -327,6 +327,15 @@ async function nextFiveAvailableDates(after) {
 }
 
 /**
+ * How `available.js` works:
+ * 1. Generate next 5 dates from a given start date that the store is open (admin can specify which date store is closed)
+ * 2. Generate all the possible timeslots of those dates using the stores’ opening and closing time
+ * 3. Get all appointments within each of the 5 dates
+ * 4. Remove any time slots from array if the timeslot exists in the appointments that are already scheduled
+ * 5. Remove any time slots that lies within the start and end time slots that are blocked off by admin
+ */
+
+/**
  * Get up to the first 5 available dates through the booking app
  * An available date is defined as a date from the earliest available booking date that includes at least 1 free time slot
  *
@@ -338,6 +347,11 @@ async function nextFiveAvailableDates(after) {
 router.get(
   "/date",
   asyncWrap(async (req, res) =>
+    // Nicer way of writing the code
+    // nextFiveAvailableDates(req.query.after && parseInt(req.query.after))
+    //   .then((timeslots) => ({ timeslots }))
+    //   .then(res.status(200).json)
+    //
     // Generate an array of the next 5 dates, where each element is an obj with start and end timestamp of that date
     // If the "after" query param is used, parse it from String to Int first before passing it to function
     nextFiveAvailableDates(req.query.after && parseInt(req.query.after)).then(
