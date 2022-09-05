@@ -1,6 +1,6 @@
 {
   "name": "mop-appointment-src",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Mapping of appointment src abbrevation to full name",
   "main": "index.json"
 }

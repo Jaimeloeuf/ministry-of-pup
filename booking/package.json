@@ -11,7 +11,7 @@
   "dependencies": {
     "bulma": "^0.9.4",
     "calendar-link": "^2.2.0",
-    "mop-appointment-src": "file:../../appointment-src",
+    "mop-appointment-src": "file:../appointment-src",
     "simpler-fetch": "^7.0.2",
     "vue": "^3.2.37",
     "vue-router": "^4.1.3",
