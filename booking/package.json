@@ -12,7 +12,7 @@
     "bulma": "^0.9.4",
     "calendar-link": "^2.2.0",
     "mop-appointment-src": "file:../appointment-src",
-    "simpler-fetch": "^7.0.2",
+    "simpler-fetch": "^8.0.0",
     "vue": "^3.2.37",
     "vue-router": "^4.1.3",
     "vuex": "^4.0.2"
