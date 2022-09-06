@@ -3,6 +3,15 @@
     <div class="columns is-multiline">
       <div class="column is-full">
         <p class="title is-3">Book a viewing slot!</p>
+        <p class="subtitle is-5">
+          This booking website is for <b>viewing and purchasing dogs</b>, not
+          for events!
+          <br />
+          <br />
+
+          For events booking, please contact
+          <a href="tel:88022177">88022177</a>.
+        </p>
       </div>
 
       <div class="column is-full">
