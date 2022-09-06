@@ -12,6 +12,7 @@ const { DateTime } = require("luxon");
 
 const fs = require("../utils/fs");
 const getBlockedDates = require("../utils/getBlockedDates.js");
+const verifyRecaptcha = require("../utils/verifyRecaptcha");
 
 /**
  * Date in milliseconds since unix epoch time.
@@ -346,6 +347,10 @@ async function nextFiveAvailableDates(after) {
  */
 router.get(
   "/date",
+
+  // Requires a valid recaptcha token to continue
+  verifyRecaptcha,
+
   asyncWrap(async (req, res) =>
     // Nicer way of writing the code
     // nextFiveAvailableDates(req.query.after && parseInt(req.query.after))
