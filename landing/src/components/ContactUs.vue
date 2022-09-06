@@ -130,47 +130,47 @@ export default {
       // Disable the button untill API call is done to prevent multiple submissions
       this.loading = true;
 
-      try {
-        const token = await new Promise((resolve, reject) =>
-          window.grecaptcha.ready(() =>
-            window.grecaptcha
-              .execute("6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z", {
-                action: "contactUs",
-              })
-              .then(resolve)
-              .catch(reject)
-          )
-        );
+      const token = await new Promise((resolve, reject) =>
+        window.grecaptcha.ready(() =>
+          window.grecaptcha
+            .execute("6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z", {
+              action: "contactUs",
+            })
+            .then(resolve)
+            .catch(reject)
+        )
+      );
 
-        const { oof } = await import("simpler-fetch");
-        oof._baseUrl =
-          process.env.NODE_ENV === "production"
-            ? "https://api.ministryofpup.com"
-            : "http://localhost:3000";
-        const res = await oof
-          .POST("/contact-us-form")
-          .header({ "x-recaptcha-token": token })
-          .data({
-            fname: this.fname,
-            lname: this.lname,
-            number: this.number,
-            email: this.email,
-            message: this.message,
-          })
-          .runJSON();
+      const { oof } = await import("simpler-fetch");
+      oof.setBaseURL(
+        process.env.NODE_ENV === "production"
+          ? "https://api.ministryofpup.com"
+          : "http://localhost:3000"
+      );
 
-        if (!res.ok) throw new Error(res.error);
+      const { res, err } = await oof
+        .POST("/contact-us-form")
+        .header({ "x-recaptcha-token": token })
+        .bodyJSON({
+          fname: this.fname,
+          lname: this.lname,
+          number: this.number,
+          email: this.email,
+          message: this.message,
+        })
+        .runJSON();
 
-        alert("Saved! We will contact you shortly.");
-      } catch (error) {
-        console.error(error);
+      if (err || !res.ok) {
+        console.error(err);
 
-        // If the API call failed, recursively call itself again if user wants to retry,
-        confirm(`Error: \n${error.message}\n\nTry again?`) && this.contact();
-      } finally {
-        // Regardless of API call status, remove loading UIs
-        this.loading = false;
+        // If the API call failed for whatever reason, recursively dispatch itself again if user wants to retry.
+        confirm(`Error: \n${err}\n\nTry again?`) && this.contact();
       }
+
+      alert("Saved! We will contact you shortly.");
+
+      // Regardless of API call status, remove loading UIs
+      this.loading = false;
     },
   },
 };

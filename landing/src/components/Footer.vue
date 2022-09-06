@@ -107,38 +107,39 @@ export default {
       if (!this.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email))
         return alert("Invalid email");
 
-      try {
-        const token = await new Promise((resolve, reject) =>
-          window.grecaptcha.ready(() =>
-            window.grecaptcha
-              .execute("6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z", {
-                action: "subscribeNewsletter",
-              })
-              .then(resolve)
-              .catch(reject)
-          )
-        );
+      const token = await new Promise((resolve, reject) =>
+        window.grecaptcha.ready(() =>
+          window.grecaptcha
+            .execute("6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z", {
+              action: "subscribeNewsletter",
+            })
+            .then(resolve)
+            .catch(reject)
+        )
+      );
 
-        const { oof } = await import("simpler-fetch");
-        oof._baseUrl =
-          process.env.NODE_ENV === "production"
-            ? "https://api.ministryofpup.com"
-            : "http://localhost:3000";
-        const res = await oof
-          .POST("/newsletter/subscribe")
-          .header({ "x-recaptcha-token": token })
-          .data({ email: this.email })
-          .runJSON();
+      const { oof } = await import("simpler-fetch");
+      oof.setBaseURL(
+        process.env.NODE_ENV === "production"
+          ? "https://api.ministryofpup.com"
+          : "http://localhost:3000"
+      );
 
-        if (!res.ok) throw new Error(res.error);
+      const { res, err } = await oof
+        .POST("/newsletter/subscribe")
+        .header({ "x-recaptcha-token": token })
+        .bodyJSON({ email: this.email })
+        .runJSON();
 
-        alert("Subscribed!");
-      } catch (error) {
-        console.error(error);
+      if (err || !res.ok) {
+        console.error(err);
 
-        // If the API call failed, recursively call itself again if user wants to retry,
-        confirm(`Error: \n${error.message}\n\nTry again?`) && this.subscribe();
+        // If the API call failed for whatever reason, recursively dispatch itself again if user wants to retry,
+        // And always make sure that this method call ends right here by putting it in a return expression.
+        return confirm(`Error: \n${err}\n\nTry again?`) && this.subscribe();
       }
+
+      alert("Subscribed!");
     },
   },
 };

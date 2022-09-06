@@ -107,32 +107,30 @@ export default {
   methods: {
     // Function to load the dogs' data from firestore using a cloud function
     async loadDogs() {
-      try {
-        const token = await new Promise((resolve, reject) =>
-          window.grecaptcha.ready(() =>
-            window.grecaptcha
-              .execute("6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z", {
-                action: "loadDogs",
-              })
-              .then(resolve)
-              .catch(reject)
-          )
-        );
+      const token = await new Promise((resolve, reject) =>
+        window.grecaptcha.ready(() =>
+          window.grecaptcha
+            .execute("6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z", {
+              action: "loadDogs",
+            })
+            .then(resolve)
+            .catch(reject)
+        )
+      );
 
-        const res = await oof
-          .GET(
-            process.env.NODE_ENV === "production"
-              ? "https://asia-southeast1-ministryofpup-ekd.cloudfunctions.net/getDogs"
-              : "http://localhost:5001/ministryofpup-ekd/asia-southeast1/getDogs"
-          )
-          .header({ "x-recaptcha-token": token })
-          .runJSON();
+      const { res, err } = await oof
+        .GET(
+          process.env.NODE_ENV === "production"
+            ? "https://gapi.ministryofpup.com"
+            : "http://localhost:3001/"
+        )
+        .header({ "x-recaptcha-token": token })
+        .runJSON();
 
-        if (!res.ok) throw new Error(res.error);
-        this.dogs = res.dogs;
-      } catch (error) {
-        console.error(error);
-      }
+      // Currently, the user does not have an option to retry if it fails, so to retry they have to reload page
+      if (err || !res.ok) console.error(err);
+
+      this.dogs = res.dogs;
     },
   },
 };

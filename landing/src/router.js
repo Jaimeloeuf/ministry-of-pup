@@ -68,9 +68,12 @@ const routes = [
       ]).then(([token, oof, URL]) =>
         oof
           .POST(URL)
+          .once()
           .header({ "x-recaptcha-token": token })
           .runJSON()
-          .then((res) => alert(res.ok ? "Subscription Cancelled" : res.error))
+          .then(({ res, err }) =>
+            alert(err || !res.ok ? err || res.error : "Subscription Cancelled")
+          )
       ) && { name: "home" },
   },
 ];

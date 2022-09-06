@@ -12,7 +12,7 @@
   "dependencies": {
     "bulma": "^0.9.4",
     "core-js": "^3.24.1",
-    "simpler-fetch": "^7.0.2",
+    "simpler-fetch": "^8.0.0",
     "vue": "^2.6.14",
     "vue-router": "^3.5.1",
     "vue2-touch-events": "^3.2.2"
