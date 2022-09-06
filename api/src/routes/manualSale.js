@@ -13,8 +13,7 @@ const unixseconds = require("unixseconds");
 const { asyncWrap } = require("express-error-middlewares");
 
 // @todo Use sendgrid dynamic template to edit without requiring deploying new API version
-// @todo Make the phone number click to call? add the +65
-const emailReceipt = async ({ email, userFname, receipt }) =>
+const emailReceipt = async ({ email, userFname, receiptLink }) =>
   sendMail.send({
     to: email,
     from: process.env.notificationEmailSender,
@@ -22,22 +21,14 @@ const emailReceipt = async ({ email, userFname, receipt }) =>
 
     text: `Hey ${userFname}!
 
-Thank you so much for being our valued partner. Please find the attached receipt for your purchase!
+Thank you so much for being our valued partner. <a href="${receiptLink}">Here is your purchase receipt!</a>
 
-If you have any concerns regarding this receipt, please call 8802,2177 between 11am - 8pm, alternatively you can reply to this email.
+If you have any concerns regarding this receipt, please call <a href="tel:+65 88022177">8802,2177</a> between 11am - 8pm.
+Alternatively you can reply to this email directly.
 
 
 Sincerely,
 The Ministry of Pup team`,
-
-    attachments: [
-      {
-        content: receipt,
-        filename: "Receipt.pdf",
-        type: "application/pdf",
-        disposition: "attachment",
-      },
-    ],
   });
 
 /**
@@ -51,16 +42,13 @@ router.post(
   asyncWrap(async (req, res) => {
     const { userID, items, paymentMethod, totalPrice } = req.body;
 
-    const {
-      generateReceiptNumber,
-      generateReceiptString,
-    } = require("../utils/receipt");
-
     // Get the current time in unix seconds to use in both receiptData and manualSale documents
     const currentTime = unixseconds();
 
     // Generate receipt number if not passed in
-    const receiptNumber = req.body.receiptNumber || generateReceiptNumber();
+    const receiptNumber =
+      req.body.receiptNumber ||
+      require("../utils/receipt").generateReceiptNumber();
 
     const receiptData = {
       createdAt: currentTime,
@@ -103,18 +91,14 @@ router.post(
     if (customer) transaction.buyer_name = receiptData.customer.name;
     await require("../DL/createTransaction.js")(transaction);
 
-    // Return link for user to access receipt anytime again
-    // `https://api.ministryofpup.com/receipt/number/${receiptNumber}`;
-
-    // Only generate and email customer the receipt if they have an account with a valid email
+    // Only email customer about the transaction with the receipt link if they have an account with a valid email
     if (customer?.email)
-      await generateReceiptString(receiptData).then((receipt) =>
-        emailReceipt({
-          email: customer.email,
-          userFname: customer.fname,
-          receipt,
-        })
-      );
+      await emailReceipt({
+        email: customer.email,
+        userFname: customer.fname,
+        // Return link for user to access receipt anytime again
+        receiptLink: `https://api.ministryofpup.com/receipt/number/${receiptNumber}`,
+      });
 
     res.status(200).json({});
   })
