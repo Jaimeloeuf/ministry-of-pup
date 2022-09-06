@@ -37,6 +37,6 @@ module.exports = async function verifyRecaptcha(req, res, next) {
     return next();
   } catch (error) {
     // 403 identity known but denied / failed authentication
-    return res.status(403).json({ error });
+    return res.status(403).json({ error: error.message });
   }
 };

@@ -105,7 +105,7 @@ router.post(
       .doc(req.params.docID)
       .delete()
       .then(() => res.status(200).json({}))
-      .catch((error) => res.status(500).json({ error }))
+      .catch((e) => res.status(500).json({ error: e.message }))
   )
 );
 
