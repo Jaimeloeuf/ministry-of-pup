@@ -116,6 +116,7 @@ export default {
             ? "https://gapi.ministryofpup.com"
             : "http://localhost:3001/"
         )
+        .once()
         .header({ "x-recaptcha-token": token })
         .runJSON();
 

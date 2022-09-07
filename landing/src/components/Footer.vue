@@ -111,14 +111,13 @@ export default {
       const token = await getRecaptchaToken("subscribeNewsletter");
 
       const { oof } = await import("simpler-fetch");
-      oof.setBaseURL(
-        process.env.NODE_ENV === "production"
-          ? "https://api.ministryofpup.com"
-          : "http://localhost:3000"
-      );
-
       const { res, err } = await oof
-        .POST("/newsletter/subscribe")
+        .POST(
+          (process.env.NODE_ENV === "production"
+            ? "https://api.ministryofpup.com"
+            : "http://localhost:3000") + "/newsletter/subscribe"
+        )
+        .once()
         .header({ "x-recaptcha-token": token })
         .bodyJSON({ email: this.email })
         .runJSON();

@@ -134,14 +134,13 @@ export default {
       const token = await getRecaptchaToken("contactUs");
 
       const { oof } = await import("simpler-fetch");
-      oof.setBaseURL(
-        process.env.NODE_ENV === "production"
-          ? "https://api.ministryofpup.com"
-          : "http://localhost:3000"
-      );
-
       const { res, err } = await oof
-        .POST("/contact-us-form")
+        .POST(
+          (process.env.NODE_ENV === "production"
+            ? "https://api.ministryofpup.com"
+            : "http://localhost:3000") + "/contact-us-form"
+        )
+        .once()
         .header({ "x-recaptcha-token": token })
         .bodyJSON({
           fname: this.fname,
