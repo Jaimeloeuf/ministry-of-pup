@@ -71,9 +71,9 @@ export default createRouter({
             const { oof } = await import("simpler-fetch");
             const { res, err } = await oof
               .POST(
-                (process.env.NODE_ENV === "production"
-                  ? "https://api.ministryofpup.com"
-                  : "http://localhost:3000") +
+                (import.meta.env.MODE === "development"
+                  ? "http://localhost:3000"
+                  : "https://api.ministryofpup.com") +
                   `/newsletter/cancel/${to.params.newsletterDocID}`
               )
               .once()

@@ -112,9 +112,9 @@ export default {
 
       const { res, err } = await oof
         .GET(
-          process.env.NODE_ENV === "production"
-            ? "https://gapi.ministryofpup.com"
-            : "http://localhost:3001/"
+          import.meta.env.MODE === "development"
+            ? "http://localhost:3000"
+            : "https://api.ministryofpup.com"
         )
         .once()
         .header({ "x-recaptcha-token": token })
