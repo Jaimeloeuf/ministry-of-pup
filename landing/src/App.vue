@@ -1,3 +1,13 @@
+<script setup lang="ts">
+/* Parent component that contains and switches between all the view components using view router's router-view */
+
+// Load the bulma styles in the top level component
+import "bulma/css/bulma.min.css";
+
+import HeroHead from "./components/HeroHead.vue";
+import Footer from "./components/Footer.vue";
+</script>
+
 <template>
   <div id="main">
     <!-- Where app contains the shared components and the router-view component to show the different views -->
@@ -16,24 +26,6 @@
     </a>
   </div>
 </template>
-
-<script>
-/* Parent component that contains and switches between all the view components using view router's router-view */
-
-// Load the bulma styles in the top level component
-import "bulma/css/bulma.min.css";
-
-import HeroHead from "@/components/HeroHead";
-import Footer from "@/components/Footer";
-
-export default {
-  name: "App",
-  components: {
-    HeroHead,
-    Footer,
-  },
-};
-</script>
 
 <style>
 /* Alternative bulma import using CDN */

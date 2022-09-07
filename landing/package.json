@@ -4,26 +4,35 @@
   "private": true,
   "scripts": {
     "serve": "npx vite --port 8080",
+    "serve:localnetwork": "npx vite --port 8080 --host",
+    "lint": "npx eslint ./src/ --ext .vue,.js,.ts,.cjs,.mjs --fix --ignore-path .gitignore",
+    "preview": "npx vite preview --port 8080",
+    "typecheck": "npx vue-tsc --noEmit",
     "build": "npx vite build",
-    "deploy-firebase-hosting": "firebase deploy --only hosting:ministryofpup",
-    "deploy": "npm run build && npm run deploy-firebase-hosting"
+    "build:delete": "npx rimraf ./dist",
+    "build:full": "npm run typecheck && npm run build:delete && npm run build",
+    "build:gh-pages": "npm run typecheck && npm run build:delete && npx vite build --mode github-pages",
+    "deploy:gh-pages": "npx gh-pages -d dist"
   },
   "dependencies": {
     "bulma": "^0.9.4",
-    "core-js": "^3.25.0",
     "simpler-fetch": "^8.0.0",
     "vue": "^3.2.38",
-    "vue-router": "^4.1.5",
-    "vue2-touch-events": "^3.2.2"
+    "vue-router": "^4.1.5"
   },
   "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.4",
+    "@types/node": "^18.7.15",
     "@vitejs/plugin-vue": "^3.1.0",
     "@vue/eslint-config-prettier": "^7.0.0",
+    "@vue/eslint-config-typescript": "^11.0.1",
+    "@vue/tsconfig": "^0.1.3",
     "eslint": "^8.23.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-vue": "^9.4.0",
     "prettier": "^2.7.1",
+    "typescript": "^4.8.2",
     "vite": "^3.1.0",
-    "vue-template-compiler": "^2.7.10"
+    "vue-tsc": "^0.40.10"
   }
 }

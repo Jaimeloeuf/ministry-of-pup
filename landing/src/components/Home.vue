@@ -14,12 +14,12 @@
 </template>
 
 <script>
-import HeroBody from "@/components/HeroBody";
-import Testimonials from "@/components/Testimonials";
-import OurDogs from "@/components/OurDogs";
-import ContactUs from "@/components/ContactUs";
-import AboutUs from "@/components/AboutUs";
-import FAQ from "@/components/FAQ";
+import HeroBody from "./HeroBody.vue";
+import Testimonials from "./Testimonials.vue";
+import OurDogs from "./OurDogs.vue";
+import ContactUs from "./ContactUs.vue";
+import AboutUs from "./AboutUs.vue";
+import FAQ from "./FAQ.vue";
 
 export default {
   name: "Home",
