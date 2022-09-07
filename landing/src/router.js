@@ -62,43 +62,34 @@ export default createRouter({
 
         // Call API to unsubscribe and redirect
         // Since API call is async, it is a Promise, so redirect returns, Promise<any> && HomeRoute
-        // Since && will short circuit to return HomeRoute object, this is fine as the API call will run in the background
-        redirect: (to) =>
-          // Get the recaptcha token
-          Promise.all([
-            new Promise((resolve, reject) =>
-              window.grecaptcha.ready(() =>
-                window.grecaptcha
-                  .execute("6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z", {
-                    action: "unsubscribeNewsletter",
-                  })
-                  .then(resolve)
-                  .catch(reject)
-              )
-            ),
+        // Return HomeRoute object, this is fine as the API call will run in the background
+        async redirect(to) {
+          const { getRecaptchaToken } = await import("./recaptcha");
+          const token = await getRecaptchaToken("unsubscribeNewsletter");
 
-            // Import oof and parse it out
-            import("simpler-fetch").then(({ oof }) => oof),
-
-            // Resolve the full API URL
-            Promise.resolve(
+          const { oof } = await import("simpler-fetch");
+          const { res, err } = await oof
+            .POST(
+              // import.meta.env.MODE
               (process.env.NODE_ENV === "production"
                 ? "https://api.ministryofpup.com"
                 : "http://localhost:3000") +
                 `/newsletter/cancel/${to.params.newsletterDocID}`
-            ),
-          ]).then(([token, oof, URL]) =>
-            oof
-              .POST(URL)
-              .once()
-              .header({ "x-recaptcha-token": token })
-              .runJSON()
-              .then(({ res, err }) =>
-                alert(
-                  err || !res.ok ? err || res.error : "Subscription Cancelled"
-                )
-              )
-          ) && { name: "home" },
+            )
+            .once()
+            .header({ "x-recaptcha-token": token })
+            .runJSON();
+
+          // Simply alert user on failure
+          if (err || !res.ok) {
+            console.error(err);
+            alert(`Error: \n${err || res.error}`);
+          } else {
+            alert("Subscription Cancelled");
+          }
+
+          return { name: "home" };
+        },
       },
 
       // {
