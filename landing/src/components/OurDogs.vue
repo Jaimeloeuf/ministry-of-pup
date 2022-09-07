@@ -107,16 +107,8 @@ export default {
   methods: {
     // Function to load the dogs' data from firestore using a cloud function
     async loadDogs() {
-      const token = await new Promise((resolve, reject) =>
-        window.grecaptcha.ready(() =>
-          window.grecaptcha
-            .execute("6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z", {
-              action: "loadDogs",
-            })
-            .then(resolve)
-            .catch(reject)
-        )
-      );
+      const { getRecaptchaToken } = await import("../recaptcha");
+      const token = await getRecaptchaToken("loadDogs");
 
       const { res, err } = await oof
         .GET(

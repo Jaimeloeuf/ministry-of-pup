@@ -130,16 +130,8 @@ export default {
       // Disable the button untill API call is done to prevent multiple submissions
       this.loading = true;
 
-      const token = await new Promise((resolve, reject) =>
-        window.grecaptcha.ready(() =>
-          window.grecaptcha
-            .execute("6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z", {
-              action: "contactUs",
-            })
-            .then(resolve)
-            .catch(reject)
-        )
-      );
+      const { getRecaptchaToken } = await import("../recaptcha");
+      const token = await getRecaptchaToken("contactUs");
 
       const { oof } = await import("simpler-fetch");
       oof.setBaseURL(

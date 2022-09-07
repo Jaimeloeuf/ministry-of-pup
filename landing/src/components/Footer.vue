@@ -107,16 +107,8 @@ export default {
       if (!this.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email))
         return alert("Invalid email");
 
-      const token = await new Promise((resolve, reject) =>
-        window.grecaptcha.ready(() =>
-          window.grecaptcha
-            .execute("6Lcex6QcAAAAADus4RtnoqwskQoXcB2DwgCav11Z", {
-              action: "subscribeNewsletter",
-            })
-            .then(resolve)
-            .catch(reject)
-        )
-      );
+      const { getRecaptchaToken } = await import("../recaptcha");
+      const token = await getRecaptchaToken("subscribeNewsletter");
 
       const { oof } = await import("simpler-fetch");
       oof.setBaseURL(
