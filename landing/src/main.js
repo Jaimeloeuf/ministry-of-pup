@@ -10,24 +10,10 @@
   //   window.location.replace("https://yourdomain.com");
 })();
 
-import Vue from "vue";
+import { createApp } from "vue";
 import App from "./App.vue";
 
 import router from "./router.js";
 
-// @todo Move this directive registration into the Testimonial.vue only
-import Vue2TouchEvents from "vue2-touch-events";
-Vue.use(Vue2TouchEvents);
-
-Vue.config.productionTip = false;
-
-new Vue({
-  router,
-  render: (h) => h(App),
-
-  // UNCOMMENT THIS IF PRE-RENDERING PLUGIN IS USED
-  // This is needed for "prerender-spa-plugin"'s renderAfterDocumentEvent to take snapshot of static content once everything is rendered.
-  // mounted() {
-  //   document.dispatchEvent(new Event("vue-render-complete"));
-  // },
-}).$mount("#app");
+// Create new vue app
+createApp(App).use(router).mount("#app");
