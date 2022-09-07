@@ -63,30 +63,35 @@ export default createRouter({
         // Call API to unsubscribe and redirect
         // Since API call is async, it is a Promise, so redirect returns, Promise<any> && HomeRoute
         // Return HomeRoute object, this is fine as the API call will run in the background
-        async redirect(to) {
-          const { getRecaptchaToken } = await import("./recaptcha");
-          const token = await getRecaptchaToken("unsubscribeNewsletter");
+        redirect(to) {
+          async function unsub() {
+            const { getRecaptchaToken } = await import("./recaptcha.js");
+            const token = await getRecaptchaToken("unsubscribeNewsletter");
 
-          const { oof } = await import("simpler-fetch");
-          const { res, err } = await oof
-            .POST(
-              // import.meta.env.MODE
-              (process.env.NODE_ENV === "production"
-                ? "https://api.ministryofpup.com"
-                : "http://localhost:3000") +
-                `/newsletter/cancel/${to.params.newsletterDocID}`
-            )
-            .once()
-            .header({ "x-recaptcha-token": token })
-            .runJSON();
+            const { oof } = await import("simpler-fetch");
+            const { res, err } = await oof
+              .POST(
+                (process.env.NODE_ENV === "production"
+                  ? "https://api.ministryofpup.com"
+                  : "http://localhost:3000") +
+                  `/newsletter/cancel/${to.params.newsletterDocID}`
+              )
+              .once()
+              .header({ "x-recaptcha-token": token })
+              .runJSON();
 
-          // Simply alert user on failure
-          if (err || !res.ok) {
-            console.error(err);
-            alert(`Error: \n${err || res.error}`);
-          } else {
-            alert("Subscription Cancelled");
+            // Simply alert user on failure
+            if (err || !res.ok) {
+              console.error(err);
+              alert(`Failed to unsubscribe: \n${err || res.error}`);
+            } else {
+              alert("Subscription Cancelled");
+            }
           }
+
+          // Call unsub function and let it run in the background on the first await inside
+          // So that the page can be redirected back to home page while the API call runs in the background
+          unsub();
 
           return { name: "home" };
         },
