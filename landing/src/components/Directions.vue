@@ -1,3 +1,5 @@
+<script setup lang="ts"></script>
+
 <template>
   <section class="section container has-text-left">
     <!-- Extra break spacing so that when navigating with # ids, the navbar's border does not touch the content so closely -->
@@ -53,9 +55,3 @@
     </div>
   </section>
 </template>
-
-<script>
-export default {
-  name: "Directions",
-};
-</script>

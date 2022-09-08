@@ -1,14 +1,16 @@
 /* For sites that can be accessed via multiple domains */
 // Function to redirect user to the preferred domain instead of the default firebase hosting domains if they land there.
-// IIFE to prevent polluting the global namespace accidentally
-(function () {
+// Wrapped in its own code block to not pollute the global namespace
+{
   const location = window.location.hostname;
   console.log(`Window location: ${location}`);
 
-  // Add links to redirect as needed
-  // if (location === "example.com" || location === "example2.com")
-  //   window.location.replace("https://yourdomain.com");
-})();
+  if (
+    location === "ministryofpup.web.app" ||
+    location === "ministryofpup.firebaseapp.com"
+  )
+    window.location.replace("https://yourdomain.com");
+}
 
 import { createApp } from "vue";
 import App from "./App.vue";

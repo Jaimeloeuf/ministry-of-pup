@@ -19,6 +19,8 @@ export default createRouter({
    * Alternative solution for smooth scrolling to anchor
    * https://github.com/vuejs/vue-router/issues/1668#issuecomment-437744248
    */
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition;
     else if (to.hash) return { selector: to.hash, behavior: "instant" };
