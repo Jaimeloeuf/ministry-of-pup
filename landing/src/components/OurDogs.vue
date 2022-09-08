@@ -42,7 +42,7 @@
       </div>
 
       <!-- Show loading card if there is dogs are not loaded yet. Assuming always at least 1 dog available -->
-      <div class="column is-3" v-if="dogs.length === 0">
+      <div v-if="dogs.length === 0" class="column is-3">
         <div class="card">
           <div class="card-content">
             <p class="subtitle" style="color: lightcoral">

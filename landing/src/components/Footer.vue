@@ -29,9 +29,9 @@
             <div class="field has-addons">
               <div class="control">
                 <input
+                  v-model="email"
                   class="input"
                   type="email"
-                  v-model="email"
                   placeholder="Email"
                 />
               </div>
@@ -83,8 +83,6 @@
 
 <script>
 export default {
-  name: "Footer",
-
   data() {
     return { email: undefined };
   },

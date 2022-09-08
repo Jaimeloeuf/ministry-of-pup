@@ -36,8 +36,8 @@
             <span
               v-for="(menuItem, i) in menuItems"
               :key="i"
-              @click="showMobileMenu = false"
               :class="{ 'greyed-link': showMobileMenu && i & 1 }"
+              @click="showMobileMenu = false"
             >
               <hr v-if="menuItem.name === 'hr'" />
 
@@ -52,24 +52,24 @@
                 <a
                   v-if="menuItem.link"
                   class="navbar-item"
+                  :href="menuItem.link"
+                  target="_blank"
                   v-html="
                     isMobile
                       ? menuItem.name + ' ' + menuItem.icon
                       : menuItem.name
                   "
-                  :href="menuItem.link"
-                  target="_blank"
                 />
 
                 <router-link
                   v-else
                   class="navbar-item"
+                  :to="menuItem.routerLink"
                   v-html="
                     isMobile
                       ? menuItem.name + ' ' + menuItem.icon
                       : menuItem.name
                   "
-                  :to="menuItem.routerLink"
                 />
               </span>
             </span>
@@ -83,26 +83,6 @@
 <script>
 export default {
   name: "HeroHead",
-
-  created() {
-    // On component creation, trigger the method to calculate if device is mobile,
-    // And add the method as a event handler for resizes to handle orientation changes
-    // resize event preferred over screen orientation event as that is not supported on safari..
-    this.recalculateIsMobile();
-    window.addEventListener("resize", this.recalculateIsMobile);
-  },
-
-  methods: {
-    // Call method to calculate if device is mobile based on screen width and update this.isMobile accordingly
-    recalculateIsMobile() {
-      // Bulma $desktop breakpoint variable is 1024px, thus check for that to see when navbar will convert to mobile style
-      // And if less than that, then the device is considered to be a mobile device
-      this.isMobile =
-        (window.innerWidth ||
-          document.documentElement.clientWidth ||
-          document.body.clientWidth) < 1024;
-    },
-  },
 
   data() {
     return {
@@ -164,6 +144,26 @@ export default {
         },
       ],
     };
+  },
+
+  created() {
+    // On component creation, trigger the method to calculate if device is mobile,
+    // And add the method as a event handler for resizes to handle orientation changes
+    // resize event preferred over screen orientation event as that is not supported on safari..
+    this.recalculateIsMobile();
+    window.addEventListener("resize", this.recalculateIsMobile);
+  },
+
+  methods: {
+    // Call method to calculate if device is mobile based on screen width and update this.isMobile accordingly
+    recalculateIsMobile() {
+      // Bulma $desktop breakpoint variable is 1024px, thus check for that to see when navbar will convert to mobile style
+      // And if less than that, then the device is considered to be a mobile device
+      this.isMobile =
+        (window.innerWidth ||
+          document.documentElement.clientWidth ||
+          document.body.clientWidth) < 1024;
+    },
   },
 };
 </script>

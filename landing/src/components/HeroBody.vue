@@ -13,8 +13,8 @@
       <router-link :to="{ name: 'home', hash: '#OurDogs' }">
         <figure class="scroll-icon">
           <svg
-            version="1.1"
             id="ico-arrow"
+            version="1.1"
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
             x="0px"

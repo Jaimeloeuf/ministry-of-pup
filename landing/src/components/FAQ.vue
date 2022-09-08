@@ -18,8 +18,8 @@
         </router-link>
       </div>
 
-      <div class="column is-4" v-for="(faq, i) in faqs" :key="i">
-        <div class="box" @click="faq.show = !faq.show" style="cursor: pointer">
+      <div v-for="(faq, i) in faqs" :key="i" class="column is-4">
+        <div class="box" style="cursor: pointer" @click="faq.show = !faq.show">
           <p class="subtitle has-text-weight-bold" v-html="faq.ques" />
           <span v-if="faq.show" v-html="faq.ans"></span>
         </div>
