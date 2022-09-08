@@ -49,12 +49,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "HeroBody",
-};
-</script>
-
 <style scoped>
 .title-color {
   /* color: #2c2c2c; */

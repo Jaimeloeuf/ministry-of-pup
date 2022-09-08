@@ -1,3 +1,47 @@
+<script setup lang="ts">
+import { ref } from "vue";
+import { oof } from "simpler-fetch";
+
+// Not the full type but just enough for all the values used in this view
+type Dog = {
+  imgSrc: Array<string>;
+  name: string;
+  breed: string;
+  reserved: boolean;
+};
+
+const dogs = ref<Array<Dog> | undefined>(undefined);
+
+// Function to get dogs from 'gapi'
+async function getDogs() {
+  const { getRecaptchaToken } = await import("../recaptcha");
+  const token = await getRecaptchaToken("loadDogs");
+
+  const { res, err } = await oof
+    .GET(
+      import.meta.env.MODE === "development"
+        ? "http://localhost:3000"
+        : "https://api.ministryofpup.com"
+    )
+    .once()
+    .header({ "x-recaptcha-token": token })
+    .runJSON();
+
+  // Currently, the user does not have an option to retry if it fails, so to retry they have to reload page
+  if (err || !res.ok) {
+    // @todo Show a unable to load dogs UI on failure
+
+    // Break out of the function
+    return console.error(err);
+  }
+
+  dogs.value = res.dogs;
+}
+
+// Trigger getDogs just before setup script exits to fire and let getDogs run in the background
+getDogs();
+</script>
+
 <template>
   <section class="section container has-text-left">
     <!-- Extra break spacing so that when navigating with # ids, the navbar's border does not touch the content so closely -->
@@ -41,8 +85,8 @@
         </div>
       </div>
 
-      <!-- Show loading card if there is dogs are not loaded yet. Assuming always at least 1 dog available -->
-      <div v-if="dogs.length === 0" class="column is-3">
+      <!-- Show loading card if dogs are not loaded yet -->
+      <div v-if="dogs === undefined" class="column is-3">
         <div class="card">
           <div class="card-content">
             <p class="subtitle" style="color: lightcoral">
@@ -89,42 +133,3 @@
     </div>
   </section>
 </template>
-
-<script>
-import { oof } from "simpler-fetch";
-
-export default {
-  name: "OurDogs",
-
-  data() {
-    return { dogs: [] };
-  },
-
-  created() {
-    this.loadDogs();
-  },
-
-  methods: {
-    // Function to load the dogs' data from firestore using a cloud function
-    async loadDogs() {
-      const { getRecaptchaToken } = await import("../recaptcha");
-      const token = await getRecaptchaToken("loadDogs");
-
-      const { res, err } = await oof
-        .GET(
-          import.meta.env.MODE === "development"
-            ? "http://localhost:3000"
-            : "https://api.ministryofpup.com"
-        )
-        .once()
-        .header({ "x-recaptcha-token": token })
-        .runJSON();
-
-      // Currently, the user does not have an option to retry if it fails, so to retry they have to reload page
-      if (err || !res.ok) console.error(err);
-
-      this.dogs = res.dogs;
-    },
-  },
-};
-</script>

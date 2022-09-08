@@ -55,12 +55,6 @@
   </section>
 </template>
 
-<script>
-export default {
-  name: "NewPawrent",
-};
-</script>
-
 <style>
 li:not(:last-child) {
   margin-bottom: 1.6em;

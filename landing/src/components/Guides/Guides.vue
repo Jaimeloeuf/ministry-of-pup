@@ -1,3 +1,28 @@
+<script setup lang="ts">
+const guides = [
+  {
+    link: { name: "guides-new-pawrent" },
+    text: "Getting started as a new Pawrent!",
+  },
+  {
+    link: { name: "guides-new-pawrent" },
+    text: "Recommended food for puppies",
+  },
+  {
+    link: { name: "guides-new-pawrent" },
+    text: "Vaccinations",
+  },
+  {
+    link: { name: "guides-new-pawrent" },
+    text: "Visiting the vet",
+  },
+  {
+    link: { name: "guides-new-pawrent" },
+    text: "Staying well groomed",
+  },
+];
+</script>
+
 <template>
   <section class="hero is-fullheight section container has-text-left">
     <!-- Extra break spacing so that when navigating with # ids, the navbar's border does not touch the content so closely -->
@@ -22,39 +47,6 @@
     </div>
   </section>
 </template>
-
-<script>
-export default {
-  name: "Guides",
-
-  data() {
-    return {
-      guides: [
-        {
-          link: { name: "guides-new-pawrent" },
-          text: "Getting started as a new Pawrent!",
-        },
-        {
-          link: { name: "guides-new-pawrent" },
-          text: "Recommended food for puppies",
-        },
-        {
-          link: { name: "guides-new-pawrent" },
-          text: "Vaccinations",
-        },
-        {
-          link: { name: "guides-new-pawrent" },
-          text: "Visiting the vet",
-        },
-        {
-          link: { name: "guides-new-pawrent" },
-          text: "Staying well groomed",
-        },
-      ],
-    };
-  },
-};
-</script>
 
 <style>
 li:not(:last-child) {

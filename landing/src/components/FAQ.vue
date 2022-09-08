@@ -1,3 +1,28 @@
+<script setup lang="ts">
+const faqs = [
+  {
+    ques: "What is your operating hours?",
+    ans: "Mon to Sun, 11am to 8pm by appointment only. Book your appointment <a href='https://booking.ministryofpup.com'>here</a>.",
+    show: false,
+  },
+  {
+    ques: "Where are your puppies from?",
+    ans: "United Kingdom!",
+    show: false,
+  },
+  {
+    ques: "Do you have pedigree dogs?",
+    ans: "Yes we do! See the listing details for each dog, and you can also learn more during your on site play session with the dogs.",
+    show: false,
+  },
+  {
+    ques: "What type of dogs do you have?",
+    ans: "Primarily French Bulldogs and Shiba Inus, but you can let us know what you are looking for via our booking system and we will notify you when we find a dog that suits your preferences.",
+    show: false,
+  },
+];
+</script>
+
 <template>
   <section class="section container has-text-left">
     <!-- Extra break spacing so that when navigating with # ids, the navbar's border does not touch the content so closely -->
@@ -56,36 +81,3 @@
     </div>
   </section>
 </template>
-
-<script>
-export default {
-  name: "OurDogs",
-
-  data() {
-    return {
-      faqs: [
-        {
-          ques: "What is your operating hours?",
-          ans: "Mon to Sun, 11am to 8pm by appointment only. Book your appointment <a href='https://booking.ministryofpup.com'>here</a>.",
-          show: false,
-        },
-        {
-          ques: "Where are your puppies from?",
-          ans: "United Kingdom!",
-          show: false,
-        },
-        {
-          ques: "Do you have pedigree dogs?",
-          ans: "Yes we do! See the listing details for each dog, and you can also learn more during your on site play session with the dogs.",
-          show: false,
-        },
-        {
-          ques: "What type of dogs do you have?",
-          ans: "Primarily French Bulldogs and Shiba Inus, but you can let us know what you are looking for via our booking system and we will notify you when we find a dog that suits your preferences.",
-          show: false,
-        },
-      ],
-    };
-  },
-};
-</script>

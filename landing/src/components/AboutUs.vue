@@ -52,9 +52,3 @@
     </div>
   </section>
 </template>
-
-<script>
-export default {
-  name: "AboutUs",
-};
-</script>

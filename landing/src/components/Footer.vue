@@ -1,3 +1,52 @@
+<script setup lang="ts">
+import { ref } from "vue";
+
+const email = ref<string | undefined>(undefined);
+
+async function subscribe() {
+  // Strip input email of whitespaces
+  // 'this.email &&' gaurd as email defaults to undefined
+  email.value = email.value && email.value.replace(/\s/g, "");
+
+  // Stop function and do nothing if the required input is missing
+  //
+  // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+  // This is not foolproof but should prevent most simple cases
+  // This does not prevent fake TLD and stuff like anystring@anystring.anystring
+  //
+  // However following these articles, it is probably just fine, at most we can implement mailcheck and verification
+  // https://davidcel.is/posts/stop-validating-email-addresses-with-regex/
+  // https://www.npmjs.com/package/mailcheck
+  if (!email.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value))
+    return alert("Invalid email");
+
+  const { getRecaptchaToken } = await import("../recaptcha");
+  const token = await getRecaptchaToken("subscribeNewsletter");
+
+  const { oof } = await import("simpler-fetch");
+  const { res, err } = await oof
+    .POST(
+      (import.meta.env.MODE === "development"
+        ? "http://localhost:3000"
+        : "https://api.ministryofpup.com") + "/newsletter/subscribe"
+    )
+    .once()
+    .header({ "x-recaptcha-token": token })
+    .bodyJSON({ email: email.value })
+    .runJSON();
+
+  if (err || !res.ok) {
+    console.error(err);
+
+    // If the API call failed for whatever reason, recursively dispatch itself again if user wants to retry,
+    // And always make sure that this method call ends right here by putting it in a return expression.
+    return confirm(`Error: \n${err}\n\nTry again?`) && this.subscribe();
+  }
+
+  alert("Subscribed!");
+}
+</script>
+
 <template>
   <footer class="footer">
     <div class="container is-centered">
@@ -80,59 +129,6 @@
     </div>
   </footer>
 </template>
-
-<script>
-export default {
-  data() {
-    return { email: undefined };
-  },
-
-  methods: {
-    async subscribe() {
-      // Strip input email of whitespaces
-      // 'this.email &&' gaurd as email defaults to undefined
-      this.email = this.email && this.email.replace(/\s/g, "");
-
-      // Stop function and do nothing if the required input is missing
-      //
-      // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
-      // This is not foolproof but should prevent most simple cases
-      // This does not prevent fake TLD and stuff like anystring@anystring.anystring
-      //
-      // However following these articles, it is probably just fine, at most we can implement mailcheck and verification
-      // https://davidcel.is/posts/stop-validating-email-addresses-with-regex/
-      // https://www.npmjs.com/package/mailcheck
-      if (!this.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email))
-        return alert("Invalid email");
-
-      const { getRecaptchaToken } = await import("../recaptcha");
-      const token = await getRecaptchaToken("subscribeNewsletter");
-
-      const { oof } = await import("simpler-fetch");
-      const { res, err } = await oof
-        .POST(
-          (import.meta.env.MODE === "development"
-            ? "http://localhost:3000"
-            : "https://api.ministryofpup.com") + "/newsletter/subscribe"
-        )
-        .once()
-        .header({ "x-recaptcha-token": token })
-        .bodyJSON({ email: this.email })
-        .runJSON();
-
-      if (err || !res.ok) {
-        console.error(err);
-
-        // If the API call failed for whatever reason, recursively dispatch itself again if user wants to retry,
-        // And always make sure that this method call ends right here by putting it in a return expression.
-        return confirm(`Error: \n${err}\n\nTry again?`) && this.subscribe();
-      }
-
-      alert("Subscribed!");
-    },
-  },
-};
-</script>
 
 <style scoped>
 footer {
