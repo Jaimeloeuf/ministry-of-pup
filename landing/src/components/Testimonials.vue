@@ -11,8 +11,20 @@
       </p>
     </div>
 
-    <div class="column" v-touch:swipe.left="next" v-touch:swipe.right="prev">
-      <!-- Add translucent arrows -->
+    <!-- Unselectable testimonial text to make it easier to swipe -->
+    <div
+      v-touch:swipe.left="next"
+      v-touch:swipe.right="prev"
+      class="column"
+      style="
+        -moz-user-select: -moz-none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      "
+    >
+      <!-- @todo Add translucent arrows -->
       {{ testimonials[currentTestimonial] }}
     </div>
 

@@ -18,7 +18,8 @@
     "bulma": "^0.9.4",
     "simpler-fetch": "^8.0.0",
     "vue": "^3.2.38",
-    "vue-router": "^4.1.5"
+    "vue-router": "^4.1.5",
+    "vue3-touch-events": "^4.1.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
