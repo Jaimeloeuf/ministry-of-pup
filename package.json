@@ -1,0 +1,21 @@
+{
+  "name": "mop",
+  "version": "0.0.0",
+  "description": "Using package.json to store root level scripts for running the API server with dependencies in this monorepo setup",
+  "scripts": {
+    "docker:build": "docker build -t gcr.io/ministryofpup-ekd/api -f ./.Dockerfile .",
+    "docker:run": "docker run -d -p 3000:3000 --rm --name mop-api --env-file ./api/.env gcr.io/ministryofpup-ekd/api",
+    "docker:run-attached": "docker run -p 3000:3000 --name mop-api --env-file ./api/.env gcr.io/ministryofpup-ekd/api",
+    "docker:push": "docker push gcr.io/ministryofpup-ekd/api",
+    "deploy": "npm run docker:build && npm run docker:push"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Enkel-Digital/mop.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Enkel-Digital/mop/issues"
+  },
+  "homepage": "https://github.com/Enkel-Digital/mop#readme",
+  "author": "JJ"
+}

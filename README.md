@@ -6,10 +6,10 @@ Code base for all the software written for [Ministry Of Pup](https://ministryofp
 - [admin](./admin)
     - Admin portal for use on the store's ipad
 - [api](./api)
-    - Monolithic API backend for all logic
+    - Monolithic API backend for all business logic like the appointment booking system and transaction processing system
     - Backend build on top of the Firestore database
 - [rapi](./rapi)
-    - Rust API server to replace [api](./api)
+    - WIP Rust API server to replace [api](./api)
     - Backend build on top of a PostgreSQL database
 - [appointment-src](./appointment-src)
     - Shared JS package to map appointment abbrevations to their full names
@@ -18,7 +18,7 @@ Code base for all the software written for [Ministry Of Pup](https://ministryofp
 - [landing](./landing)
     - Landing page of [Ministry Of Pup](https://ministryofpup.com/)
 - [pdf](./pdf)
-    - Utility library for handling PDF generations for the API
+    - Utility library for handling PDF generations for the JS API
 - [gapi](./gapi)
     - Go API server with super low cold start time for the landing page get dogs API.
 
