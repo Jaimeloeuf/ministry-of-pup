@@ -3,7 +3,7 @@ import { ref } from "vue";
 
 const email = ref<string | undefined>(undefined);
 
-async function subscribe() {
+async function subscribe(): Promise<boolean | void> {
   // Strip input email of whitespaces
   // 'this.email &&' gaurd as email defaults to undefined
   email.value = email.value && email.value.replace(/\s/g, "");
@@ -40,7 +40,7 @@ async function subscribe() {
 
     // If the API call failed for whatever reason, recursively dispatch itself again if user wants to retry,
     // And always make sure that this method call ends right here by putting it in a return expression.
-    return confirm(`Error: \n${err}\n\nTry again?`) && this.subscribe();
+    return confirm(`Error: \n${err}\n\nTry again?`) && subscribe();
   }
 
   alert("Subscribed!");
