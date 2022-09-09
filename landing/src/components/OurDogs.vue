@@ -21,7 +21,7 @@ async function getDogs() {
     .GET(
       import.meta.env.MODE === "development"
         ? "http://localhost:3000"
-        : "https://api.ministryofpup.com"
+        : "https://gapi.ministryofpup.com"
     )
     .once()
     .header({ "x-recaptcha-token": token })
