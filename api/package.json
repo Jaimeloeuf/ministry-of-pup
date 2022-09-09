@@ -4,6 +4,7 @@
   "main": "./src/index.js",
   "scripts": {
     "serve": "nodemon ./src/index.js",
+    "start:monitor-memory": "node ./mem.js ./src/index.js",
     "start": "node ./src/index.js"
   },
   "author": "JJ",
@@ -25,5 +26,8 @@
     "pdfkit": "^0.13.0",
     "tiny-json-http": "^7.4.2",
     "unixseconds": "^0.1.1"
+  },
+  "devDependencies": {
+    "pidusage": "^3.0.0"
   }
 }
